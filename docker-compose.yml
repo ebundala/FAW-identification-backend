@@ -7,7 +7,7 @@ services:
     ports:
         - ${POSTGRES_PORT}:5432
     volumes: 
-       - PGDATA:/var/lib/postgresql/data
+       - FAWPGDATA:/var/lib/postgresql/data
     networks: 
         webnet:
     environment:
@@ -39,4 +39,4 @@ services:
 networks: 
     webnet:
 volumes: 
-     PGDATA:
+     FAWPGDATA:
