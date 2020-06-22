@@ -9,7 +9,7 @@ import {
   Info,
   Context,
 } from '@nestjs/graphql';
-import { User, AuthInput, AuthResult, Role } from '../models/graphql';
+import { User, AuthInput, AuthResult, Role, SignOutResult } from '../models/graphql';
 import { UserService } from './user-service';
 
 @Resolver((of) => User)
@@ -31,5 +31,9 @@ export class UsersResolver {
     @Args('credentials', { type: () => AuthInput }) credentials: AuthInput,
   ): Promise<AuthResult> {
     return this.userService.signInWithEmail(credentials);
+  }
+  @Mutation((retuns)=>SignOutResult)
+  async signout(@Context() ctx): Promise<SignOutResult>{
+  return this.userService.signOut(ctx.token)
   }
 }

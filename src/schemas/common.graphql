@@ -1,3 +1,10 @@
+
+
+enum QuestionType {
+  BOOLEAN
+  TEXT
+}
+
 enum Role {
   USER
   ADMIN
@@ -12,11 +19,4 @@ enum State {
   APPROVED
   COMPLETED
   ARCHIVED
-}
-
-input InInput{
-    in:[Int!]!
-}
-input WhereInput{
-    id: ID!
 }

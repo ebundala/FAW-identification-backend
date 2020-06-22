@@ -1,0 +1,46 @@
+type Form{
+  id:   ID!
+  title:       String!
+  description: String
+  state:       State!      
+  author:      User!      
+  questions:   [Question!]
+  grades:      [Grade!]
+  responses:   [Response!]
+  attachments: [File!]
+  createdAt:   String
+  updatedAt:   String
+}
+
+type FormResult{
+    status: Boolean!
+    message: String!
+    form: Form
+}
+input FormCreateInput{
+  title:       String!
+  description: String
+  state:       State      
+ # author:      UserWhereUniqueInput!     
+ # questions:   [Question]!
+ # grades:      [Grade!]
+ # responses:   [Response!]!
+ # attachments: [File!]!
+}
+input FormUpdateDataInput{
+  title:       String
+  description: String
+  state:       State      
+}
+input FormWhereUniqueInput{
+    id:  ID!
+}
+input FormUpdateInput{
+    where: FormWhereUniqueInput
+    update: FormUpdateDataInput
+}
+extend type Mutation{
+    createForm(data:FormCreateInput!):FormResult!
+    updateForm(data: FormUpdateInput):FormResult!
+    deleteForm(where:FormWhereUniqueInput):FormResult!
+}

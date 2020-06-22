@@ -1,13 +1,4 @@
 # import * from './user.graphql'
-# import * from './expertise.graphql'
-# import * from './bid.graphql'
-# import * from './job.graphql'
-# import * from './file.graphql'
-# import * from './messaging.graphql'
-# import * from './payment.graphql'
-
-
-
 
 
 type Query{

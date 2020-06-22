@@ -18,6 +18,7 @@ export class AuthMiddleware implements NestMiddleware {
      await this.app.admin.auth().verifySessionCookie(token,true)
       .then((claims)=>{
         req.auth = claims;
+        req.token = token
         this.logger.log(claims.uid,'AUTH')
       })
       .catch((e)=>{

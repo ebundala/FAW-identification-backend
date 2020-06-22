@@ -1,20 +1,16 @@
 type User {
-  id:          Int  
-  uid:         ID!       
-  email:       String!       
-  displayName: String!
-  phoneNumber: String
-  emailVerified: Boolean!
-  disabled: Boolean!
-  avator:      File         
-  role:        Role!        
-  expertise:   [Expertise!]!
-  jobs:         [Job!]!
-  bids:         [Bid!]!
-  chats:        [Chat!]!
-  TokenOrder:   [TokenOrder!]!
-  createdAt:    String!     
-  updatedAt:    String!     
+   id:            ID!          
+  email:         String!  
+  displayName:   String
+  phoneNumber:   String
+  emailVerified: Boolean!    
+  disabled:      Boolean!   
+  avator:        File
+  role:          Role!     
+  forms:         [Form!]!
+  responses:     [Response!]!
+  createdAt:     String!  
+  updatedAt:     String!   
  
 }
 input AuthInput{
@@ -24,41 +20,24 @@ input AuthInput{
 }
 type AuthResult{
     token: String
-    error: String
-    message: String
+    error: Boolean!
+    message: String!
     user: User 
 }
+type SignOutResult{
+ status: Boolean
+ message: String
 
+}
 input UserWhereUniqueInput {
-  id: ID
+  id: Int
   email: String
   uid: String
 }
 
 
-input UserUpdateDataInput{
-       
-  email:       String       
-  displayName: String
-  phoneNumber: String
-  emailVerified: Boolean
-  disabled: Boolean
 
-  avator:     FileUpdateOneInput 
-  role:        Role       
-  expertise:   [ExpertiseUpdateOneInput]
-  jobs:         [JobUpdateOneInput]
-  bids:         [BidUpdateOneInput]
-  chats:        [ChatUpdateOneInput]
-  TokenOrder:   [TokenOrderUpdateOneInput]
-}
-input UserUpdateOneInput {
-  # create: UserCreateInput
-  update: UserUpdateDataInput
-  delete: Boolean
-  disconnect: Boolean
-  connect: UserWhereUniqueInput
-}
+
 
 
 extend type Query{
@@ -67,8 +46,5 @@ extend type Query{
 extend type Mutation{
     signup(credentials: AuthInput):AuthResult!
     signin(credentials: AuthInput):AuthResult!
-    editProfile(data: UserUpdateDataInput):User
-}
-extend type Subscription{
-    message(userId: ID!): Message
+    signout:SignOutResult!
 }

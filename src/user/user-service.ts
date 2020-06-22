@@ -1,11 +1,12 @@
 import { Injectable, HttpService } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client'
 import { isEmail, isAlphanumeric, isLength } from 'validator';
-import { AuthInput, AuthResult, Role, User } from 'src/models/graphql';
+import { AuthInput, AuthResult, Role, User, SignOutResult } from 'src/models/graphql';
 import { FirebaseService } from 'src/firebase-admin/firebase.service';
 
 @Injectable()
 export class UserService {
+  
   constructor(
     private readonly firebaseApp: FirebaseService,
     private readonly prisma: PrismaClient,
@@ -17,6 +18,11 @@ export class UserService {
   async signup(credentials: AuthInput): Promise<AuthResult> {
     return this.signupWithEmail(credentials)
   }
+  
+  signOut(token: String): Promise<SignOutResult> {
+    return this.destroySessionToken(token);
+  }
+
   async signupWithEmail(data: AuthInput): Promise<AuthResult> {
     const { email, password, displayName } = data;
     if (!isEmail(email)) {
@@ -37,23 +43,16 @@ export class UserService {
           'The email address is already in use by another account',
         );
       } else {
+
         return this._createUserWithEmail(email, password, displayName)
           .then((user) =>
             users.create({
-              data: {
-                uid: user.uid,
+              data: {   
+                id:user.uid,             
                 displayName: user.displayName,
                 disabled: user.disabled,
                 email: user.email,
                 emailVerified: user.emailVerified,
-                avator: {
-                  create: {
-                    path: user.photoURL || "",
-                    filename: user.photoURL || "",
-                    mimetype: 'image/*',
-                    encoding: 'UTF-8',
-                  },
-                },
                 role: Role.USER,
               },
             }).catch(async (e) => {
@@ -64,9 +63,7 @@ export class UserService {
           .then(async (user) => {
             const setClaims = await this._setUserClaims(user);
             if (setClaims) {
-              debugger
               const session = await this.signInWithEmail({ email, password })
-               // .then(({ idToken }) => this.createSessionToken(idToken))
                 .catch((e) => e);
                 
               if (session instanceof Error) {
@@ -80,6 +77,7 @@ export class UserService {
               throw Error('Failed to cleanup user signup errors')
             };
             throw Error('Failed to create user account')
+
           })
           .then((session) => session);
       }
@@ -90,11 +88,11 @@ export class UserService {
    
     const remove1 = await this.firebaseApp.admin
       .auth()
-      .deleteUser(user.uid)
+      .deleteUser(user.id)
       .then(() => true)
       .catch(() => false);
     const remove2 = await this.prisma.user
-      .delete({ where: { uid: user.uid } })
+      .delete({ where: { id: user.id } })
       .then(() => true)
       .catch(() => false);
     return remove1 && remove2;
@@ -134,11 +132,10 @@ export class UserService {
       disabled: false,
     });
   }
-
   _setUserClaims(user) {
     return this.firebaseApp.admin
       .auth()
-      .setCustomUserClaims(user.uid, { role: Role.USER })
+      .setCustomUserClaims(user.id, { role: Role.USER })
       .then(() => true)
       .catch(() => false);
   }
@@ -157,19 +154,26 @@ export class UserService {
             .createSessionCookie(idToken, { expiresIn })
             .then((token) => {
               return this.prisma.user
-                .findOne({ where: { uid: decodedIdToken.uid } })
+                .findOne({ where: { id: decodedIdToken.uid } })
                 .then((user) => {
                   return {
                     user,
                     token,
+                    error:false,
                     message: 'Session created successfully',
                   };
                 });
-            });
+            }).catch(({message})=>{
+              return  {
+                error:true,
+                message:  message || 'Unknown Error',
+              }})
+            };
+        
+        return {
+          error:true,
+          message:  'A user that was not recently signed in is trying to set a session',
         }
-        throw Error(
-          'A user that was not recently signed in is trying to set a session',
-        );
       });
   }
 
@@ -183,7 +187,12 @@ export class UserService {
       .then(() => ({
         status: true,
         message: 'Session destroyed successfully',
-      }));
+      })).catch(({message})=>{
+        return{
+          status: false,
+          message: 'Operation Failed'
+        }
+      });
   }
 
   /*
