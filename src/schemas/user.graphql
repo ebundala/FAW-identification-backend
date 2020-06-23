@@ -5,7 +5,7 @@ type User {
   phoneNumber:   String
   emailVerified: Boolean!    
   disabled:      Boolean!   
-  avator:        File
+  avator:        Attachment
   role:          Role!     
   forms:         [Form!]!
   responses:     [Response!]!

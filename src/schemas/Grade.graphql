@@ -9,7 +9,7 @@ type Grade{
   max:              Float!
   minInclusive:     Boolean         
   maxInclusive:     Boolean         
-  attachments:      [File!]
+  attachments:      [Attachment!]
   createdAt:        String!
   updatedAt:        String!
 }

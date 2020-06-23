@@ -77,23 +77,23 @@ export class AnswerQueryInput {
     cursor?: AnswerWhereUniqueInput;
 }
 
-export class FileUpdateDataInput {
+export class AttachmentUpdateDataInput {
     path?: string;
     filename?: string;
     mimetype?: string;
     encoding?: string;
 }
 
-export class FileWhereUniqueInput {
+export class AttachmentWhereUniqueInput {
     id: string;
 }
 
-export class FileUpdateInput {
-    where?: FileWhereUniqueInput;
-    update?: FileUpdateDataInput;
+export class AttachmentUpdateInput {
+    where?: AttachmentWhereUniqueInput;
+    update?: AttachmentUpdateDataInput;
 }
 
-export class FileOrderBy {
+export class AttachmentOrderBy {
     id?: OrderByInput;
     path?: OrderByInput;
     filename?: OrderByInput;
@@ -101,7 +101,7 @@ export class FileOrderBy {
     encoding?: OrderByInput;
 }
 
-export class FileWhereQuery {
+export class AttachmentWhereQuery {
     id?: string;
     path?: string;
     filename?: string;
@@ -109,12 +109,12 @@ export class FileWhereQuery {
     encoding?: string;
 }
 
-export class FileQueryInput {
+export class AttachmentQueryInput {
     take?: number;
     skip?: number;
-    where?: FileWhereQuery;
-    orderBy?: FileOrderBy;
-    cursor?: FileWhereUniqueInput;
+    where?: AttachmentWhereQuery;
+    orderBy?: AttachmentOrderBy;
+    cursor?: AttachmentWhereUniqueInput;
 }
 
 export class FormCreateInput {
@@ -367,7 +367,7 @@ export class Answer {
     id: string;
     response: Response;
     question: Question;
-    attachments?: File[];
+    attachments?: Attachment[];
     booleanValue?: boolean;
     textValue?: string;
     createdAt: string;
@@ -393,11 +393,11 @@ export abstract class IMutation {
 
     abstract deleteAnswer(where: AnswerWhereUniqueInput): AnswerResult | Promise<AnswerResult>;
 
-    abstract createFile(data: Upload): FileResult | Promise<FileResult>;
+    abstract createAttachment(data: Upload): AttachmentResult | Promise<AttachmentResult>;
 
-    abstract updateFile(data: FileUpdateInput): FileResult | Promise<FileResult>;
+    abstract updateAttachment(data: AttachmentUpdateInput): AttachmentResult | Promise<AttachmentResult>;
 
-    abstract deleteFile(where: FileWhereUniqueInput): FileResult | Promise<FileResult>;
+    abstract deleteAttachment(where: AttachmentWhereUniqueInput): AttachmentResult | Promise<AttachmentResult>;
 
     abstract createForm(data: FormCreateInput): FormResult | Promise<FormResult>;
 
@@ -438,7 +438,7 @@ export abstract class IMutation {
     abstract signout(): SignOutResult | Promise<SignOutResult>;
 }
 
-export class File {
+export class Attachment {
     id: string;
     path: string;
     filename: string;
@@ -446,16 +446,16 @@ export class File {
     encoding: string;
 }
 
-export class FileResult {
+export class AttachmentResult {
     status: boolean;
     message: string;
-    file?: File;
+    file?: Attachment;
 }
 
-export class FileListResult {
+export class AttachmentListResult {
     status: boolean;
     message: string;
-    files?: File[];
+    files?: Attachment[];
 }
 
 export class Form {
@@ -467,7 +467,7 @@ export class Form {
     questions?: Question[];
     grades?: Grade[];
     responses?: Response[];
-    attachments?: File[];
+    attachments?: Attachment[];
     createdAt?: string;
     updatedAt?: string;
 }
@@ -501,7 +501,7 @@ export class Grade {
     max: number;
     minInclusive?: boolean;
     maxInclusive?: boolean;
-    attachments?: File[];
+    attachments?: Attachment[];
     createdAt: string;
     updatedAt: string;
 }
@@ -527,7 +527,7 @@ export class Question {
     questionType: QuestionType;
     form: Form;
     answers?: Answer[];
-    attachments?: File[];
+    attachments?: Attachment[];
     createdAt?: string;
     updatedAt?: string;
 }
@@ -547,7 +547,7 @@ export class QuestionListResult {
 export class Reccommendation {
     id: string;
     content: string;
-    attachments?: File[];
+    attachments?: Attachment[];
     grade: Grade;
     createdAt?: string;
     updatedAt?: string;
@@ -571,7 +571,7 @@ export class Response {
     form: Form;
     answers?: Answer[];
     grade?: Grade;
-    attachments?: File[];
+    attachments?: Attachment[];
     state: State;
     createdAt: string;
     updatedAt: string;
@@ -600,7 +600,7 @@ export class User {
     phoneNumber?: string;
     emailVerified: boolean;
     disabled: boolean;
-    avator?: File;
+    avator?: Attachment;
     role: Role;
     forms: Form[];
     responses: Response[];

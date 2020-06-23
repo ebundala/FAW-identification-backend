@@ -4,7 +4,7 @@ type Response{
   form:        Form!     
   answers:     [Answer!]
   grade:       Grade  
-  attachments: [File!]
+  attachments: [Attachment!]
   state:       State!   
   createdAt:   String!
   updatedAt:   String! 

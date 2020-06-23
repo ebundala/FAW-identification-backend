@@ -7,7 +7,7 @@ type Question{
   questionType:   QuestionType!
   form:           Form!        
   answers:        [Answer!]
-  attachments:    [File!]
+  attachments:    [Attachment!]
   createdAt:      String
   updatedAt:      String
 }

@@ -1,5 +1,5 @@
 scalar Upload
-type File{
+type Attachment{
     id: ID!
     path:             String!
     filename:         String!
@@ -7,52 +7,52 @@ type File{
     encoding:         String!
 }
 
-input FileUpdateDataInput{    
+input AttachmentUpdateDataInput{    
     path:             String
     filename:         String
     mimetype:         String
     encoding:         String     
 }
-input FileWhereUniqueInput{
+input AttachmentWhereUniqueInput{
     id: ID!
 }
-input FileUpdateInput{
-    where:FileWhereUniqueInput
-    update: FileUpdateDataInput
+input AttachmentUpdateInput{
+    where:AttachmentWhereUniqueInput
+    update: AttachmentUpdateDataInput
 }
-type FileResult{
+type AttachmentResult{
     status: Boolean!
     message: String!
-    file: File
+    file: Attachment
 }
-type FileListResult{
+type AttachmentListResult{
     status: Boolean!
     message: String!
-    files: [File!]
+    files: [Attachment!]
 }
-input FileOrderBy{
+input AttachmentOrderBy{
     id: OrderByInput   
     path:             OrderByInput
     filename:         OrderByInput
     mimetype:         OrderByInput
     encoding:         OrderByInput
 }
-input FileWhereQuery{
+input AttachmentWhereQuery{
   id: ID
   path:             String
   filename:         String
   mimetype:         String
   encoding:         String
 }
-input FileQueryInput{
+input AttachmentQueryInput{
  take: Int
   skip: Int
-  where: FileWhereQuery
-  orderBy:FileOrderBy
-  cursor: FileWhereUniqueInput   
+  where: AttachmentWhereQuery
+  orderBy:AttachmentOrderBy
+  cursor: AttachmentWhereUniqueInput   
 }
 extend type Mutation{
-    createFile(data: Upload!): FileResult!
-    updateFile(data: FileUpdateInput!): FileResult!
-    deleteFile(where: FileWhereUniqueInput!):FileResult!
+    createAttachment(data: Upload!): AttachmentResult!
+    updateAttachment(data: AttachmentUpdateInput!): AttachmentResult!
+    deleteAttachment(where: AttachmentWhereUniqueInput!):AttachmentResult!
 }

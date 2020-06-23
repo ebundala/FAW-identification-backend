@@ -17,7 +17,7 @@ model User {
   phoneNumber   String?
   emailVerified Boolean    @default(false)
   disabled      Boolean    @default(true)
-  avator        File?      @relation(fields: [avatorId], references: [id])
+  avator        Attachment?      @relation(fields: [avatorId], references: [id])
   avatorId      String?
   role          Role       @default(USER)
   forms         Form[]
@@ -26,7 +26,7 @@ model User {
   updatedAt     DateTime   @updatedAt
 }
 
-model File {
+model Attachment {
   id               String          @default(cuid()) @id
   path             String
   filename         String?
@@ -59,7 +59,7 @@ model Form {
   questions   Question[]
   grades      Grade[]
   responses   Response[]
-  attachments File[]
+  attachments Attachment[]
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
 }
@@ -76,7 +76,7 @@ model Grade {
   max             Float
   minInclusive    Boolean          @default(false)
   maxInclusive    Boolean          @default(false)
-  attachments     File[]
+  attachments     Attachment[]
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
 }
@@ -90,7 +90,7 @@ model Response {
   answers     Answer[]
   grade       Grade?   @relation(fields: [gradeId], references: [id])
   gradeId     String?
-  attachments File[]
+  attachments Attachment[]
   state       State    @default(PENDING)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -106,7 +106,7 @@ model Question {
   form           Form         @relation(fields: [formId], references: [id])
   formId         String
   answers        Answer[]
-  attachments    File[]
+  attachments    Attachment[]
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
 }
@@ -117,7 +117,7 @@ model Answer {
   responseId   String
   question     Question @relation(fields: [questionId], references: [id])
   questionId   String
-  attachments  File[]
+  attachments  Attachment[]
   booleanValue Boolean?
   textValue    String?
   createdAt    DateTime @default(now())
@@ -127,7 +127,7 @@ model Answer {
 model Recommendation {
   id          String   @default(cuid()) @id
   content     String
-  attachments File[]
+  attachments Attachment[]
   grade       Grade    @relation(fields: [gradeId], references: [id])
   gradeId     String
   createdAt   DateTime @default(now())

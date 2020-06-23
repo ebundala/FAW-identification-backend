@@ -11,15 +11,14 @@ generator client {
 }
 
 model User {
-  id            Int        @default(autoincrement()) @id
-  uid           String     @unique
+  id            String     @default(cuid()) @id
   email         String     @unique
   displayName   String
   phoneNumber   String?
   emailVerified Boolean    @default(false)
   disabled      Boolean    @default(true)
-  avator        File?      @relation(fields: [avatorId], references: [id])
-  avatorId      Int?
+  avator        Attachment?      @relation(fields: [avatorId], references: [id])
+  avatorId      String?
   role          Role       @default(USER)
   forms         Form[]
   responses     Response[]
@@ -27,8 +26,8 @@ model User {
   updatedAt     DateTime   @updatedAt
 }
 
-model File {
-  id               Int             @default(autoincrement()) @id
+model Attachment {
+  id               String          @default(cuid()) @id
   path             String
   filename         String?
   mimetype         String?
@@ -37,88 +36,88 @@ model File {
   updatedAt        DateTime        @updatedAt
   User             User[]
   Form             Form?           @relation(fields: [formId], references: [id])
-  formId           Int?
+  formId           String?
   Grade            Grade?          @relation(fields: [gradeId], references: [id])
-  gradeId          Int?
+  gradeId          String?
   Response         Response?       @relation(fields: [responseId], references: [id])
-  responseId       Int?
+  responseId       String?
   Question         Question?       @relation(fields: [questionId], references: [id])
-  questionId       Int?
+  questionId       String?
   Answer           Answer?         @relation(fields: [answerId], references: [id])
-  answerId         Int?
+  answerId         String?
   Recommendation   Recommendation? @relation(fields: [recommendationId], references: [id])
-  recommendationId Int?
+  recommendationId String?
 }
 
 model Form {
-  id          Int        @default(autoincrement()) @id
+  id          String     @default(cuid()) @id
   title       String
   description String?
   state       State      @default(PENDING)
-  author      User       @relation(fields: [authorId], references: [uid])
+  author      User       @relation(fields: [authorId], references: [id])
   authorId    String
   questions   Question[]
   grades      Grade[]
   responses   Response[]
-  attachments File[]
+  attachments Attachment[]
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
 }
 
 model Grade {
-  id              Int              @default(autoincrement()) @id
+  id              String           @default(cuid()) @id
   name            String
   description     String
   form            Form             @relation(fields: [formId], references: [id])
-  formId          Int
+  formId          String
   responses       Response[]
   recommendations Recommendation[]
   min             Float
   max             Float
   minInclusive    Boolean          @default(false)
   maxInclusive    Boolean          @default(false)
-  attachments     File[]
+  attachments     Attachment[]
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
 }
 
 model Response {
-  id          Int      @default(autoincrement()) @id
-  author      User     @relation(fields: [authorId], references: [uid])
+  id          String   @default(cuid()) @id
+  author      User     @relation(fields: [authorId], references: [id])
   authorId    String
   form        Form     @relation(fields: [formId], references: [id])
-  formId      Int
+  formId      String
   answers     Answer[]
   grade       Grade?   @relation(fields: [gradeId], references: [id])
-  gradeId     Int?
-  attachments File[]
+  gradeId     String?
+  attachments Attachment[]
   state       State    @default(PENDING)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
 
 model Question {
-  id             Int          @default(autoincrement()) @id
+  id             String       @default(cuid()) @id
   questionNumber Int
   question       String
   weight         Float        @default(0.0)
   instruction    String?
   questionType   QuestionType @default(BOOLEAN)
   form           Form         @relation(fields: [formId], references: [id])
-  formId         Int
+  formId         String
   answers        Answer[]
-  attachments    File[]
+  attachments    Attachment[]
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
 }
 
 model Answer {
-  id           Int      @default(autoincrement()) @id
+  id           String   @default(cuid()) @id
   response     Response @relation(fields: [responseId], references: [id])
-  responseId   Int
+  responseId   String
   question     Question @relation(fields: [questionId], references: [id])
-  questionId   Int
-  attachments  File[]
+  questionId   String
+  attachments  Attachment[]
   booleanValue Boolean?
   textValue    String?
   createdAt    DateTime @default(now())
@@ -126,11 +125,11 @@ model Answer {
 }
 
 model Recommendation {
-  id          Int      @default(autoincrement()) @id
+  id          String   @default(cuid()) @id
   content     String
-  attachments File[]
+  attachments Attachment[]
   grade       Grade    @relation(fields: [gradeId], references: [id])
-  gradeId     Int
+  gradeId     String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }

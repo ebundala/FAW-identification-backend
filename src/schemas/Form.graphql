@@ -7,7 +7,7 @@ type Form{
   questions:   [Question!]
   grades:      [Grade!]
   responses:   [Response!]
-  attachments: [File!]
+  attachments: [Attachment!]
   createdAt:   String
   updatedAt:   String
 }
@@ -30,7 +30,7 @@ input FormCreateInput{
  # questions:   [Question]!
  # grades:      [Grade!]
  # responses:   [Response!]!
- # attachments: [File!]!
+ # attachments: [Attachment!]!
 }
 input FormUpdateDataInput{
   title:       String
