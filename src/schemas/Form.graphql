@@ -17,6 +17,11 @@ type FormResult{
     message: String!
     form: Form
 }
+type FormListResult{
+    status: Boolean!
+    message: String!
+    forms: [Form!]
+}
 input FormCreateInput{
   title:       String!
   description: String
@@ -39,8 +44,33 @@ input FormUpdateInput{
     where: FormWhereUniqueInput
     update: FormUpdateDataInput
 }
+enum OrderByInput{
+  asc
+  desc
+}
+input FormOrderBy{
+  title: OrderByInput
+  createdAt: OrderByInput
+  updatedAt: OrderByInput
+}
+input FormWhereQuery{
+  id: ID
+  authorId: ID
+  state: State
+}
+input FormQueryInput{
+  take: Int
+  skip: Int
+  where: FormWhereQuery
+  orderBy:FormOrderBy
+  cursor: FormWhereUniqueInput
+}
 extend type Mutation{
     createForm(data:FormCreateInput!):FormResult!
-    updateForm(data: FormUpdateInput):FormResult!
-    deleteForm(where:FormWhereUniqueInput):FormResult!
+    updateForm(data: FormUpdateInput!):FormResult!
+    deleteForm(where:FormWhereUniqueInput!):FormResult!
+}
+
+extend type Query{
+  forms(where:FormQueryInput):FormListResult!
 }

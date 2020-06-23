@@ -6,6 +6,11 @@
 
 /* tslint:disable */
 /* eslint-disable */
+export enum OrderByInput {
+    asc = "asc",
+    desc = "desc"
+}
+
 export enum QuestionType {
     BOOLEAN = "BOOLEAN",
     TEXT = "TEXT"
@@ -48,6 +53,26 @@ export class FormUpdateInput {
     update?: FormUpdateDataInput;
 }
 
+export class FormOrderBy {
+    title?: OrderByInput;
+    createdAt?: OrderByInput;
+    updatedAt?: OrderByInput;
+}
+
+export class FormWhereQuery {
+    id?: string;
+    authorId?: string;
+    state?: State;
+}
+
+export class FormQueryInput {
+    take?: number;
+    skip?: number;
+    where?: FormWhereQuery;
+    orderBy?: FormOrderBy;
+    cursor?: FormWhereUniqueInput;
+}
+
 export class AuthInput {
     email: string;
     password: string;
@@ -88,12 +113,18 @@ export class FormResult {
     form?: Form;
 }
 
+export class FormListResult {
+    status: boolean;
+    message: string;
+    forms?: Form[];
+}
+
 export abstract class IMutation {
     abstract createForm(data: FormCreateInput): FormResult | Promise<FormResult>;
 
-    abstract updateForm(data?: FormUpdateInput): FormResult | Promise<FormResult>;
+    abstract updateForm(data: FormUpdateInput): FormResult | Promise<FormResult>;
 
-    abstract deleteForm(where?: FormWhereUniqueInput): FormResult | Promise<FormResult>;
+    abstract deleteForm(where: FormWhereUniqueInput): FormResult | Promise<FormResult>;
 
     abstract version(): string | Promise<string>;
 
@@ -102,6 +133,14 @@ export abstract class IMutation {
     abstract signin(credentials?: AuthInput): AuthResult | Promise<AuthResult>;
 
     abstract signout(): SignOutResult | Promise<SignOutResult>;
+}
+
+export abstract class IQuery {
+    abstract forms(where?: FormQueryInput): FormListResult | Promise<FormListResult>;
+
+    abstract version(): string | Promise<string>;
+
+    abstract me(): User | Promise<User>;
 }
 
 export class Grade {
@@ -118,12 +157,6 @@ export class Reccommendation {
 
 export class Response {
     id: string;
-}
-
-export abstract class IQuery {
-    abstract version(): string | Promise<string>;
-
-    abstract me(): User | Promise<User>;
 }
 
 export abstract class ISubscription {
