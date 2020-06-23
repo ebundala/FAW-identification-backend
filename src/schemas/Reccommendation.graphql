@@ -1,3 +1,60 @@
 type Reccommendation{
+   id: ID!
+  content:     String!
+  attachments: [File!]
+  grade:       Grade!
+  createdAt:   String
+  updatedAt:   String
+}
+
+
+input ReccommendationCreateInput{  
+  content:     String!
+  grade:       GradeWhereUniqueInput!
+}
+input ReccommendationUpdateDataInput{    
+  content:     String
+  grade:       GradeWhereUniqueInput     
+}
+input ReccommendationWhereUniqueInput{
     id: ID!
+}
+input ReccommendationUpdateInput{
+    where:ReccommendationWhereUniqueInput
+    update: ReccommendationUpdateDataInput
+}
+type ReccommendationResult{
+    status: Boolean!
+    message: String!
+    reccommendation: Reccommendation
+}
+type ReccommendationListResult{
+    status: Boolean!
+    message: String!
+    reccommendations: [Reccommendation!]
+}
+input ReccommendationOrderBy{
+    id: OrderByInput
+    content: OrderByInput      
+    grade: OrderByInput
+    createdAt: OrderByInput
+    updatedAt: OrderByInput
+}
+input ReccommendationWhereQuery{
+  id: ID
+  content:     String
+  grade:       GradeWhereUniqueInput!
+
+}
+input ReccommendationQueryInput{
+ take: Int
+  skip: Int
+  where: ReccommendationWhereQuery
+  orderBy: ReccommendationOrderBy
+  cursor: ReccommendationWhereUniqueInput   
+}
+extend type Mutation{
+    createReccommendation(data:ReccommendationCreateInput!): ReccommendationResult!
+    updateReccommendation(data:ReccommendationUpdateInput!): ReccommendationResult!
+    deleteReccommendation(where:ReccommendationWhereUniqueInput!):ReccommendationResult!
 }

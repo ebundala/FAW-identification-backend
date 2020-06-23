@@ -1,3 +1,66 @@
 type Answer{
+  id: ID!
+  response:     Response!
+  question:     Question!
+  attachments:  [File!]
+  booleanValue: Boolean
+  textValue:    String
+  createdAt:    String!
+  updatedAt:    String!
+}
+
+input AnswerCreateInput{  
+  response:     ResponseWhereUniqueInput!
+  question:     QuestionWhereUniqueInput!
+  booleanValue: Boolean
+  textValue:    String
+}
+input AnswerUpdateDataInput{    
+  booleanValue: Boolean
+  textValue:    String      
+}
+input AnswerWhereUniqueInput{
     id: ID!
+}
+input AnswerUpdateInput{
+    where:AnswerWhereUniqueInput
+    update: AnswerUpdateDataInput
+}
+type AnswerResult{
+    status: Boolean!
+    message: String!
+    answer: Answer
+}
+type AnswerListResult{
+    status: Boolean!
+    message: String!
+    answers:[Answer!]
+}
+input AnswerOrderBy{
+    id: OrderByInput   
+    booleanValue: OrderByInput
+    textValue:    OrderByInput
+    createdAt: OrderByInput
+    updatedAt: OrderByInput
+}
+input AnswerWhereQuery{
+  id: ID
+  response:     ResponseWhereUniqueInput
+  question:     QuestionWhereUniqueInput
+  booleanValue: Boolean
+  textValue:    String
+
+}
+input AnswerQueryInput{
+ take: Int
+  skip: Int
+  where: AnswerWhereQuery
+  orderBy:AnswerOrderBy
+  cursor: AnswerWhereUniqueInput   
+}
+
+extend type Mutation{
+    createAnswer(data:AnswerCreateInput!): AnswerResult!
+    updateAnswer(data:AnswerUpdateInput!): AnswerResult!
+    deleteAnswer(where:AnswerWhereUniqueInput!):AnswerResult!
 }

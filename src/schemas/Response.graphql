@@ -1,3 +1,62 @@
 type Response{
+  id: ID!
+  author:      User!     
+  form:        Form!     
+  answers:     [Answer!]
+  grade:       Grade  
+  attachments: [File!]
+  state:       State!   
+  createdAt:   String!
+  updatedAt:   String! 
+}
+
+input ResponseCreateInput{  
+  form:        FormWhereUniqueInput!      
+  state:       State!
+}
+input ResponseUpdateDataInput{    
+  state:       State        
+}
+input ResponseWhereUniqueInput{
     id: ID!
+}
+input ResponseUpdateInput{
+    where:ResponseWhereUniqueInput
+    update: ResponseUpdateDataInput
+}
+type ResponseResult{
+    status: Boolean!
+    message: String!
+    response: Response
+}
+type ResponseListResult{
+    status: Boolean!
+    message: String!
+    responses: [Response!]
+}
+input ResponseOrderBy{
+    state: OrderByInput      
+    id: OrderByInput
+    createdAt: OrderByInput
+    updatedAt: OrderByInput
+}
+input ResponseWhereQuery{
+   id:               ID
+  state: State
+  author: UserWhereUniqueInput
+  form: FormWhereUniqueInput
+  grade: GradeWhereUniqueInput
+
+}
+input ResponseQueryInput{
+ take: Int
+  skip: Int
+  where: ResponseWhereQuery
+  orderBy: ResponseOrderBy
+  cursor: ResponseWhereUniqueInput   
+}
+extend type Mutation{
+    createResponse(data:ResponseCreateInput): ResponseResult!
+    updateResponse(data:ResponseUpdateInput): ResponseResult!
+    deleteResponse(where:ResponseWhereUniqueInput):ResponseResult!
 }

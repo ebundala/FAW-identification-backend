@@ -32,17 +32,9 @@ type SignOutResult{
 input UserWhereUniqueInput {
   id: Int
   email: String
-  uid: String
 }
 
 
-
-
-
-
-extend type Query{
-    me:User
-}
 extend type Mutation{
     signup(credentials: AuthInput):AuthResult!
     signin(credentials: AuthInput):AuthResult!

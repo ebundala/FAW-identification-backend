@@ -8,9 +8,15 @@ import { AppLoggerModule } from './app-logger/app-logger.module';
 import { AuthMiddleware } from './auth.middleware';
 import { FormModule } from './form/form.module';
 import { QuestionModule } from './question/question.module';
+import { GradeModule } from './grade/grade.module';
+import { ResponseModule } from './response/response.module';
+import { AnswerModule } from './answer/answer.module';
+import { AttachmentModule } from './attachment/attachment.module';
+import { ReccommendationModule } from './reccommendation/reccommendation.module';
 
 @Module({
   imports: [
+    
     ConfigModule.forRoot({
       isGlobal: true,
     }),
@@ -30,8 +36,13 @@ import { QuestionModule } from './question/question.module';
     AppLoggerModule,
     UserModule,
     FormModule,
-    QuestionModule
-  ]
+    QuestionModule,
+    GradeModule,
+    ResponseModule,
+    AnswerModule,
+    AttachmentModule,
+    ReccommendationModule
+  ],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

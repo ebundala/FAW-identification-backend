@@ -4,7 +4,7 @@ type Grade{
   description:      String
   form:             Form!           
   responses:        [Response!]
-  recommendations:  [Recommendation!]
+  recommendations:  [Reccommendation!]
   min:              Float!
   max:              Float!
   minInclusive:     Boolean         
@@ -68,16 +68,15 @@ input GradeWhereQuery{
    maxInclusive:     Boolean
 
 }
-input QustionQueryInput{
+input GradeQueryInput{
  take: Int
   skip: Int
   where: GradeWhereQuery
   orderBy:GradeOrderBy
   cursor: GradeWhereUniqueInput   
 }
-
 extend type Mutation{
-    createGrade(data:GradeCreateInput): GradeResult!
-    updateGrade(data:GradeUpdateInput): GradeResult!
-    deleteGrade(where:GradeWhereUniqueInput):GradeResult!
+    createGrade(data:GradeCreateInput!): GradeResult!
+    updateGrade(data:GradeUpdateInput!): GradeResult!
+    deleteGrade(where:GradeWhereUniqueInput!):GradeResult!
 }
