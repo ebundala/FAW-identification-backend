@@ -1,17 +1,13 @@
 import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
-import { ConfigModule, registerAs } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { join } from 'path';
 import { UserModule } from './user/user.module';
-//import { PrismaClientModule } from './prisma-client/prisma-client.module';
-import { UserService } from './user/user-service';
-import { PrismaClientModule } from './prisma-client/prisma-client.module';
-import { UsersResolver } from './user/user.resolver';
 import { FirebaseModule } from './firebase-admin/firebase.module';
 import { AppLoggerModule } from './app-logger/app-logger.module';
 import { AuthMiddleware } from './auth.middleware';
 import { FormModule } from './form/form.module';
-import { FormService } from './form/form-service';
+import { QuestionModule } from './question/question.module';
 
 @Module({
   imports: [
@@ -24,20 +20,21 @@ import { FormService } from './form/form-service';
         path: join(process.cwd(), 'src/models/graphql.ts'),
         outputAs: 'class',
       },
-      context:({ req })=>{
-        return {auth:req.auth, token:req.token}
+      context: ({ req }) => {
+        return { auth: req.auth, token: req.token }
       },
       debug: true,
       playground: true,
     }),
     FirebaseModule,
-   AppLoggerModule,
-   UserModule,
-   FormModule
-  ],
+    AppLoggerModule,
+    UserModule,
+    FormModule,
+    QuestionModule
+  ]
 })
 export class AppModule implements NestModule {
-  configure(consumer:MiddlewareConsumer){
+  configure(consumer: MiddlewareConsumer) {
     consumer.apply(AuthMiddleware).forRoutes('/graphql')
   }
 }

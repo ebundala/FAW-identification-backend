@@ -73,6 +73,60 @@ export class FormQueryInput {
     cursor?: FormWhereUniqueInput;
 }
 
+export class QuestionCreateInput {
+    questionNumber: number;
+    question?: string;
+    weight: number;
+    instruction?: string;
+    questionType: QuestionType;
+    form: FormWhereUniqueInput;
+}
+
+export class QuestionUpdateDataInput {
+    questionNumber?: number;
+    question?: string;
+    weight?: number;
+    instruction?: string;
+    questionType?: QuestionType;
+}
+
+export class QuestionWhereUniqueInput {
+    id: string;
+}
+
+export class QuestionUpdateInput {
+    where?: QuestionWhereUniqueInput;
+    update?: QuestionUpdateDataInput;
+}
+
+export class QuestionOrderBy {
+    questionNumber?: OrderByInput;
+    weight?: OrderByInput;
+    question?: OrderByInput;
+    instruction?: OrderByInput;
+    questionType?: OrderByInput;
+    id?: OrderByInput;
+    createdAt?: OrderByInput;
+    updatedAt?: OrderByInput;
+}
+
+export class QuestionWhereQuery {
+    id?: string;
+    questionNumber?: number;
+    question?: string;
+    instruction?: string;
+    weight?: number;
+    questionType?: QuestionType;
+}
+
+export class QustionQueryInput {
+    take?: number;
+    skip?: number;
+    where?: QuestionWhereQuery;
+    orderBy?: QuestionOrderBy;
+    cursor?: QuestionWhereUniqueInput;
+}
+
 export class AuthInput {
     email: string;
     password: string;
@@ -126,6 +180,12 @@ export abstract class IMutation {
 
     abstract deleteForm(where: FormWhereUniqueInput): FormResult | Promise<FormResult>;
 
+    abstract createQuestion(data?: QuestionCreateInput): QuestionResult | Promise<QuestionResult>;
+
+    abstract updateQuestion(data?: QuestionUpdateInput): QuestionResult | Promise<QuestionResult>;
+
+    abstract deleteQuestion(where?: QuestionWhereUniqueInput): QuestionResult | Promise<QuestionResult>;
+
     abstract version(): string | Promise<string>;
 
     abstract signup(credentials?: AuthInput): AuthResult | Promise<AuthResult>;
@@ -149,6 +209,28 @@ export class Grade {
 
 export class Question {
     id: string;
+    questionNumber: number;
+    question: string;
+    weight?: number;
+    instruction?: string;
+    questionType: QuestionType;
+    form: Form;
+    answers?: Answer[];
+    attachments?: File[];
+    createdAt?: string;
+    updatedAt?: string;
+}
+
+export class QuestionResult {
+    status: boolean;
+    message: string;
+    question?: Question;
+}
+
+export class QuestionListResult {
+    status: boolean;
+    message: string;
+    questions?: Question[];
 }
 
 export class Reccommendation {

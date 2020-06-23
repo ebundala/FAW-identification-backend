@@ -1,3 +1,79 @@
 type Question{
+  id: ID!
+  questionNumber: Int!
+  question:       String!
+  weight:         Float
+  instruction:    String
+  questionType:   QuestionType!
+  form:           Form!        
+  answers:        [Answer!]
+  attachments:    [File!]
+  createdAt:      String
+  updatedAt:      String
+}
+
+input QuestionCreateInput{
+    questionNumber: Int!
+    question: String
+    weight: Float!
+    instruction: String
+    questionType: QuestionType!
+    form: FormWhereUniqueInput!
+}
+input QuestionUpdateDataInput{
+    questionNumber: Int
+    question: String
+    weight: Float
+    instruction: String
+    questionType: QuestionType
+}
+input QuestionWhereUniqueInput{
     id: ID!
 }
+input QuestionUpdateInput{
+    where:QuestionWhereUniqueInput
+    update: QuestionUpdateDataInput
+}
+type QuestionResult{
+    status: Boolean!
+    message: String!
+    question: Question
+}
+type QuestionListResult{
+    status: Boolean!
+    message: String!
+    questions:[Question!]
+}
+input QuestionOrderBy{
+    questionNumber: OrderByInput
+    weight: OrderByInput
+    question: OrderByInput
+    instruction: OrderByInput
+    questionType: OrderByInput
+    id: OrderByInput
+    createdAt: OrderByInput
+    updatedAt: OrderByInput
+}
+input QuestionWhereQuery{
+    id: ID
+    questionNumber: Int
+    question: String
+    instruction: String
+    weight: Float
+    questionType: QuestionType
+
+}
+input QustionQueryInput{
+ take: Int
+  skip: Int
+  where: QuestionWhereQuery
+  orderBy:QuestionOrderBy
+  cursor: QuestionWhereUniqueInput   
+}
+
+extend type Mutation{
+    createQuestion(data:QuestionCreateInput): QuestionResult!
+    updateQuestion(data:QuestionUpdateInput): QuestionResult!
+    deleteQuestion(where:QuestionWhereUniqueInput):QuestionResult!
+}
+

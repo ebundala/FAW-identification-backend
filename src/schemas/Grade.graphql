@@ -1,3 +1,83 @@
 type Grade{
+  id:              ID!
+  name:           String!
+  description:      String
+  form:             Form!           
+  responses:        [Response!]
+  recommendations:  [Recommendation!]
+  min:              Float!
+  max:              Float!
+  minInclusive:     Boolean         
+  maxInclusive:     Boolean         
+  attachments:      [File!]
+  createdAt:        String!
+  updatedAt:        String!
+}
+input GradeCreateInput{
+  name:           String!
+  description:      String
+  min:              Float!
+  max:              Float!
+  minInclusive:     Boolean         
+  maxInclusive:     Boolean         
+  form:             FormWhereUniqueInput!
+}
+input GradeUpdateDataInput{
+  name:           String
+  description:      String
+  min:              Float
+  max:              Float
+  minInclusive:     Boolean         
+  maxInclusive:     Boolean         
+}
+input GradeWhereUniqueInput{
     id: ID!
+}
+input GradeUpdateInput{
+    where:GradeWhereUniqueInput
+    update: GradeUpdateDataInput
+}
+type GradeResult{
+    status: Boolean!
+    message: String!
+    grade: Grade
+}
+type GradeListResult{
+    status: Boolean!
+    message: String!
+    grades:[Grade!]
+}
+input GradeOrderBy{
+   name:           OrderByInput
+   description:      OrderByInput
+   min:              OrderByInput
+   max:              OrderByInput
+   minInclusive:     OrderByInput         
+   maxInclusive:     OrderByInput         
+    id: OrderByInput
+    createdAt: OrderByInput
+    updatedAt: OrderByInput
+}
+input GradeWhereQuery{
+   id:               ID
+   name:             String
+   description:      String
+   min:              Float
+   max:              Float
+   minInclusive:     Boolean         
+   maxInclusive:     Boolean
+
+}
+input QustionQueryInput{
+ take: Int
+  skip: Int
+  where: GradeWhereQuery
+  orderBy:GradeOrderBy
+  cursor: GradeWhereUniqueInput   
+}
+
+extend type Mutation{
+    createGrade(data:GradeCreateInput): GradeResult!
+    updateGrade(data:GradeUpdateInput): GradeResult!
+    deleteGrade(where:GradeWhereUniqueInput):GradeResult!
 }
