@@ -22,7 +22,7 @@ export class AuthMiddleware implements NestMiddleware {
         this.logger.log(claims.uid,'AUTH')
       })
       .catch((e)=>{
-        req.user=null;
+        req.auth=null;
       }).finally(()=>{
         next();
       })
