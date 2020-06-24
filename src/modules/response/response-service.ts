@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client';
-import { ResponseCreateInput, ResponseResult, ResponseUpdateInput, ResponseWhereUniqueInput, State } from 'src/models/graphql';
+import { PrismaClient, FindManyAnswerArgs, AnswerWhereInput, AnswerOrderByInput } from '@prisma/client';
+import { ResponseCreateInput,Response, ResponseResult,
+     ResponseUpdateInput, ResponseWhereUniqueInput, State, AnswerQueryInput, OrderByInput } from 'src/models/graphql';
 
 @Injectable()
 export class ResponseService {
@@ -87,5 +88,65 @@ export class ResponseService {
                 message: message ||  'Failed to delete the response'
             }
         })
+    }
+    async answers(parent: Response, where: AnswerQueryInput, ctx: any, uid: String): Promise<any[]> {
+        const args: FindManyAnswerArgs = {};
+        if (where) {
+            if (where.take) {
+                args.take = where.take
+            }
+            if (where.skip) {
+                args.skip = where.skip
+            }
+            if (where.where) {
+                const whereInput: AnswerWhereInput = {}
+                if (where.where.id) {
+                    whereInput.id = where.where.id
+                }
+                
+                
+                args.where = whereInput
+            }
+            if (where.cursor) {
+                args.cursor = where.cursor
+            }
+            if (where.orderBy) {
+                const orderBy: AnswerOrderByInput = {}
+                if (where.orderBy.createdAt == OrderByInput.asc) {
+                    orderBy.createdAt = "asc"
+                }
+                if (where.orderBy.createdAt == OrderByInput.desc) {
+                    orderBy.createdAt = "desc"
+                }
+                if (where.orderBy.updatedAt == OrderByInput.asc) {
+                    orderBy.updatedAt = "asc"
+                }
+                if (where.orderBy.updatedAt == OrderByInput.desc) {
+                    orderBy.updatedAt = "desc"
+                }
+                if (where.orderBy.booleanValue == OrderByInput.asc) {
+                    orderBy.booleanValue = "asc"
+                }
+                if (where.orderBy.booleanValue == OrderByInput.desc) {
+                    orderBy.booleanValue = "desc"
+                }
+                if (where.orderBy.textValue == OrderByInput.asc) {
+                    orderBy.textValue = "asc"
+                }
+                if (where.orderBy.textValue == OrderByInput.desc) {
+                    orderBy.textValue = "desc"
+                }
+                args.orderBy = orderBy;
+            }
+
+        }
+        args.include={
+                response: true,
+                question: true,
+                attachments:true
+            }
+        return this.prisma.response
+            .findOne({ where: { id: parent.id } })
+            .answers(args);
     }
 }

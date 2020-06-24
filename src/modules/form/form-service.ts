@@ -1,6 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaClient, FormWhereInput, FindManyFormArgs, FormOrderByInput, } from '@prisma/client';
-import { Form, State, FormUpdateInput, FormCreateInput, FormResult, FormWhereUniqueInput, FormQueryInput, OrderByInput, FormListResult } from 'src/models/graphql';
+import {
+    PrismaClient, FormWhereInput, FindManyFormArgs,
+    FormOrderByInput, FindManyResponseArgs, ResponseWhereInput,
+} from '@prisma/client';
+import {
+    Form, State, FormUpdateInput, FormCreateInput,
+    FormResult, Response, FormWhereUniqueInput, FormQueryInput,
+    OrderByInput, FormListResult, ResponseQueryInput
+} from 'src/models/graphql';
 
 @Injectable()
 export class FormService {
@@ -85,7 +92,63 @@ export class FormService {
             }
         })
     }
+    async responses(parent: Form, where: ResponseQueryInput, ctx: any, uid: String): Promise<any[]> {
+        const args: FindManyResponseArgs = {}
+        if (where) {
+            if (where.take) {
+                args.take = where.take
+            }
+            if (where.skip) {
+                args.skip = where.skip
+            }
+            if (where.where) {
+                const whereInput: ResponseWhereInput = {}
+                if (where.where.id) {
+                    whereInput.id = where.where.id
+                }
+                if (where.where.authorId) {
+                    whereInput.authorId = where.where.authorId
+                }
+                if (where.where.state) {
+                    whereInput.state = where.where.state
+                }
+                args.where = whereInput
+            }
+            if (where.cursor) {
+                args.cursor = where.cursor
+            }
+            if (where.orderBy) {
+                const orderBy: FormOrderByInput = {}
+                if (where.orderBy.createdAt == OrderByInput.asc) {
+                    orderBy.createdAt = "asc"
+                }
+                if (where.orderBy.createdAt == OrderByInput.desc) {
+                    orderBy.createdAt = "desc"
+                }
+                if (where.orderBy.updatedAt == OrderByInput.asc) {
+                    orderBy.updatedAt = "asc"
+                }
+                if (where.orderBy.updatedAt == OrderByInput.desc) {
+                    orderBy.updatedAt = "desc"
+                }
+                if (where.orderBy.state == OrderByInput.asc) {
+                    orderBy.state = "asc"
+                }
+                if (where.orderBy.state == OrderByInput.desc) {
+                    orderBy.state = "desc"
+                }
+                args.orderBy = orderBy;
+            }
 
+        }
+        args.include={
+                author: true,
+                form: true,
+            }
+        return this.prisma.form
+            .findOne({ where: { id: parent.id } })
+            .responses(args);
+    }
     async getForms(where?: FormQueryInput): Promise<any | FormListResult> {
         const args: FindManyFormArgs = {}
         if (where) {

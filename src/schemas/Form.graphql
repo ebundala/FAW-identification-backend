@@ -6,7 +6,7 @@ type Form{
   author:      User!      
   questions:   [Question!]
   grades:      [Grade!]
-  responses:   [Response!]
+  responses(where:ResponseQueryInput):   [Response!]
   attachments: [Attachment!]
   createdAt:   String
   updatedAt:   String

@@ -291,7 +291,6 @@ export class RecommendationUpdateInput {
 export class RecommendationOrderBy {
     id?: OrderByInput;
     content?: OrderByInput;
-    grade?: OrderByInput;
     createdAt?: OrderByInput;
     updatedAt?: OrderByInput;
 }
@@ -338,7 +337,7 @@ export class ResponseOrderBy {
 export class ResponseWhereQuery {
     id?: string;
     state?: State;
-    author?: UserWhereUniqueInput;
+    authorId?: string;
     form?: FormWhereUniqueInput;
     grade?: GradeWhereUniqueInput;
 }
@@ -555,13 +554,13 @@ export class Recommendation {
 export class RecommendationResult {
     status: boolean;
     message: string;
-    reccommendation?: Recommendation;
+    recommendation?: Recommendation;
 }
 
 export class RecommendationListResult {
     status: boolean;
     message: string;
-    reccommendations?: Recommendation[];
+    recommendations?: Recommendation[];
 }
 
 export class Response {

@@ -1,5 +1,5 @@
-import { Resolver, Mutation, Args, Context } from '@nestjs/graphql';
-import { Grade, GradeResult, GradeCreateInput, GradeUpdateInput, GradeWhereUniqueInput } from 'src/models/graphql';
+import { Resolver, Mutation, Args, Context, ResolveField, Parent } from '@nestjs/graphql';
+import { Grade, GradeResult, GradeCreateInput, GradeUpdateInput, GradeWhereUniqueInput, Recommendation, RecommendationQueryInput } from 'src/models/graphql';
 import { GradeService } from './grade-service';
 
 @Resolver((of)=>Grade)
@@ -19,5 +19,10 @@ export class GradeResolver {
     async deleteGrade(@Args('where',{type:()=>GradeWhereUniqueInput}) where:GradeWhereUniqueInput,@Context() ctx): Promise<GradeResult>{
          if(ctx.auth&&ctx.auth.uid)
         return this.gradeService.deleteGrade(where,ctx.auth.uid);
+    }
+    @ResolveField((returns) => [Recommendation])
+    async recommendations(@Parent() parent, @Args("where", { type: () => RecommendationQueryInput }) where: RecommendationQueryInput, @Context() ctx): Promise<Recommendation[]> {
+        if (ctx.auth && ctx.auth.uid)
+            return this.gradeService.recommendations(parent, where, ctx, ctx.auth.uid)
     }
 }

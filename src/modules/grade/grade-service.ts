@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaClient} from '@prisma/client';
-import { GradeResult, GradeCreateInput, GradeUpdateInput, GradeWhereUniqueInput } from 'src/models/graphql';
+import { PrismaClient, FindManyRecommendationArgs, RecommendationWhereInput, RecommendationOrderByInput} from '@prisma/client';
+import { GradeResult, GradeCreateInput, GradeUpdateInput, GradeWhereUniqueInput, Grade, RecommendationQueryInput, OrderByInput } from 'src/models/graphql';
 
 @Injectable()
 export class GradeService {
@@ -83,5 +83,58 @@ export class GradeService {
                 message: message || 'Failed to delete the grade'
             }
         })
+    }
+    async recommendations(parent: Grade, where: RecommendationQueryInput, ctx: any, uid: String): Promise<any[]> {
+        const args: FindManyRecommendationArgs = {}
+        if (where) {
+            if (where.take) {
+                args.take = where.take
+            }
+            if (where.skip) {
+                args.skip = where.skip
+            }
+            if (where.where) {
+                const whereInput: RecommendationWhereInput = {}
+                if (where.where.id) {
+                    whereInput.id = where.where.id
+                }
+                
+                args.where = whereInput
+            }
+            if (where.cursor) {
+                args.cursor = where.cursor
+            }
+            if (where.orderBy) {
+                const orderBy: RecommendationOrderByInput = {}
+                if (where.orderBy.createdAt == OrderByInput.asc) {
+                    orderBy.createdAt = "asc"
+                }
+                if (where.orderBy.createdAt == OrderByInput.desc) {
+                    orderBy.createdAt = "desc"
+                }
+                if (where.orderBy.updatedAt == OrderByInput.asc) {
+                    orderBy.updatedAt = "asc"
+                }
+                if (where.orderBy.updatedAt == OrderByInput.desc) {
+                    orderBy.updatedAt = "desc"
+                }
+                if (where.orderBy.content == OrderByInput.asc) {
+                    orderBy.content = "asc"
+                }
+                if (where.orderBy.content == OrderByInput.desc) {
+                    orderBy.content = "desc"
+                }
+                args.orderBy = orderBy;
+            }
+
+        }
+        args.include={
+                attachments:true,
+                grade:true
+                
+            }
+        return this.prisma.grade
+            .findOne({ where: { id: parent.id } })
+            .recommendations(args);
     }
 }

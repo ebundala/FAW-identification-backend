@@ -13,6 +13,7 @@ export class RecommendationService {
             },
             include: {
                 attachments: true,
+                grade: true,
             }
         }).then((recommendation) => {
             return {
@@ -34,6 +35,7 @@ export class RecommendationService {
             data: data.update,
             include: {
                 attachments: true,
+                grade: true,
             }
         })
             .then((recommendation) => {
@@ -52,11 +54,13 @@ export class RecommendationService {
 
     }
 
+    
     async deleteRecommendation(where: RecommendationWhereUniqueInput, uid: String): Promise<any> {
         return this.prisma.recommendation.delete({
             where: where,
             include: {
                 attachments: true,
+                grade: true,
             },
         }).then((recommendation) => {
             return {

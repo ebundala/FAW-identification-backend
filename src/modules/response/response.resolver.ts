@@ -1,6 +1,6 @@
-import { Resolver, Mutation, Args, Context } from '@nestjs/graphql';
+import { Resolver, Mutation, Args, Context, ResolveField, Parent } from '@nestjs/graphql';
 import { ResponseService } from './response-service';
-import { ResponseResult,Response, ResponseCreateInput, ResponseUpdateInput, ResponseWhereUniqueInput } from 'src/models/graphql';
+import { ResponseResult,Response, ResponseCreateInput, ResponseUpdateInput, ResponseWhereUniqueInput, Answer, AnswerQueryInput } from 'src/models/graphql';
 
 @Resolver((of)=>Response)
 export class ResponseResolver {
@@ -19,5 +19,10 @@ export class ResponseResolver {
     async deleteResponse(@Args('where',{type:()=>ResponseWhereUniqueInput}) where:ResponseWhereUniqueInput,@Context() ctx): Promise<ResponseResult>{
          if(ctx.auth&&ctx.auth.uid)
         return this.responseService.deleteResponse(where,ctx.auth.uid);
+    }
+    @ResolveField((returns) => [Answer])
+    async answers(@Parent() parent, @Args("where", { type: () => AnswerQueryInput }) where: AnswerQueryInput, @Context() ctx): Promise<Answer[]> {
+        if (ctx.auth && ctx.auth.uid)
+            return this.responseService.answers(parent, where, ctx, ctx.auth.uid)
     }
 }

@@ -25,17 +25,16 @@ input RecommendationUpdateInput{
 type RecommendationResult{
     status: Boolean!
     message: String!
-    reccommendation: Recommendation
+    recommendation: Recommendation
 }
 type RecommendationListResult{
     status: Boolean!
     message: String!
-    reccommendations: [Recommendation!]
+    recommendations: [Recommendation!]
 }
 input RecommendationOrderBy{
     id: OrderByInput
     content: OrderByInput      
-    grade: OrderByInput
     createdAt: OrderByInput
     updatedAt: OrderByInput
 }

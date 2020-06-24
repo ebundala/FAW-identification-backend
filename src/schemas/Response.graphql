@@ -2,7 +2,7 @@ type Response{
   id: ID!
   author:      User!     
   form:        Form!     
-  answers:     [Answer!]
+  answers(where:AnswerQueryInput):     [Answer!]
   grade:       Grade  
   attachments: [Attachment!]
   state:       State!   
@@ -43,7 +43,7 @@ input ResponseOrderBy{
 input ResponseWhereQuery{
    id:               ID
   state: State
-  author: UserWhereUniqueInput
+  authorId: ID
   form: FormWhereUniqueInput
   grade: GradeWhereUniqueInput
 
