@@ -38,6 +38,7 @@
     "firebase-admin": "^8.12.1",
     "graphql": "^15.1.0",
     "graphql-tools": "^6.0.9",
+    "graphql-upload": "^11.0.0",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.0",
     "rxjs": "^6.5.3",

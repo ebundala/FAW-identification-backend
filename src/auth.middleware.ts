@@ -1,6 +1,6 @@
 import { Injectable, NestMiddleware, Request,Response,Headers } from '@nestjs/common';
-import { AppLogger } from './app-logger/app-logger.module';
-import { FirebaseService } from './firebase-admin/firebase.service';
+import { AppLogger } from './modules/app-logger/app-logger.module';
+import { FirebaseService } from './modules/firebase-admin/firebase.service';
 
 @Injectable()
 export class AuthMiddleware implements NestMiddleware {

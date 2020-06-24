@@ -2,17 +2,17 @@ import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { join } from 'path';
-import { UserModule } from './user/user.module';
-import { FirebaseModule } from './firebase-admin/firebase.module';
-import { AppLoggerModule } from './app-logger/app-logger.module';
+import { UserModule } from './modules/user/user.module';
+import { FirebaseModule } from './modules/firebase-admin/firebase.module';
+import { AppLoggerModule } from './modules/app-logger/app-logger.module';
 import { AuthMiddleware } from './auth.middleware';
-import { FormModule } from './form/form.module';
-import { QuestionModule } from './question/question.module';
-import { GradeModule } from './grade/grade.module';
-import { ResponseModule } from './response/response.module';
-import { AnswerModule } from './answer/answer.module';
-import { AttachmentModule } from './attachment/attachment.module';
-import { ReccommendationModule } from './reccommendation/reccommendation.module';
+import { FormModule } from './modules/form/form.module';
+import { QuestionModule } from './modules/question/question.module';
+import { GradeModule } from './modules/grade/grade.module';
+import { ResponseModule } from './modules/response/response.module';
+import { AnswerModule } from './modules/answer/answer.module';
+import { AttachmentModule } from './modules/attachment/attachment.module';
+import { RecommendationModule } from './modules/recommendation/recommendation.module';
 
 @Module({
   imports: [
@@ -41,7 +41,7 @@ import { ReccommendationModule } from './reccommendation/reccommendation.module'
     ResponseModule,
     AnswerModule,
     AttachmentModule,
-    ReccommendationModule
+    RecommendationModule
   ],
 })
 export class AppModule implements NestModule {

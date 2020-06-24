@@ -270,26 +270,25 @@ export class QustionQueryInput {
     cursor?: QuestionWhereUniqueInput;
 }
 
-export class ReccommendationCreateInput {
+export class RecommendationCreateInput {
     content: string;
     grade: GradeWhereUniqueInput;
 }
 
-export class ReccommendationUpdateDataInput {
+export class RecommendationUpdateDataInput {
     content?: string;
-    grade?: GradeWhereUniqueInput;
 }
 
-export class ReccommendationWhereUniqueInput {
+export class RecommendationWhereUniqueInput {
     id: string;
 }
 
-export class ReccommendationUpdateInput {
-    where?: ReccommendationWhereUniqueInput;
-    update?: ReccommendationUpdateDataInput;
+export class RecommendationUpdateInput {
+    where?: RecommendationWhereUniqueInput;
+    update?: RecommendationUpdateDataInput;
 }
 
-export class ReccommendationOrderBy {
+export class RecommendationOrderBy {
     id?: OrderByInput;
     content?: OrderByInput;
     grade?: OrderByInput;
@@ -297,18 +296,18 @@ export class ReccommendationOrderBy {
     updatedAt?: OrderByInput;
 }
 
-export class ReccommendationWhereQuery {
+export class RecommendationWhereQuery {
     id?: string;
     content?: string;
     grade: GradeWhereUniqueInput;
 }
 
-export class ReccommendationQueryInput {
+export class RecommendationQueryInput {
     take?: number;
     skip?: number;
-    where?: ReccommendationWhereQuery;
-    orderBy?: ReccommendationOrderBy;
-    cursor?: ReccommendationWhereUniqueInput;
+    where?: RecommendationWhereQuery;
+    orderBy?: RecommendationOrderBy;
+    cursor?: RecommendationWhereUniqueInput;
 }
 
 export class ResponseCreateInput {
@@ -417,11 +416,11 @@ export abstract class IMutation {
 
     abstract deleteQuestion(where?: QuestionWhereUniqueInput): QuestionResult | Promise<QuestionResult>;
 
-    abstract createReccommendation(data: ReccommendationCreateInput): ReccommendationResult | Promise<ReccommendationResult>;
+    abstract createRecommendation(data: RecommendationCreateInput): RecommendationResult | Promise<RecommendationResult>;
 
-    abstract updateReccommendation(data: ReccommendationUpdateInput): ReccommendationResult | Promise<ReccommendationResult>;
+    abstract updateRecommendation(data: RecommendationUpdateInput): RecommendationResult | Promise<RecommendationResult>;
 
-    abstract deleteReccommendation(where: ReccommendationWhereUniqueInput): ReccommendationResult | Promise<ReccommendationResult>;
+    abstract deleteRecommendation(where: RecommendationWhereUniqueInput): RecommendationResult | Promise<RecommendationResult>;
 
     abstract createResponse(data?: ResponseCreateInput): ResponseResult | Promise<ResponseResult>;
 
@@ -496,7 +495,7 @@ export class Grade {
     description?: string;
     form: Form;
     responses?: Response[];
-    recommendations?: Reccommendation[];
+    recommendations?: Recommendation[];
     min: number;
     max: number;
     minInclusive?: boolean;
@@ -544,7 +543,7 @@ export class QuestionListResult {
     questions?: Question[];
 }
 
-export class Reccommendation {
+export class Recommendation {
     id: string;
     content: string;
     attachments?: Attachment[];
@@ -553,16 +552,16 @@ export class Reccommendation {
     updatedAt?: string;
 }
 
-export class ReccommendationResult {
+export class RecommendationResult {
     status: boolean;
     message: string;
-    reccommendation?: Reccommendation;
+    reccommendation?: Recommendation;
 }
 
-export class ReccommendationListResult {
+export class RecommendationListResult {
     status: boolean;
     message: string;
-    reccommendations?: Reccommendation[];
+    reccommendations?: Recommendation[];
 }
 
 export class Response {

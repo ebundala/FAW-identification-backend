@@ -4,7 +4,7 @@ type Grade{
   description:      String
   form:             Form!           
   responses:        [Response!]
-  recommendations:  [Reccommendation!]
+  recommendations:  [Recommendation!]
   min:              Float!
   max:              Float!
   minInclusive:     Boolean         

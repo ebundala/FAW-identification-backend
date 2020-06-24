@@ -1,4 +1,4 @@
-type Reccommendation{
+type Recommendation{
    id: ID!
   content:     String!
   attachments: [Attachment!]
@@ -8,53 +8,52 @@ type Reccommendation{
 }
 
 
-input ReccommendationCreateInput{  
+input RecommendationCreateInput{  
   content:     String!
   grade:       GradeWhereUniqueInput!
 }
-input ReccommendationUpdateDataInput{    
-  content:     String
-  grade:       GradeWhereUniqueInput     
+input RecommendationUpdateDataInput{    
+  content:     String    
 }
-input ReccommendationWhereUniqueInput{
+input RecommendationWhereUniqueInput{
     id: ID!
 }
-input ReccommendationUpdateInput{
-    where:ReccommendationWhereUniqueInput
-    update: ReccommendationUpdateDataInput
+input RecommendationUpdateInput{
+    where:RecommendationWhereUniqueInput
+    update: RecommendationUpdateDataInput
 }
-type ReccommendationResult{
+type RecommendationResult{
     status: Boolean!
     message: String!
-    reccommendation: Reccommendation
+    reccommendation: Recommendation
 }
-type ReccommendationListResult{
+type RecommendationListResult{
     status: Boolean!
     message: String!
-    reccommendations: [Reccommendation!]
+    reccommendations: [Recommendation!]
 }
-input ReccommendationOrderBy{
+input RecommendationOrderBy{
     id: OrderByInput
     content: OrderByInput      
     grade: OrderByInput
     createdAt: OrderByInput
     updatedAt: OrderByInput
 }
-input ReccommendationWhereQuery{
+input RecommendationWhereQuery{
   id: ID
   content:     String
   grade:       GradeWhereUniqueInput!
 
 }
-input ReccommendationQueryInput{
+input RecommendationQueryInput{
  take: Int
   skip: Int
-  where: ReccommendationWhereQuery
-  orderBy: ReccommendationOrderBy
-  cursor: ReccommendationWhereUniqueInput   
+  where: RecommendationWhereQuery
+  orderBy: RecommendationOrderBy
+  cursor: RecommendationWhereUniqueInput   
 }
 extend type Mutation{
-    createReccommendation(data:ReccommendationCreateInput!): ReccommendationResult!
-    updateReccommendation(data:ReccommendationUpdateInput!): ReccommendationResult!
-    deleteReccommendation(where:ReccommendationWhereUniqueInput!):ReccommendationResult!
+    createRecommendation(data:RecommendationCreateInput!): RecommendationResult!
+    updateRecommendation(data:RecommendationUpdateInput!): RecommendationResult!
+    deleteRecommendation(where:RecommendationWhereUniqueInput!):RecommendationResult!
 }
