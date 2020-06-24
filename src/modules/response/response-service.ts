@@ -6,7 +6,7 @@ import { ResponseCreateInput, ResponseResult, ResponseUpdateInput, ResponseWhere
 export class ResponseService {
     constructor(private readonly prisma: PrismaClient){}
     async createResponse(data: ResponseCreateInput,uid: string): Promise<any|ResponseResult>{
-        const response =  await this.prisma.response.create({
+        return this.prisma.response.create({
            data:{
                state: data.state || State.PENDING,
                form:{

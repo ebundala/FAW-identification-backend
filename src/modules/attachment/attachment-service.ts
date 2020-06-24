@@ -6,7 +6,7 @@ import { createWriteStream, ReadStream } from 'fs';
 @Injectable()
 export class AttachmentService {
     constructor(private readonly prisma: PrismaClient){}
-    deleteAttachment(where: AttachmentWhereUniqueInput, uid: String): Promise<AttachmentResult> {
+   async deleteAttachment(where: AttachmentWhereUniqueInput, uid: String): Promise<AttachmentResult> {
         return this.prisma.attachment.delete({
             where: where,
         }).then((attachment) => {
@@ -22,7 +22,7 @@ export class AttachmentService {
             }
         })
     }
-    updateAttachment(data: AttachmentUpdateInput, uid: String): Promise<AttachmentResult> {
+  async  updateAttachment(data: AttachmentUpdateInput, uid: String): Promise<AttachmentResult> {
         return this.prisma.attachment.update({
             where: data.where,
             data: data.update,

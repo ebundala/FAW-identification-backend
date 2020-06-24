@@ -25,17 +25,17 @@ export class GradeService {
                 recommendations:true,
                 form:true
             }
-        }) .then((answer) => {
+        }) .then((grade) => {
             return {
                 status: true,
-                message: 'Grade updated successfully',
-                answer
+                message: 'Grade created successfully',
+                grade
             }
         })
         .catch(({ message }) => {
             return {
                 status: false,
-                message: message || 'Failed to create answer'
+                message: message || 'Failed to create grade'
             }
         });
     }
