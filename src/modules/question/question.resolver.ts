@@ -1,5 +1,5 @@
 import { Resolver, Mutation, Args, Context, ResolveField, Parent } from '@nestjs/graphql';
-import { Question, QuestionResult, QuestionCreateInput, QuestionUpdateInput, QuestionWhereUniqueInput, Attachment, AttachmentQueryInput, AnswerQueryInput, Answer } from 'src/models/graphql';
+import { Question, QuestionResult, QuestionCreateInput, QuestionUpdateInput, QuestionWhereUniqueInput, Attachment, AttachmentQueryInput, AnswerQueryInput, Answer, Form } from 'src/models/graphql';
 import { PrismaClient } from '@prisma/client';
 import { QuestionService } from './question-service';
 
@@ -34,6 +34,11 @@ export class QuestionResolver {
         @Context() ctx): Promise<any[]> {
         if (ctx.auth && ctx.auth.uid)
             return this.questionService.attachments(parent, where, ctx, ctx.auth.uid)
+    }
+    @ResolveField((returns)=>Form)
+    async form(@Parent() parent: Question, @Context() ctx){
+        if(ctx.auth&&ctx.auth.uid)
+        return this.questionService.form(parent,ctx,ctx.auth.uid)
     }
 
 }

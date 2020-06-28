@@ -17,7 +17,8 @@ import {
     ResponseQueryInput,
     Attachment,
     Response,
-    AttachmentQueryInput
+    AttachmentQueryInput,
+    Form
 } from 'src/models/graphql';
 import { GradeService } from './grade-service';
 
@@ -56,5 +57,10 @@ export class GradeResolver {
         @Context() ctx): Promise<any[]> {
         if (ctx.auth && ctx.auth.uid)
             return this.gradeService.attachments(parent, where, ctx, ctx.auth.uid)
+    }
+    @ResolveField((returns)=>Form)
+    async form(@Parent() parent: Grade, @Context() ctx){
+        if(ctx.auth&&ctx.auth.uid)
+        return this.gradeService.form(parent,ctx,ctx.auth.uid)
     }
 }

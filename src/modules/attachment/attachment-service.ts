@@ -56,11 +56,6 @@ export class AttachmentService {
                         id:data.form.id
                     }
                 }
-            },
-            include: {
-                attachments: true,
-                recommendations:true,
-                form:true
             }
         });
 

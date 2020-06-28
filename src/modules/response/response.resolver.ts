@@ -1,6 +1,6 @@
 import { Resolver, Mutation, Args, Context, ResolveField, Parent } from '@nestjs/graphql';
 import { ResponseService } from './response-service';
-import { ResponseResult,Response, ResponseCreateInput, ResponseUpdateInput, ResponseWhereUniqueInput, Answer, AnswerQueryInput, Attachment, AttachmentQueryInput } from 'src/models/graphql';
+import { ResponseResult,Response, ResponseCreateInput, ResponseUpdateInput, ResponseWhereUniqueInput, Answer, AnswerQueryInput, Attachment, AttachmentQueryInput, Form, User, Grade } from 'src/models/graphql';
 
 @Resolver((of)=>Response)
 export class ResponseResolver {
@@ -29,5 +29,20 @@ export class ResponseResolver {
     async attachments(@Parent() parent, @Args("where", { type: () => AttachmentQueryInput }) where: AttachmentQueryInput, @Context() ctx): Promise<Attachment[]> {
         if (ctx.auth && ctx.auth.uid)
             return this.responseService.attachments(parent, where, ctx, ctx.auth.uid)
+    }
+    @ResolveField((returns)=>Grade)
+    async grade(@Parent() parent: Response, @Context() ctx){
+        if(ctx.auth&&ctx.auth.uid)
+        return this.responseService.grade(parent,ctx,ctx.auth.uid)
+    }
+    @ResolveField((returns)=>User)
+    async author(@Parent() parent: Response, @Context() ctx){
+        if(ctx.auth&&ctx.auth.uid)
+        return this.responseService.author(parent,ctx,ctx.auth.uid)
+    }
+    @ResolveField((returns)=>Form)
+    async form(@Parent() parent: Response, @Context() ctx){
+        if(ctx.auth&&ctx.auth.uid)
+        return this.responseService.form(parent,ctx,ctx.auth.uid)
     }
 }

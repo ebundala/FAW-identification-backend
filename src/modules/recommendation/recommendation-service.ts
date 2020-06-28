@@ -5,6 +5,7 @@ import { QueryHelper } from '../query-helper/query-helper';
 
 @Injectable()
 export class RecommendationService {
+    
     constructor(private readonly prisma: PrismaClient,
         private readonly helper: QueryHelper) { }
     async createRecommendation(data: RecommendationCreateInput, uid: string): Promise<any | RecommendationResult> {
@@ -12,9 +13,6 @@ export class RecommendationService {
             data: {
                 content: data.content,
                 grade: { connect: { id: data.grade.id } },
-            },
-            include: {
-                grade: true,
             }
         }).then((recommendation) => {
             return {
@@ -34,9 +32,6 @@ export class RecommendationService {
         return this.prisma.recommendation.update({
             where: data.where,
             data: data.update,
-            include: {
-                grade: true,
-            }
         })
             .then((recommendation) => {
                 return {
@@ -55,10 +50,7 @@ export class RecommendationService {
     }
     async deleteRecommendation(where: RecommendationWhereUniqueInput, uid: String): Promise<any> {
         return this.prisma.recommendation.delete({
-            where: where,
-            include: {
-                grade: true,
-            },
+            where: where
         }).then((recommendation) => {
             return {
                 status: true,
@@ -77,4 +69,7 @@ export class RecommendationService {
         return this.prisma.recommendation.findOne({where:{id:parent.id}})
         .attachments(args);
     }
+   async grade(parent: Recommendation, ctx: any, uid: any) {
+        return this.prisma.recommendation.findOne({where:{id:parent.id}}).grade();
+     }
 }

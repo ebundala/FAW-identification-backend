@@ -18,7 +18,8 @@ import {
    Response, 
    ResponseQueryInput, 
    Form, 
-   FormQueryInput } from '../../models/graphql';
+   FormQueryInput, 
+   Attachment} from '../../models/graphql';
 import { UserService } from './user-service';
 
 @Resolver((of) => User)
@@ -56,4 +57,9 @@ export class UsersResolver {
     if (ctx.auth && ctx.auth.uid)
       return this.userService.forms(parent, where, ctx, ctx.auth.uid)
   }
+  @ResolveField((returns)=>Attachment)
+    async avator(@Parent() parent: User, @Context() ctx){
+        if(ctx.auth&&ctx.auth.uid)
+        return this.userService.avator(parent,ctx,ctx.auth.uid)
+    }
 }

@@ -26,6 +26,7 @@ import { QueryHelper } from 'src/modules/query-helper/query-helper';
 
 @Injectable()
 export class FormService {
+   
     constructor(private readonly prisma: PrismaClient,
         private readonly helper: QueryHelper) { }
      createForm(data: FormCreateInput, uid: string): Promise<any | FormResult> {
@@ -38,9 +39,7 @@ export class FormService {
                     connect: { id: uid }
                 }
             },
-            include: {
-                author: true,
-            }
+            
         }).then((form) => {
             return {
                 status: true,
@@ -59,9 +58,7 @@ export class FormService {
         return this.prisma.form.update({
             where: data.where,
             data: data.update,
-            include: {
-                author: true,
-            }
+            
 
         })
             .then((form) => {
@@ -83,9 +80,6 @@ export class FormService {
      deleteForm(where: FormWhereUniqueInput, uid: String): Promise<any> {
         return this.prisma.form.delete({
             where: where,
-            include: {
-                author: true,
-            },
         }).then((form) => {
             return {
                 status: true,
@@ -129,7 +123,10 @@ export class FormService {
             .findOne({ where: { id: parent.id } })
             .attachments(args);
     }
-
+    author(parent: Form, ctx: any, uid: string) {
+        return this.prisma.form.findOne({where:{id:parent.id}})
+        .author();
+    }
 
     getForms(where?: FormQueryInput): Promise<any | FormListResult> {
         const args: FindManyFormArgs = this.helper.formQueryBuilder(where);

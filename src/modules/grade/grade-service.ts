@@ -15,6 +15,7 @@ import { QueryHelper } from '../query-helper/query-helper';
 
 @Injectable()
 export class GradeService {
+   
     constructor(
         private readonly prisma: PrismaClient,
         private readonly helper: QueryHelper){}
@@ -32,10 +33,8 @@ export class GradeService {
                         id:data.form.id
                     }
                 }
-            },
-            include: {
-                form:true
             }
+            
         }) .then((grade) => {
             return {
                 status: true,
@@ -54,9 +53,7 @@ export class GradeService {
         return this.prisma.grade.update({
             where: data.where,
             data: data.update,
-            include: {
-                form:true
-            }
+           
         })
             .then((grade) => {
                 return {
@@ -77,9 +74,7 @@ export class GradeService {
     async deleteGrade(where: GradeWhereUniqueInput, uid: String): Promise<any> {
         return this.prisma.grade.delete({
             where: where,
-            include: {
-                form: true,
-            },
+           
         }).then((grade) => {
             return {
                 status: true,
@@ -109,5 +104,8 @@ export class GradeService {
         return this.prisma.grade
             .findOne({ where: { id: parent.id } })
             .responses(args);
+    }
+    async  form(parent: Grade, ctx: any, uid: string) {
+        return this.prisma.grade.findOne({where:{id:parent.id}}).form();
     }
 }

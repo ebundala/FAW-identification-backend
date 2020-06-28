@@ -1,8 +1,8 @@
 import { Resolver, Mutation, Args, Context, ResolveField, Parent } from '@nestjs/graphql';
 import { RecommendationService } from './recommendation-service';
-import { RecommendationResult, RecommendationCreateInput, RecommendationUpdateInput, RecommendationWhereUniqueInput, Attachment, AttachmentQueryInput, Recommendation } from 'src/models/graphql';
+import { RecommendationResult, RecommendationCreateInput, RecommendationUpdateInput, RecommendationWhereUniqueInput, Attachment, AttachmentQueryInput, Recommendation, Grade } from 'src/models/graphql';
 
-@Resolver('Reccommendation')
+@Resolver((of)=>Recommendation)
 export class RecommendationResolver {
     constructor(private readonly recommendationService: RecommendationService){}
     @Mutation((returns)=>RecommendationResult)
@@ -20,11 +20,16 @@ export class RecommendationResolver {
          if(ctx.auth&&ctx.auth.uid)
         return this.recommendationService.deleteRecommendation(where,ctx.auth.uid);
     }
-
+    @ResolveField((returns)=>[Attachment])
     async attachments(@Parent() parent: Recommendation,
         @Args("where", { type: () => AttachmentQueryInput }) where: AttachmentQueryInput,
         @Context() ctx): Promise<any[]> {
         if (ctx.auth && ctx.auth.uid)
             return this.recommendationService.attachments(parent, where, ctx, ctx.auth.uid)
+    }
+    @ResolveField((returns)=>Grade)
+    async grade(@Parent() parent: Recommendation, @Context() ctx){
+        if(ctx.auth&&ctx.auth.uid)
+        return this.recommendationService.grade(parent,ctx,ctx.auth.uid)
     }
 }

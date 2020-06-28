@@ -5,6 +5,7 @@ import { QueryHelper } from '../query-helper/query-helper';
 
 @Injectable()
 export class QuestionService {
+    
     constructor(private readonly prisma: PrismaClient,
         private readonly helper: QueryHelper) { }
 
@@ -20,11 +21,6 @@ export class QuestionService {
                 form: {
                     connect: { id: data.form.id }
                 },
-            },
-            include: {
-                form: true,
-                attachments: true
-
             },
         }).then((question) => {
             return {
@@ -43,12 +39,7 @@ export class QuestionService {
     async updateQuestion(data: QuestionUpdateInput, uid: String): Promise<any | QuestionResult> {
         return this.prisma.question.update({
             where: data.where,
-            data: data.update,
-            include: {
-                form: true,
-                attachments: true
-
-            },
+            data: data.update
         }).then((question) => {
             return {
                 status: true,
@@ -88,5 +79,8 @@ export class QuestionService {
         const args = this.helper.attachmentQueryBuilder(where);
      return this.prisma.question.findOne({where:{id:parent.id}})
      .attachments(args);
+    }
+   async form(parent: Question, ctx: any, uid: any) {
+        return this.prisma.question.findOne({where:{id:parent.id}}).form()
     }
 }

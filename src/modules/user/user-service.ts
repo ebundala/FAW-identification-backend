@@ -7,6 +7,7 @@ import { QueryHelper } from 'src/modules/query-helper/query-helper';
 
 @Injectable()
 export class UserService {
+  
 
   constructor(
     private readonly firebaseApp: FirebaseService,
@@ -100,7 +101,7 @@ export class UserService {
     return remove1 && remove2;
   }
 
-  signInWithEmail({ email, password }) {
+  async signInWithEmail({ email, password }) {
     const returnSecureToken = true;
     const buffer = Buffer.from(
       JSON.stringify({ email, password, returnSecureToken }),
@@ -123,7 +124,7 @@ export class UserService {
       });
   }
 
-  _createUserWithEmail(email, password, displayName) {
+  async _createUserWithEmail(email, password, displayName) {
     return this.firebaseApp.admin.auth().createUser({
       email,
       emailVerified: false,
@@ -134,7 +135,7 @@ export class UserService {
       disabled: false,
     });
   }
-  _setUserClaims(user) {
+  async _setUserClaims(user) {
     return this.firebaseApp.admin
       .auth()
       .setCustomUserClaims(user.id, { role: Role.USER })
@@ -142,7 +143,7 @@ export class UserService {
       .catch(() => false);
   }
 
-  createSessionToken(idToken, expiresIn = 60 * 60 * 5 * 24 * 1000) {
+ async createSessionToken(idToken, expiresIn = 60 * 60 * 5 * 24 * 1000) {
 
     return this.firebaseApp.admin
       .auth()
@@ -180,7 +181,7 @@ export class UserService {
       });
   }
 
-  destroySessionToken(sessionToken) {
+ async destroySessionToken(sessionToken) {
     return this.firebaseApp.admin
       .auth()
       .verifySessionCookie(sessionToken)
@@ -197,20 +198,22 @@ export class UserService {
         }
       });
   }
-  responses(parent: User, where: ResponseQueryInput, ctx: any, uid: String): Promise<any[]> {
+ async responses(parent: User, where: ResponseQueryInput, ctx: any, uid: String): Promise<any[]> {
     const args: FindManyResponseArgs = this.helper.responseQueryBuilder(where);
     return this.prisma.user
       .findOne({ where: { id: parent.id } })
       .responses(args);
   }
   
-  forms(parent: User, where: FormQueryInput, ctx: any, uid: String): Promise<any[]> {
+  async forms(parent: User, where: FormQueryInput, ctx: any, uid: String): Promise<any[]> {
     const args: FindManyFormArgs = this.helper.formQueryBuilder(where)
     return this.prisma.user
       .findOne({ where: { id: parent.id } })
       .forms(args);
   }
-
+  async avator(parent: User, ctx: any, uid: any) {
+    return this.prisma.user.findOne({where:{id:parent.id}}).avator();
+  }
   /*
   linkIdProvider({ idToken, username }) {
     log(idToken);

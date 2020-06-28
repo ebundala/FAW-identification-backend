@@ -29,10 +29,7 @@ export class AnswerService {
                     }
                 }
             },
-            include: {
-                response: true,
-                question: true
-            }
+            
         }) .then((answer) => {
             return {
                 status: true,
@@ -51,10 +48,7 @@ export class AnswerService {
         return this.prisma.answer.update({
             where: data.where,
             data: data.update,
-            include: {
-                response: true,
-                question: true
-            }
+            
         })
             .then((answer) => {
                 return {
@@ -75,10 +69,7 @@ export class AnswerService {
     async deleteAnswer(where: AnswerWhereUniqueInput, uid: String): Promise<any> {
         return this.prisma.answer.delete({
             where: where,
-            include: {
-                response: true,
-                question: true
-            },
+           
         }).then((answer) => {
             return {
                 status: true,
@@ -97,5 +88,13 @@ export class AnswerService {
        const args: FindManyAttachmentArgs = this.helper.attachmentQueryBuilder(where);
        return this.prisma.answer.findOne({where:{id:parent.id}})
        .attachments(args)
+    }
+    async response(parent: Answer,ctx:any,uid:String){
+        return this.prisma.answer.findOne({where:{id:parent.id}})
+        .response()
+    }
+    async question(parent: Answer,ctx:any,uid:String){
+        return this.prisma.answer.findOne({where:{id:parent.id}})
+        .question()
     }
 }

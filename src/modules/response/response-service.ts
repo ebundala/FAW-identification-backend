@@ -7,6 +7,7 @@ import { QueryHelper } from '../query-helper/query-helper';
 
 @Injectable()
 export class ResponseService {
+    
     constructor(private readonly prisma: PrismaClient,
         private readonly helper: QueryHelper){}
     async createResponse(data: ResponseCreateInput,uid: string): Promise<any|ResponseResult>{
@@ -21,11 +22,6 @@ export class ResponseService {
                author:{
                    connect:{id:uid}
                }
-           },
-           include:{
-            author: true,
-            grade: true,
-            form: true
            }
        }).then((response)=>{
         return{
@@ -45,12 +41,7 @@ export class ResponseService {
     async updateResponse(data:ResponseUpdateInput,uid:String):Promise<any>{
       return  this.prisma.response.update({
             where:data.where,
-            data:data.update,
-            include:{
-                author: true,
-                grade: true,
-                form: true
-               }
+            data:data.update
         })
         .then((response)=>{
             return{
@@ -71,11 +62,6 @@ export class ResponseService {
     async deleteResponse(where: ResponseWhereUniqueInput,uid:String):Promise<any>{
         return this.prisma.response.delete({
             where:where,
-            include:{
-                author: true,
-                grade: true,
-                form: true
-            },
         }).then((response)=>{
             return{
                 status: true,
@@ -101,5 +87,13 @@ export class ResponseService {
             .findOne({ where: { id: parent.id } })
             .attachments(args);
     }
+   async form(parent: Response, ctx: any, uid: any) {
+        return this.prisma.response.findOne({where:{id:parent.id}}).form();
+    }
+   async author(parent: Response, ctx: any, uid: any) {
+        return this.prisma.response.findOne({where:{id:parent.id}}).author();    }
+   async grade(parent: Response, ctx: any, uid: any) {
+        return this.prisma.response.findOne({where:{id:parent.id}}).grade();
+        }
     
 }

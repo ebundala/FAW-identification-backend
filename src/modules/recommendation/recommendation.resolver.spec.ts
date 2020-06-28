@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { RecommendationResolver } from './recommendation.resolver';
 
-describe('ReccommendationResolver', () => {
+describe('RecommendationResolver', () => {
   let resolver: RecommendationResolver;
 
   beforeEach(async () => {

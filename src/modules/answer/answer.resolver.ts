@@ -1,6 +1,9 @@
 import { Resolver, Mutation, Args, Context, ResolveField, Parent } from '@nestjs/graphql';
 import { AnswerService } from './answer-service';
-import { AnswerWhereUniqueInput, AnswerResult, AnswerUpdateInput, AnswerCreateInput, Answer, Attachment, AttachmentQueryInput } from 'src/models/graphql';
+import { AnswerWhereUniqueInput,
+     AnswerResult, AnswerUpdateInput,
+      AnswerCreateInput, Answer, Attachment,
+       AttachmentQueryInput, Question, Response } from 'src/models/graphql';
 
 @Resolver((of)=>Answer)
 export class AnswerResolver {
@@ -24,5 +27,15 @@ export class AnswerResolver {
     async attachments(@Args('where',{type:()=>AttachmentQueryInput}) where: AttachmentQueryInput, @Parent() parent, @Context() ctx){
         if(ctx.auth&&ctx.auth.uid)
         return this.answerService.attachments(parent,where,ctx.auth.uid)
+    }
+    @ResolveField((returns)=>Question)
+    async question(@Parent() parent, @Context() ctx){
+        if(ctx.auth&&ctx.auth.uid)
+        return this.answerService.question(parent,ctx,ctx.auth.uid)
+    }
+    @ResolveField((returns)=>Response)
+    async response(@Parent() parent, @Context() ctx){
+        if(ctx.auth&&ctx.auth.uid)
+        return this.answerService.response(parent,ctx,ctx.auth.uid)
     }
 }
