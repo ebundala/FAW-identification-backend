@@ -3,13 +3,13 @@ type Grade{
   name:           String!
   description:      String
   form:             Form!           
-  responses:        [Response!]
+  responses(where: ResponseQueryInput):        [Response!]
   recommendations(where: RecommendationQueryInput):  [Recommendation!]
   min:              Float!
   max:              Float!
   minInclusive:     Boolean         
   maxInclusive:     Boolean         
-  attachments:      [Attachment!]
+  attachments(where: AttachmentQueryInput):      [Attachment!]
   createdAt:        String!
   updatedAt:        String!
 }

@@ -99,6 +99,8 @@ export class AttachmentOrderBy {
     filename?: OrderByInput;
     mimetype?: OrderByInput;
     encoding?: OrderByInput;
+    createdAt?: OrderByInput;
+    updatedAt?: OrderByInput;
 }
 
 export class AttachmentWhereQuery {
@@ -139,7 +141,9 @@ export class FormUpdateInput {
 }
 
 export class FormOrderBy {
+    id?: OrderByInput;
     title?: OrderByInput;
+    state?: OrderByInput;
     createdAt?: OrderByInput;
     updatedAt?: OrderByInput;
 }
@@ -262,7 +266,7 @@ export class QuestionWhereQuery {
     questionType?: QuestionType;
 }
 
-export class QustionQueryInput {
+export class QuestionQueryInput {
     take?: number;
     skip?: number;
     where?: QuestionWhereQuery;
@@ -442,6 +446,8 @@ export class Attachment {
     filename: string;
     mimetype: string;
     encoding: string;
+    createdAt: string;
+    updatedAt: string;
 }
 
 export class AttachmentResult {

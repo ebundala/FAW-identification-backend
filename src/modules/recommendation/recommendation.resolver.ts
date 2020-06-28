@@ -1,6 +1,6 @@
-import { Resolver, Mutation, Args, Context } from '@nestjs/graphql';
+import { Resolver, Mutation, Args, Context, ResolveField, Parent } from '@nestjs/graphql';
 import { RecommendationService } from './recommendation-service';
-import { RecommendationResult, RecommendationCreateInput, RecommendationUpdateInput, RecommendationWhereUniqueInput } from 'src/models/graphql';
+import { RecommendationResult, RecommendationCreateInput, RecommendationUpdateInput, RecommendationWhereUniqueInput, Attachment, AttachmentQueryInput, Recommendation } from 'src/models/graphql';
 
 @Resolver('Reccommendation')
 export class RecommendationResolver {
@@ -19,5 +19,12 @@ export class RecommendationResolver {
     async deleteRecommendation(@Args('where',{type:()=>RecommendationWhereUniqueInput}) where:RecommendationWhereUniqueInput,@Context() ctx): Promise<RecommendationResult>{
          if(ctx.auth&&ctx.auth.uid)
         return this.recommendationService.deleteRecommendation(where,ctx.auth.uid);
+    }
+
+    async attachments(@Parent() parent: Recommendation,
+        @Args("where", { type: () => AttachmentQueryInput }) where: AttachmentQueryInput,
+        @Context() ctx): Promise<any[]> {
+        if (ctx.auth && ctx.auth.uid)
+            return this.recommendationService.attachments(parent, where, ctx, ctx.auth.uid)
     }
 }

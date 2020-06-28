@@ -2,7 +2,7 @@ type Answer{
   id: ID!
   response:     Response!
   question:     Question!
-  attachments:  [Attachment!]
+  attachments(where: AttachmentQueryInput):  [Attachment!]
   booleanValue: Boolean
   textValue:    String
   createdAt:    String!

@@ -7,8 +7,8 @@ type User {
   disabled:      Boolean!   
   avator:        Attachment
   role:          Role!     
-  forms:         [Form!]!
-  responses:     [Response!]!
+  forms(where:FormQueryInput):         [Form!]!
+  responses(where:ResponseQueryInput):     [Response!]!
   createdAt:     String!  
   updatedAt:     String!   
  

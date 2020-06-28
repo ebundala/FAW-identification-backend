@@ -1,18 +1,34 @@
 import { Injectable } from '@nestjs/common';
 import {
-    PrismaClient, FormWhereInput, FindManyFormArgs,
-    FormOrderByInput, FindManyResponseArgs, ResponseWhereInput,
+    PrismaClient, 
+    FindManyFormArgs,
+     FindManyResponseArgs,  
+     FindManyQuestionArgs, 
+     FindManyGradeArgs,
+      FindManyAttachmentArgs
+      
 } from '@prisma/client';
 import {
-    Form, State, FormUpdateInput, FormCreateInput,
-    FormResult, Response, FormWhereUniqueInput, FormQueryInput,
-    OrderByInput, FormListResult, ResponseQueryInput
+    Form, 
+    State, 
+    FormUpdateInput, 
+    FormCreateInput,
+    FormResult, 
+    FormWhereUniqueInput, 
+    FormQueryInput,
+     FormListResult, 
+     ResponseQueryInput, 
+     QuestionQueryInput, 
+     GradeQueryInput, 
+     AttachmentQueryInput
 } from 'src/models/graphql';
+import { QueryHelper } from 'src/modules/query-helper/query-helper';
 
 @Injectable()
 export class FormService {
-    constructor(private readonly prisma: PrismaClient) { }
-    async createForm(data: FormCreateInput, uid: string): Promise<any | FormResult> {
+    constructor(private readonly prisma: PrismaClient,
+        private readonly helper: QueryHelper) { }
+     createForm(data: FormCreateInput, uid: string): Promise<any | FormResult> {
         return this.prisma.form.create({
             data: {
                 title: data.title,
@@ -23,10 +39,7 @@ export class FormService {
                 }
             },
             include: {
-                attachments: true,
                 author: true,
-                questions: true,
-                grades: true,
             }
         }).then((form) => {
             return {
@@ -42,15 +55,12 @@ export class FormService {
                 }
             });
     }
-    async updateForm(data: FormUpdateInput): Promise<any> {
+     updateForm(data: FormUpdateInput): Promise<any> {
         return this.prisma.form.update({
             where: data.where,
             data: data.update,
             include: {
-                attachments: true,
                 author: true,
-                questions: true,
-                grades: true,
             }
 
         })
@@ -70,14 +80,11 @@ export class FormService {
 
     }
 
-    async deleteForm(where: FormWhereUniqueInput, uid: String): Promise<any> {
+     deleteForm(where: FormWhereUniqueInput, uid: String): Promise<any> {
         return this.prisma.form.delete({
             where: where,
             include: {
-                attachments: true,
                 author: true,
-                questions: true,
-                grades: true,
             },
         }).then((form) => {
             return {
@@ -92,118 +99,40 @@ export class FormService {
             }
         })
     }
-    async responses(parent: Form, where: ResponseQueryInput, ctx: any, uid: String): Promise<any[]> {
-        const args: FindManyResponseArgs = {}
-        if (where) {
-            if (where.take) {
-                args.take = where.take
-            }
-            if (where.skip) {
-                args.skip = where.skip
-            }
-            if (where.where) {
-                const whereInput: ResponseWhereInput = {}
-                if (where.where.id) {
-                    whereInput.id = where.where.id
-                }
-                if (where.where.authorId) {
-                    whereInput.authorId = where.where.authorId
-                }
-                if (where.where.state) {
-                    whereInput.state = where.where.state
-                }
-                args.where = whereInput
-            }
-            if (where.cursor) {
-                args.cursor = where.cursor
-            }
-            if (where.orderBy) {
-                const orderBy: FormOrderByInput = {}
-                if (where.orderBy.createdAt == OrderByInput.asc) {
-                    orderBy.createdAt = "asc"
-                }
-                if (where.orderBy.createdAt == OrderByInput.desc) {
-                    orderBy.createdAt = "desc"
-                }
-                if (where.orderBy.updatedAt == OrderByInput.asc) {
-                    orderBy.updatedAt = "asc"
-                }
-                if (where.orderBy.updatedAt == OrderByInput.desc) {
-                    orderBy.updatedAt = "desc"
-                }
-                if (where.orderBy.state == OrderByInput.asc) {
-                    orderBy.state = "asc"
-                }
-                if (where.orderBy.state == OrderByInput.desc) {
-                    orderBy.state = "desc"
-                }
-                args.orderBy = orderBy;
-            }
-
-        }
-        args.include={
-                author: true,
-                form: true,
-            }
+     responses(parent: Form, where: ResponseQueryInput, ctx: any, uid: String): Promise<any[]> {
+        const args: FindManyResponseArgs = this.helper.responseQueryBuilder(where);
         return this.prisma.form
             .findOne({ where: { id: parent.id } })
             .responses(args);
     }
-    async getForms(where?: FormQueryInput): Promise<any | FormListResult> {
-        const args: FindManyFormArgs = {}
-        if (where) {
-            if (where.take) {
-                args.take = where.take
-            }
-            if (where.skip) {
-                args.skip = where.skip
-            }
-            if (where.where) {
-                const whereInput: FormWhereInput = {}
-                if (where.where.id) {
-                    whereInput.id = where.where.id
-                }
-                if (where.where.authorId) {
-                    whereInput.authorId = where.where.authorId
-                }
-                if (where.where.state) {
-                    whereInput.state = where.where.state
-                }
-                args.where = whereInput
-            }
-            if (where.cursor) {
-                args.cursor = where.cursor
-            }
-            if (where.orderBy) {
-                const orderBy: FormOrderByInput = {}
-                if (where.orderBy.createdAt == OrderByInput.asc) {
-                    orderBy.createdAt = "asc"
-                }
-                if (where.orderBy.createdAt == OrderByInput.desc) {
-                    orderBy.createdAt = "desc"
-                }
-                if (where.orderBy.updatedAt == OrderByInput.asc) {
-                    orderBy.updatedAt = "asc"
-                }
-                if (where.orderBy.updatedAt == OrderByInput.desc) {
-                    orderBy.updatedAt = "desc"
-                }
-                if (where.orderBy.title == OrderByInput.asc) {
-                    orderBy.title = "asc"
-                }
-                if (where.orderBy.title == OrderByInput.desc) {
-                    orderBy.title = "desc"
-                }
-                args.orderBy = orderBy;
-            }
 
-        }
-        args.include = {
-            attachments: true,
-            author: true,
-            questions: true,
-            grades: true,
-        }
+
+    questions(parent: Form, where: QuestionQueryInput, ctx: any, uid: String): Promise<any[]> {
+        const args: FindManyQuestionArgs = this.helper.questionQueryBuilder(where);
+        return this.prisma.form
+            .findOne({ where: { id: parent.id } })
+            .questions(args);
+    }
+
+
+    grades(parent: Form, where: GradeQueryInput, ctx: any, uid: String): Promise<any[]> {
+        const args: FindManyGradeArgs = this.helper.gradeQueryBuilder(where);
+        return this.prisma.form
+            .findOne({ where: { id: parent.id } })
+            .grades(args);
+    }
+
+
+    attachments(parent: Form, where: AttachmentQueryInput, ctx: any, uid: String): Promise<any[]> {
+        const args: FindManyAttachmentArgs = this.helper.attachmentQueryBuilder(where);
+        return this.prisma.form
+            .findOne({ where: { id: parent.id } })
+            .attachments(args);
+    }
+
+
+    getForms(where?: FormQueryInput): Promise<any | FormListResult> {
+        const args: FindManyFormArgs = this.helper.formQueryBuilder(where);
         return this.prisma.form.findMany(args).then((forms) => {
             return {
                 status: true,
@@ -217,4 +146,6 @@ export class FormService {
             }
         });
     }
+
+
 }

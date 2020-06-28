@@ -4,7 +4,7 @@ type Response{
   form:        Form!     
   answers(where:AnswerQueryInput):     [Answer!]
   grade:       Grade  
-  attachments: [Attachment!]
+  attachments(where: AttachmentQueryInput): [Attachment!]
   state:       State!   
   createdAt:   String!
   updatedAt:   String! 

@@ -1,16 +1,18 @@
 import { Injectable, HttpService } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient, FindManyResponseArgs, ResponseWhereInput, ResponseOrderByInput, FindManyFormArgs, FormWhereInput, FormOrderByInput } from '@prisma/client'
 import { isEmail, isAlphanumeric, isLength } from 'validator';
-import { AuthInput, AuthResult, Role, User, SignOutResult } from 'src/models/graphql';
+import { AuthInput, AuthResult, Role, User, SignOutResult, ResponseQueryInput, OrderByInput, FormQueryInput } from 'src/models/graphql';
 import { FirebaseService } from '../firebase-admin/firebase.service';
+import { QueryHelper } from 'src/modules/query-helper/query-helper';
 
 @Injectable()
 export class UserService {
-  
+
   constructor(
     private readonly firebaseApp: FirebaseService,
     private readonly prisma: PrismaClient,
-    private readonly httpService: HttpService
+    private readonly httpService: HttpService,
+    private readonly helper: QueryHelper
   ) {
     this.httpService.axiosRef.defaults.baseURL = this.firebaseApp.signInWithProviderHost;
     this.httpService.axiosRef.defaults.headers.post['Content-Type'] = 'application/json';
@@ -18,7 +20,7 @@ export class UserService {
   async signup(credentials: AuthInput): Promise<AuthResult> {
     return this.signupWithEmail(credentials)
   }
-  
+
   signOut(token: String): Promise<SignOutResult> {
     return this.destroySessionToken(token);
   }
@@ -47,8 +49,8 @@ export class UserService {
         return this._createUserWithEmail(email, password, displayName)
           .then((user) =>
             users.create({
-              data: {   
-                id:user.uid,             
+              data: {
+                id: user.uid,
                 displayName: user.displayName,
                 disabled: user.disabled,
                 email: user.email,
@@ -65,7 +67,7 @@ export class UserService {
             if (setClaims) {
               const session = await this.signInWithEmail({ email, password })
                 .catch((e) => e);
-                
+
               if (session instanceof Error) {
                 await this.cleanUpOnSignUpFailure(user);
                 throw session;
@@ -85,7 +87,7 @@ export class UserService {
   }
 
   private async cleanUpOnSignUpFailure(user) {
-   
+
     const remove1 = await this.firebaseApp.admin
       .auth()
       .deleteUser(user.id)
@@ -141,7 +143,7 @@ export class UserService {
   }
 
   createSessionToken(idToken, expiresIn = 60 * 60 * 5 * 24 * 1000) {
-    
+
     return this.firebaseApp.admin
       .auth()
       .verifyIdToken(idToken, true)
@@ -159,20 +161,21 @@ export class UserService {
                   return {
                     user,
                     token,
-                    error:false,
+                    error: false,
                     message: 'Session created successfully',
                   };
                 });
-            }).catch(({message})=>{
-              return  {
-                error:true,
-                message:  message || 'Unknown Error',
-              }})
-            };
-        
+            }).catch(({ message }) => {
+              return {
+                error: true,
+                message: message || 'Unknown Error',
+              }
+            })
+        };
+
         return {
-          error:true,
-          message:  'A user that was not recently signed in is trying to set a session',
+          error: true,
+          message: 'A user that was not recently signed in is trying to set a session',
         }
       });
   }
@@ -187,12 +190,25 @@ export class UserService {
       .then(() => ({
         status: true,
         message: 'Session destroyed successfully',
-      })).catch(({message})=>{
-        return{
+      })).catch(({ message }) => {
+        return {
           status: false,
           message: 'Operation Failed'
         }
       });
+  }
+  responses(parent: User, where: ResponseQueryInput, ctx: any, uid: String): Promise<any[]> {
+    const args: FindManyResponseArgs = this.helper.responseQueryBuilder(where);
+    return this.prisma.user
+      .findOne({ where: { id: parent.id } })
+      .responses(args);
+  }
+  
+  forms(parent: User, where: FormQueryInput, ctx: any, uid: String): Promise<any[]> {
+    const args: FindManyFormArgs = this.helper.formQueryBuilder(where)
+    return this.prisma.user
+      .findOne({ where: { id: parent.id } })
+      .forms(args);
   }
 
   /*

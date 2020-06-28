@@ -1,10 +1,23 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaClient, FindManyRecommendationArgs, RecommendationWhereInput, RecommendationOrderByInput} from '@prisma/client';
-import { GradeResult, GradeCreateInput, GradeUpdateInput, GradeWhereUniqueInput, Grade, RecommendationQueryInput, OrderByInput } from 'src/models/graphql';
+import { PrismaClient,
+     FindManyRecommendationArgs,     
+     FindManyAttachmentArgs,
+      FindManyResponseArgs} from '@prisma/client';
+import { GradeResult, 
+    GradeCreateInput,
+     GradeUpdateInput,
+      GradeWhereUniqueInput,
+       Grade, 
+       RecommendationQueryInput, 
+       AttachmentQueryInput, 
+       ResponseQueryInput } from 'src/models/graphql';
+import { QueryHelper } from '../query-helper/query-helper';
 
 @Injectable()
 export class GradeService {
-    constructor(private readonly prisma: PrismaClient){}
+    constructor(
+        private readonly prisma: PrismaClient,
+        private readonly helper: QueryHelper){}
     async createGrade(data: GradeCreateInput, uid: string): Promise<any | GradeResult> {
         return this.prisma.grade.create({
             data: {
@@ -21,8 +34,6 @@ export class GradeService {
                 }
             },
             include: {
-                attachments: true,
-                recommendations:true,
                 form:true
             }
         }) .then((grade) => {
@@ -44,8 +55,6 @@ export class GradeService {
             where: data.where,
             data: data.update,
             include: {
-                attachments: true,
-                recommendations:true,
                 form:true
             }
         })
@@ -69,7 +78,7 @@ export class GradeService {
         return this.prisma.grade.delete({
             where: where,
             include: {
-                attachments: true,
+                form: true,
             },
         }).then((grade) => {
             return {
@@ -84,57 +93,21 @@ export class GradeService {
             }
         })
     }
+    async attachments(parent: Grade,where: AttachmentQueryInput, ctx:any, uid: String){
+        const args: FindManyAttachmentArgs = this.helper.attachmentQueryBuilder(where);
+        return this.prisma.grade.findOne({where:{id:parent.id}})
+        .attachments(args)
+     }
     async recommendations(parent: Grade, where: RecommendationQueryInput, ctx: any, uid: String): Promise<any[]> {
-        const args: FindManyRecommendationArgs = {}
-        if (where) {
-            if (where.take) {
-                args.take = where.take
-            }
-            if (where.skip) {
-                args.skip = where.skip
-            }
-            if (where.where) {
-                const whereInput: RecommendationWhereInput = {}
-                if (where.where.id) {
-                    whereInput.id = where.where.id
-                }
-                
-                args.where = whereInput
-            }
-            if (where.cursor) {
-                args.cursor = where.cursor
-            }
-            if (where.orderBy) {
-                const orderBy: RecommendationOrderByInput = {}
-                if (where.orderBy.createdAt == OrderByInput.asc) {
-                    orderBy.createdAt = "asc"
-                }
-                if (where.orderBy.createdAt == OrderByInput.desc) {
-                    orderBy.createdAt = "desc"
-                }
-                if (where.orderBy.updatedAt == OrderByInput.asc) {
-                    orderBy.updatedAt = "asc"
-                }
-                if (where.orderBy.updatedAt == OrderByInput.desc) {
-                    orderBy.updatedAt = "desc"
-                }
-                if (where.orderBy.content == OrderByInput.asc) {
-                    orderBy.content = "asc"
-                }
-                if (where.orderBy.content == OrderByInput.desc) {
-                    orderBy.content = "desc"
-                }
-                args.orderBy = orderBy;
-            }
-
-        }
-        args.include={
-                attachments:true,
-                grade:true
-                
-            }
+        const args: FindManyRecommendationArgs = this.helper.recommendationQueryBuilder(where);
         return this.prisma.grade
             .findOne({ where: { id: parent.id } })
             .recommendations(args);
+    }
+    async responses(parent: Grade, where: ResponseQueryInput, ctx: any, uid: String): Promise<any[]> {
+        const args: FindManyResponseArgs = this.helper.responseQueryBuilder(where);
+        return this.prisma.grade
+            .findOne({ where: { id: parent.id } })
+            .responses(args);
     }
 }

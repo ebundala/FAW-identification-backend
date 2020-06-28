@@ -2,7 +2,7 @@ import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { join } from 'path';
-import { UserModule } from './modules/user/user.module';
+
 import { FirebaseModule } from './modules/firebase-admin/firebase.module';
 import { AppLoggerModule } from './modules/app-logger/app-logger.module';
 import { AuthMiddleware } from './auth.middleware';
@@ -13,6 +13,7 @@ import { ResponseModule } from './modules/response/response.module';
 import { AnswerModule } from './modules/answer/answer.module';
 import { AttachmentModule } from './modules/attachment/attachment.module';
 import { RecommendationModule } from './modules/recommendation/recommendation.module';
+import { UserModule } from './modules/user/user.module';
 
 @Module({
   imports: [
@@ -41,8 +42,9 @@ import { RecommendationModule } from './modules/recommendation/recommendation.mo
     ResponseModule,
     AnswerModule,
     AttachmentModule,
-    RecommendationModule
+    RecommendationModule,
   ],
+  
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

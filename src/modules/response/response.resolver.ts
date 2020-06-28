@@ -1,6 +1,6 @@
 import { Resolver, Mutation, Args, Context, ResolveField, Parent } from '@nestjs/graphql';
 import { ResponseService } from './response-service';
-import { ResponseResult,Response, ResponseCreateInput, ResponseUpdateInput, ResponseWhereUniqueInput, Answer, AnswerQueryInput } from 'src/models/graphql';
+import { ResponseResult,Response, ResponseCreateInput, ResponseUpdateInput, ResponseWhereUniqueInput, Answer, AnswerQueryInput, Attachment, AttachmentQueryInput } from 'src/models/graphql';
 
 @Resolver((of)=>Response)
 export class ResponseResolver {
@@ -24,5 +24,10 @@ export class ResponseResolver {
     async answers(@Parent() parent, @Args("where", { type: () => AnswerQueryInput }) where: AnswerQueryInput, @Context() ctx): Promise<Answer[]> {
         if (ctx.auth && ctx.auth.uid)
             return this.responseService.answers(parent, where, ctx, ctx.auth.uid)
+    }
+    @ResolveField((returns) => [Attachment])
+    async attachments(@Parent() parent, @Args("where", { type: () => AttachmentQueryInput }) where: AttachmentQueryInput, @Context() ctx): Promise<Attachment[]> {
+        if (ctx.auth && ctx.auth.uid)
+            return this.responseService.attachments(parent, where, ctx, ctx.auth.uid)
     }
 }

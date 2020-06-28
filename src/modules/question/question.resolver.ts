@@ -1,5 +1,5 @@
-import { Resolver, Mutation, Args, Context } from '@nestjs/graphql';
-import { Question, QuestionResult, QuestionCreateInput, QuestionUpdateInput, QuestionWhereUniqueInput } from 'src/models/graphql';
+import { Resolver, Mutation, Args, Context, ResolveField, Parent } from '@nestjs/graphql';
+import { Question, QuestionResult, QuestionCreateInput, QuestionUpdateInput, QuestionWhereUniqueInput, Attachment, AttachmentQueryInput, AnswerQueryInput, Answer } from 'src/models/graphql';
 import { PrismaClient } from '@prisma/client';
 import { QuestionService } from './question-service';
 
@@ -21,4 +21,19 @@ export class QuestionResolver {
          if(ctx.auth&&ctx.auth.uid)
         return this.questionService.deleteQuestion(where,ctx.auth.uid);
     }
+    @ResolveField((returns) => [Answer])
+    async answers(@Parent() parent: Question,
+        @Args("where", { type: () => AnswerQueryInput }) where: AnswerQueryInput,
+        @Context() ctx): Promise<any[]> {
+        if (ctx.auth && ctx.auth.uid)
+            return this.questionService.answers(parent, where, ctx, ctx.auth.uid)
+    }
+    @ResolveField((returns) => [Attachment])
+    async attachments(@Parent() parent: Question,
+        @Args("where", { type: () => AttachmentQueryInput }) where: AttachmentQueryInput,
+        @Context() ctx): Promise<any[]> {
+        if (ctx.auth && ctx.auth.uid)
+            return this.questionService.attachments(parent, where, ctx, ctx.auth.uid)
+    }
+
 }

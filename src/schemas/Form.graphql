@@ -4,10 +4,10 @@ type Form{
   description: String
   state:       State!      
   author:      User!      
-  questions:   [Question!]
-  grades:      [Grade!]
+  questions(where: QuestionQueryInput):   [Question!]
+  grades(where: GradeQueryInput):      [Grade!]
   responses(where:ResponseQueryInput):   [Response!]
-  attachments: [Attachment!]
+  attachments(where:AttachmentQueryInput): [Attachment!]
   createdAt:   String
   updatedAt:   String
 }
@@ -49,7 +49,9 @@ enum OrderByInput{
   desc
 }
 input FormOrderBy{
+  id: OrderByInput
   title: OrderByInput
+  state: OrderByInput
   createdAt: OrderByInput
   updatedAt: OrderByInput
 }

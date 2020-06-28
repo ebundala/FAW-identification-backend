@@ -2,11 +2,11 @@ import { Module, HttpModule, HttpService } from '@nestjs/common';
 import { UsersResolver } from './user.resolver';
 import { UserService } from './user-service';
 import { PrismaClientModule } from '../prisma-client/prisma-client.module';
-import { PrismaClientService } from '../prisma-client/prisma-client-service';
+import { QueryHelperModule } from '../query-helper/query-helper.module';
 
 
 @Module({
-  imports: [HttpModule,PrismaClientModule,],
+  imports: [HttpModule,PrismaClientModule,QueryHelperModule],
   providers: [UsersResolver,UserService],
 })
 export class UserModule {}

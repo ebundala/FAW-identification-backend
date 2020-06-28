@@ -1,7 +1,7 @@
 type Recommendation{
    id: ID!
   content:     String!
-  attachments: [Attachment!]
+  attachments(where: AttachmentQueryInput): [Attachment!]
   grade:       Grade!
   createdAt:   String
   updatedAt:   String
@@ -45,7 +45,7 @@ input RecommendationWhereQuery{
 
 }
 input RecommendationQueryInput{
- take: Int
+  take: Int
   skip: Int
   where: RecommendationWhereQuery
   orderBy: RecommendationOrderBy

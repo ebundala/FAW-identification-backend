@@ -1,10 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
-import { QuestionCreateInput, QuestionResult, QuestionWhereUniqueInput, QuestionUpdateInput } from 'src/models/graphql';
+import { QuestionCreateInput, QuestionResult, QuestionWhereUniqueInput, QuestionUpdateInput, Answer, AnswerQueryInput, Attachment, AttachmentQueryInput, Question } from 'src/models/graphql';
+import { QueryHelper } from '../query-helper/query-helper';
 
 @Injectable()
 export class QuestionService {
-    constructor(private readonly prisma: PrismaClient) { }
+    constructor(private readonly prisma: PrismaClient,
+        private readonly helper: QueryHelper) { }
 
     async createQuestion(data: QuestionCreateInput, uid: String): Promise<any | QuestionResult> {
         return this.prisma.question.create({
@@ -76,5 +78,15 @@ export class QuestionService {
                 message: message || 'Failed to delete question'
             }
         });
+    }
+    async answers(parent: Question,where: AnswerQueryInput,ctx:any,uid:String){
+     const args = this.helper.answersQueryBuilder(where);
+     return this.prisma.question.findOne({where:{id:parent.id}})
+     .answers(args);
+    }
+    async attachments(parent: Question,where:AttachmentQueryInput,ctx:any,uid:String){
+        const args = this.helper.attachmentQueryBuilder(where);
+     return this.prisma.question.findOne({where:{id:parent.id}})
+     .attachments(args);
     }
 }

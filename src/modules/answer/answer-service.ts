@@ -1,10 +1,18 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client';
-import { AnswerResult, AnswerCreateInput, State, AnswerUpdateInput, AnswerWhereUniqueInput } from 'src/models/graphql';
+import { PrismaClient, FindManyAnswerArgs, FindManyAttachmentArgs } from '@prisma/client';
+import { AnswerResult,
+     AnswerCreateInput,
+      State, 
+      AnswerUpdateInput, 
+      AnswerWhereUniqueInput, 
+      AttachmentQueryInput, 
+      Answer} from 'src/models/graphql';
+import { QueryHelper } from '../query-helper/query-helper';
 
 @Injectable()
 export class AnswerService {
-    constructor(private readonly prisma: PrismaClient) { }
+    constructor(private readonly prisma: PrismaClient,
+        private readonly helper: QueryHelper) { }
     async createAnswer(data: AnswerCreateInput, uid: string): Promise<any | AnswerResult> {
         return this.prisma.answer.create({
             data: {
@@ -23,7 +31,6 @@ export class AnswerService {
             },
             include: {
                 response: true,
-                attachments: true,
                 question: true
             }
         }) .then((answer) => {
@@ -46,7 +53,6 @@ export class AnswerService {
             data: data.update,
             include: {
                 response: true,
-                attachments: true,
                 question: true
             }
         })
@@ -71,7 +77,6 @@ export class AnswerService {
             where: where,
             include: {
                 response: true,
-                attachments: true,
                 question: true
             },
         }).then((answer) => {
@@ -86,5 +91,11 @@ export class AnswerService {
                 message: message || 'Failed to delete the answer'
             }
         })
+    }
+
+    async attachments(parent: Answer,where: AttachmentQueryInput, uid: String){
+       const args: FindManyAttachmentArgs = this.helper.attachmentQueryBuilder(where);
+       return this.prisma.answer.findOne({where:{id:parent.id}})
+       .attachments(args)
     }
 }

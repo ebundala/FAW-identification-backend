@@ -1,10 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaClient, } from '@prisma/client';
-import { RecommendationWhereUniqueInput, RecommendationResult, RecommendationCreateInput, RecommendationUpdateInput } from 'src/models/graphql';
+import { RecommendationWhereUniqueInput, RecommendationResult, RecommendationCreateInput, RecommendationUpdateInput, Recommendation, RecommendationQueryInput, AttachmentQueryInput } from 'src/models/graphql';
+import { QueryHelper } from '../query-helper/query-helper';
 
 @Injectable()
 export class RecommendationService {
-    constructor(private readonly prisma: PrismaClient) { }
+    constructor(private readonly prisma: PrismaClient,
+        private readonly helper: QueryHelper) { }
     async createRecommendation(data: RecommendationCreateInput, uid: string): Promise<any | RecommendationResult> {
         return this.prisma.recommendation.create({
             data: {
@@ -12,7 +14,6 @@ export class RecommendationService {
                 grade: { connect: { id: data.grade.id } },
             },
             include: {
-                attachments: true,
                 grade: true,
             }
         }).then((recommendation) => {
@@ -34,7 +35,6 @@ export class RecommendationService {
             where: data.where,
             data: data.update,
             include: {
-                attachments: true,
                 grade: true,
             }
         })
@@ -53,13 +53,10 @@ export class RecommendationService {
             });
 
     }
-
-    
     async deleteRecommendation(where: RecommendationWhereUniqueInput, uid: String): Promise<any> {
         return this.prisma.recommendation.delete({
             where: where,
             include: {
-                attachments: true,
                 grade: true,
             },
         }).then((recommendation) => {
@@ -74,5 +71,10 @@ export class RecommendationService {
                 message: message || 'Failed to delete the recommendation'
             }
         })
+    }
+    async attachments(parent: Recommendation,where: AttachmentQueryInput,ctx:any,uid: String){
+        const args = this.helper.attachmentQueryBuilder(where);
+        return this.prisma.recommendation.findOne({where:{id:parent.id}})
+        .attachments(args);
     }
 }

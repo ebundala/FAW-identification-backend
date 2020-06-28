@@ -1,11 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaClient, FindManyAnswerArgs, AnswerWhereInput, AnswerOrderByInput } from '@prisma/client';
+import { PrismaClient, FindManyAnswerArgs, 
+     } from '@prisma/client';
 import { ResponseCreateInput,Response, ResponseResult,
-     ResponseUpdateInput, ResponseWhereUniqueInput, State, AnswerQueryInput, OrderByInput } from 'src/models/graphql';
+     ResponseUpdateInput, ResponseWhereUniqueInput, State, AnswerQueryInput, OrderByInput, AttachmentQueryInput, Answer } from 'src/models/graphql';
+import { QueryHelper } from '../query-helper/query-helper';
 
 @Injectable()
 export class ResponseService {
-    constructor(private readonly prisma: PrismaClient){}
+    constructor(private readonly prisma: PrismaClient,
+        private readonly helper: QueryHelper){}
     async createResponse(data: ResponseCreateInput,uid: string): Promise<any|ResponseResult>{
         return this.prisma.response.create({
            data:{
@@ -20,7 +23,6 @@ export class ResponseService {
                }
            },
            include:{
-            attachments:true,
             author: true,
             grade: true,
             form: true
@@ -45,7 +47,6 @@ export class ResponseService {
             where:data.where,
             data:data.update,
             include:{
-                attachments:true,
                 author: true,
                 grade: true,
                 form: true
@@ -71,7 +72,6 @@ export class ResponseService {
         return this.prisma.response.delete({
             where:where,
             include:{
-                attachments:true,
                 author: true,
                 grade: true,
                 form: true
@@ -90,63 +90,16 @@ export class ResponseService {
         })
     }
     async answers(parent: Response, where: AnswerQueryInput, ctx: any, uid: String): Promise<any[]> {
-        const args: FindManyAnswerArgs = {};
-        if (where) {
-            if (where.take) {
-                args.take = where.take
-            }
-            if (where.skip) {
-                args.skip = where.skip
-            }
-            if (where.where) {
-                const whereInput: AnswerWhereInput = {}
-                if (where.where.id) {
-                    whereInput.id = where.where.id
-                }
-                
-                
-                args.where = whereInput
-            }
-            if (where.cursor) {
-                args.cursor = where.cursor
-            }
-            if (where.orderBy) {
-                const orderBy: AnswerOrderByInput = {}
-                if (where.orderBy.createdAt == OrderByInput.asc) {
-                    orderBy.createdAt = "asc"
-                }
-                if (where.orderBy.createdAt == OrderByInput.desc) {
-                    orderBy.createdAt = "desc"
-                }
-                if (where.orderBy.updatedAt == OrderByInput.asc) {
-                    orderBy.updatedAt = "asc"
-                }
-                if (where.orderBy.updatedAt == OrderByInput.desc) {
-                    orderBy.updatedAt = "desc"
-                }
-                if (where.orderBy.booleanValue == OrderByInput.asc) {
-                    orderBy.booleanValue = "asc"
-                }
-                if (where.orderBy.booleanValue == OrderByInput.desc) {
-                    orderBy.booleanValue = "desc"
-                }
-                if (where.orderBy.textValue == OrderByInput.asc) {
-                    orderBy.textValue = "asc"
-                }
-                if (where.orderBy.textValue == OrderByInput.desc) {
-                    orderBy.textValue = "desc"
-                }
-                args.orderBy = orderBy;
-            }
-
-        }
-        args.include={
-                response: true,
-                question: true,
-                attachments:true
-            }
+        const args: FindManyAnswerArgs = this.helper.answersQueryBuilder(where);
         return this.prisma.response
             .findOne({ where: { id: parent.id } })
             .answers(args);
     }
+    async attachments(parent: Response, where: AttachmentQueryInput, ctx: any, uid: String): Promise<any[]> {
+        const args = this.helper.attachmentQueryBuilder(where);
+        return this.prisma.response
+            .findOne({ where: { id: parent.id } })
+            .attachments(args);
+    }
+    
 }

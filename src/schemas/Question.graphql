@@ -6,8 +6,8 @@ type Question{
   instruction:    String
   questionType:   QuestionType!
   form:           Form!        
-  answers:        [Answer!]
-  attachments:    [Attachment!]
+  answers(where: AnswerQueryInput):        [Answer!]
+  attachments(where: AttachmentQueryInput):    [Attachment!]
   createdAt:      String
   updatedAt:      String
 }
@@ -63,8 +63,8 @@ input QuestionWhereQuery{
     questionType: QuestionType
 
 }
-input QustionQueryInput{
- take: Int
+input QuestionQueryInput{
+  take: Int
   skip: Int
   where: QuestionWhereQuery
   orderBy:QuestionOrderBy

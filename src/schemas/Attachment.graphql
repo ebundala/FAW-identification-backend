@@ -5,6 +5,8 @@ type Attachment{
     filename:         String!
     mimetype:         String!
     encoding:         String!
+    createdAt:        String!
+    updatedAt:        String!
 }
 
 input AttachmentUpdateDataInput{    
@@ -36,6 +38,8 @@ input AttachmentOrderBy{
     filename:         OrderByInput
     mimetype:         OrderByInput
     encoding:         OrderByInput
+    createdAt:        OrderByInput
+    updatedAt:        OrderByInput
 }
 input AttachmentWhereQuery{
   id: ID
@@ -48,7 +52,7 @@ input AttachmentQueryInput{
  take: Int
   skip: Int
   where: AttachmentWhereQuery
-  orderBy:AttachmentOrderBy
+  orderBy: AttachmentOrderBy
   cursor: AttachmentWhereUniqueInput   
 }
 extend type Mutation{
