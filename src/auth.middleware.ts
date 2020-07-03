@@ -15,7 +15,7 @@ export class AuthMiddleware implements NestMiddleware {
     const {headers} = req;
     if(headers&&headers.authorization){
       const [realm,token] = headers.authorization.split(' ');
-     await this.app.admin.auth().verifySessionCookie(token,true)
+     await this.app.admin.auth().verifySessionCookie(token,false)//TODO set true to verify revoked tokens
       .then((claims)=>{
         req.auth = claims;
         req.token = token

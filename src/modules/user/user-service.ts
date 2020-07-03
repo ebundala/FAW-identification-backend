@@ -120,7 +120,9 @@ export class UserService {
           }
           return session;
         }
-        throw Error(data);
+        
+      }).catch(({message})=>{
+        throw Error(`Invalid credentials: ${message}`);
       });
   }
 
