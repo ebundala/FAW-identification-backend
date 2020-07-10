@@ -30,12 +30,13 @@ input FormCreateInput{
  # questions:   [Question]!
  # grades:      [Grade!]
  # responses:   [Response!]!
- # attachments: [Attachment!]!
+  attachments: [AttachmentWhereUniqueInput!]!
 }
 input FormUpdateDataInput{
   title:       String
   description: String
-  state:       State      
+  state:       State  
+  attachments: [AttachmentWhereUniqueInput!]    
 }
 input FormWhereUniqueInput{
     id:  ID!

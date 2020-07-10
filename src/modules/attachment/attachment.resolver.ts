@@ -9,12 +9,9 @@ import { GraphQLUpload, FileUpload } from 'graphql-upload';
 export class AttachmentResolver {
     constructor(private readonly gradeService: AttachmentService){}
     @Mutation((returns)=>AttachmentResult)
-    async createAttachment(@Args('data',{type:()=>GraphQLUpload}) {
-        createReadStream,
-        filename
-    }: FileUpload,@Context() ctx): Promise<AttachmentResult>{
+    async createAttachment(@Args('data',{type:()=>GraphQLUpload}) file: FileUpload,@Context() ctx): Promise<AttachmentResult>{
         if(ctx.auth&&ctx.auth.uid)
-        return this.gradeService.createAttachment(createReadStream,filename,ctx.auth.uid);
+        return this.gradeService.createAttachment(file,ctx.auth);
     }
     @Mutation((returns)=>AttachmentResult)
     async updateAttachment(@Args('data',{type:()=>AttachmentUpdateInput}) data:AttachmentUpdateInput,@Context() ctx): Promise<AttachmentResult>{

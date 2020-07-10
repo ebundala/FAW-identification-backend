@@ -3,7 +3,7 @@ version: '3.1'
 services:
   db:
     image: ${POSTGRES_TAG}
-    restart: always
+   # restart: always
     ports:
         - ${POSTGRES_PORT}:5432
     volumes: 
@@ -15,6 +15,14 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_DB: ${POSTGRES_DB}
       PGDATA: ${PGDATA}
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          cpus: "0.2"
+          memory: 1g
+      restart_policy:
+        condition: always
     
   adminer:
     image: ${ADMINER_TAG}
@@ -23,19 +31,37 @@ services:
       - ${ADMINER_PORT}:8080
     networks: 
        webnet:
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          cpus: "0.05"
+          memory: 256MiB
+      restart_policy:
+        condition: on-failure
   app:
     image: ${NODE_TAG}
-    restart: always
-    working_dir: /home/src
-    command: npm start:debug
+    #restart: always
+    working_dir: /home/app
+    command: yarn run start:docker:debug
     depends_on: 
         - db
     ports: 
-        - ${APP_PORT}:${APP_PORT}
+        - ${APP_PORT}:3000
+        - 9229:9229 #debugger port disable in production
     volumes: 
-        - .:/home/dist
+        - ./:/home/app
+       # - ./uploads:/home/app/uploads
     networks: 
         webnet:
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          cpus: "0.2"
+          memory: 1g
+      restart_policy:
+        condition: on-failure
 networks: 
     webnet:
 volumes: 

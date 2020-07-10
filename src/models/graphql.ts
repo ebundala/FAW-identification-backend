@@ -123,12 +123,14 @@ export class FormCreateInput {
     title: string;
     description?: string;
     state?: State;
+    attachments: AttachmentWhereUniqueInput[];
 }
 
 export class FormUpdateDataInput {
     title?: string;
     description?: string;
     state?: State;
+    attachments?: AttachmentWhereUniqueInput[];
 }
 
 export class FormWhereUniqueInput {
@@ -281,6 +283,7 @@ export class RecommendationCreateInput {
 
 export class RecommendationUpdateDataInput {
     content?: string;
+    grade?: GradeWhereUniqueInput;
 }
 
 export class RecommendationWhereUniqueInput {

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaClient, } from '@prisma/client';
+import { PrismaClient, RecommendationUpdateArgs, } from '@prisma/client';
 import { RecommendationWhereUniqueInput, RecommendationResult, RecommendationCreateInput, RecommendationUpdateInput, Recommendation, RecommendationQueryInput, AttachmentQueryInput } from 'src/models/graphql';
 import { QueryHelper } from '../query-helper/query-helper';
 
@@ -29,11 +29,21 @@ export class RecommendationService {
         });
     }
     async updateRecommendation(data: RecommendationUpdateInput, uid: String): Promise<any> {
-        return this.prisma.recommendation.update({
-            where: data.where,
-            data: data.update,
-        })
-            .then((recommendation) => {
+        const args: RecommendationUpdateArgs = {where:data.where,data:{}};
+        if(data.update){
+            if(data.update.content){
+                args.data.content=data.update.content;
+            }
+            if(data.update.grade){
+                args.data.grade={
+                    connect: {
+                        id: data.update.grade.id
+                    }
+                }
+            }
+        }
+        return this.prisma.recommendation.update(args)
+        .then((recommendation) => {
                 return {
                     status: true,
                     message: 'Recommendation updated successfully',

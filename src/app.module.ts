@@ -2,7 +2,7 @@ import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { join } from 'path';
-
+import { ServeStaticModule } from '@nestjs/serve-static';
 import { FirebaseModule } from './modules/firebase-admin/firebase.module';
 import { AppLoggerModule } from './modules/app-logger/app-logger.module';
 import { AuthMiddleware } from './auth.middleware';
@@ -32,6 +32,10 @@ import { UserModule } from './modules/user/user.module';
       },
       debug: true,
       playground: true,
+    }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '../', 'uploads'),
+      serveRoot: "/uploads/"
     }),
     FirebaseModule,
     AppLoggerModule,

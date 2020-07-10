@@ -5,7 +5,8 @@ import {
      FindManyResponseArgs,  
      FindManyQuestionArgs, 
      FindManyGradeArgs,
-      FindManyAttachmentArgs
+      FindManyAttachmentArgs,
+      FormUpdateArgs
       
 } from '@prisma/client';
 import {
@@ -30,11 +31,16 @@ export class FormService {
     constructor(private readonly prisma: PrismaClient,
         private readonly helper: QueryHelper) { }
      createForm(data: FormCreateInput, uid: string): Promise<any | FormResult> {
+         
         return this.prisma.form.create({
             data: {
                 title: data.title,
                 description: data.description,
                 state: data.state || State.PENDING,
+                attachments:{
+                    connect:data.attachments
+
+                },
                 author: {
                     connect: { id: uid }
                 }
@@ -55,12 +61,21 @@ export class FormService {
             });
     }
      updateForm(data: FormUpdateInput): Promise<any> {
-        return this.prisma.form.update({
-            where: data.where,
-            data: data.update,
-            
-
-        })
+         const args: FormUpdateArgs = {where: data.where,data:{}};
+         if(data.update.title){
+             args.data.title = data.update.title
+         }
+         if(data.update.description){
+            args.data.description = data.update.description
+        }
+        if(data.update.state){
+            args.data.state = data.update.state
+        }
+        if(data.update.attachments){
+            args.data.attachments
+          args.data.attachments ={connect:data.update.attachments}
+        }
+        return this.prisma.form.update(args)
             .then((form) => {
                 return {
                     status: true,

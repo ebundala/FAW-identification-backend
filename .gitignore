@@ -36,3 +36,5 @@ lerna-debug.log*
 prisma/.env
 .env
 serviceAccount.json
+uploads
+node_modules.old
