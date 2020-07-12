@@ -48,7 +48,7 @@ services:
         - db
     ports: 
         - ${APP_PORT}:3000
-        - 9229:9229 #debugger port disable in production
+        - 9228:9229 #debugger port disable in production
     volumes: 
         - ./:/home/app
        # - ./uploads:/home/app/uploads

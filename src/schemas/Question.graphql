@@ -19,6 +19,7 @@ input QuestionCreateInput{
     instruction: String
     questionType: QuestionType!
     form: FormWhereUniqueInput!
+     attachments: [AttachmentWhereUniqueInput!]! 
 }
 input QuestionUpdateDataInput{
     questionNumber: Int
@@ -26,6 +27,7 @@ input QuestionUpdateDataInput{
     weight: Float
     instruction: String
     questionType: QuestionType
+    attachments: [AttachmentWhereUniqueInput!] 
 }
 input QuestionWhereUniqueInput{
     id: ID!

@@ -11,10 +11,14 @@ type Recommendation{
 input RecommendationCreateInput{  
   content:     String!
   grade:       GradeWhereUniqueInput!
+  attachments: [AttachmentWhereUniqueInput!]!
+
 }
 input RecommendationUpdateDataInput{    
   content:     String    
   grade:       GradeWhereUniqueInput
+  attachments: [AttachmentWhereUniqueInput!] 
+  disconnected: [AttachmentWhereUniqueInput!]
 }
 input RecommendationWhereUniqueInput{
     id: ID!

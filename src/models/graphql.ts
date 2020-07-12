@@ -229,6 +229,7 @@ export class QuestionCreateInput {
     instruction?: string;
     questionType: QuestionType;
     form: FormWhereUniqueInput;
+    attachments: AttachmentWhereUniqueInput[];
 }
 
 export class QuestionUpdateDataInput {
@@ -237,6 +238,7 @@ export class QuestionUpdateDataInput {
     weight?: number;
     instruction?: string;
     questionType?: QuestionType;
+    attachments?: AttachmentWhereUniqueInput[];
 }
 
 export class QuestionWhereUniqueInput {
@@ -279,11 +281,14 @@ export class QuestionQueryInput {
 export class RecommendationCreateInput {
     content: string;
     grade: GradeWhereUniqueInput;
+    attachments: AttachmentWhereUniqueInput[];
 }
 
 export class RecommendationUpdateDataInput {
     content?: string;
     grade?: GradeWhereUniqueInput;
+    attachments?: AttachmentWhereUniqueInput[];
+    disconnected?: AttachmentWhereUniqueInput[];
 }
 
 export class RecommendationWhereUniqueInput {

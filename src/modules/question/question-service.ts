@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, QuestionCreateArgs, QuestionUpdateArgs } from '@prisma/client';
 import { QuestionCreateInput, QuestionResult, QuestionWhereUniqueInput, QuestionUpdateInput, Answer, AnswerQueryInput, Attachment, AttachmentQueryInput, Question } from 'src/models/graphql';
 import { QueryHelper } from '../query-helper/query-helper';
 
@@ -10,9 +10,8 @@ export class QuestionService {
         private readonly helper: QueryHelper) { }
 
     async createQuestion(data: QuestionCreateInput, uid: String): Promise<any | QuestionResult> {
-        return this.prisma.question.create({
-
-            data: {
+        const args: QuestionCreateArgs = {
+            data:{
                 question: data.question,
                 questionNumber: data.questionNumber,
                 questionType: data.questionType,
@@ -21,8 +20,13 @@ export class QuestionService {
                 form: {
                     connect: { id: data.form.id }
                 },
-            },
-        }).then((question) => {
+                attachments:{
+                    connect:data.attachments
+                }
+            }
+        }
+        
+        return this.prisma.question.create(args).then((question) => {
             return {
                 status: true,
                 message: 'Question created successfully',
@@ -37,10 +41,34 @@ export class QuestionService {
     }
 
     async updateQuestion(data: QuestionUpdateInput, uid: String): Promise<any | QuestionResult> {
-        return this.prisma.question.update({
+        const args: QuestionUpdateArgs = {
             where: data.where,
-            data: data.update
-        }).then((question) => {
+            data: {}
+        };
+        debugger
+        if(data.update.question){
+            args.data.question = data.update.question;
+        }
+        
+        if(data.update.questionNumber){
+
+        }
+        if(data.update.instruction){
+            args.data.instruction=data.update.instruction
+        }
+        if(data.update.questionType){
+            args.data.questionType=data.update.questionType;
+        }
+        if(data.update.weight){
+            args.data.weight=data.update.weight;
+        }
+        if(data.update.attachments){
+            args.data.attachments={
+                connect:data.update.attachments
+            }
+        }
+
+        return this.prisma.question.update(args).then((question) => {
             return {
                 status: true,
                 message: 'Question updated successfully',
