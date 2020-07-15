@@ -102,10 +102,19 @@ export class UserService {
   }
 
   async signInWithEmail({ email, password }) {
+    var user = await this.prisma.user
+    .findOne({where:{email},select:{id:true,role:true}});
+    if(!user) {
+      throw new Error('Signin failed user does not exist');
+    }
+    if(user.role == Role.ADMIN){
+      await this._setUserAdminClaims(user)
+    }
     const returnSecureToken = true;
     const buffer = Buffer.from(
       JSON.stringify({ email, password, returnSecureToken }),
     );
+
     return this.httpService.axiosRef
       .post(this.firebaseApp.signInWithEmailPath, buffer)
       .then(async ({ status, data }) => {
@@ -144,7 +153,13 @@ export class UserService {
       .then(() => true)
       .catch(() => false);
   }
-
+  async _setUserAdminClaims(user) {
+    return this.firebaseApp.admin
+      .auth()
+      .setCustomUserClaims(user.id, { role: Role.ADMIN })
+      .then(() => true)
+      .catch(() => false);
+  }
  async createSessionToken(idToken, expiresIn = 60 * 60 * 5 * 24 * 1000) {
 
     return this.firebaseApp.admin
