@@ -34,8 +34,8 @@ import { UserModule } from './modules/user/user.module';
       playground: true,
     }),
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '../', 'uploads'),
-      serveRoot: "/uploads/"
+      rootPath: join(__dirname, '../', 'public'),
+      //serveRoot: "/uploads/"
     }),
     FirebaseModule,
     AppLoggerModule,

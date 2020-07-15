@@ -63,7 +63,7 @@ export class AttachmentService {
          const uuid = uuidv4();
          const [img,ext] = mimetype.split("/"); 
          const fname= `${uuid}${filename}.${ext!=="octet-stream"?ext:"png"}`;
-        const p = join(__dirname,'../../../uploads',fname)
+        const p = join(__dirname,'../../../public/uploads',fname)
         this.logger.debug(p,AttachmentService.name);
         const options={
             encoding: encoding as BufferEncoding,
