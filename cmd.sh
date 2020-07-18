@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 CMD=${1?Error: no command given}
 APP=${2:-faw-identification-backend_app_1}
-
     case $CMD in 
     'deploy')
      ./scripts/deploy.sh
