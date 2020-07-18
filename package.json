@@ -11,6 +11,8 @@
     "start": "nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
+    "install": "yarn install",
+    "postinstall": "yarn run migrate:save && yarn run migrate:up",
     "start:docker:debug": "yarn run prebuild && yarn run prisma:generate && nest start --debug 0.0.0.0:9229 --watch",
     "start:prod": "node dist/main",
     "prisma:generate": "prisma generate",
