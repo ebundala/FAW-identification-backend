@@ -108,6 +108,7 @@ export class UserService {
       throw new Error('Signin failed user does not exist');
     }
     if(user.role == Role.ADMIN){
+      
       await this._setUserAdminClaims(user)
     }
     const returnSecureToken = true;

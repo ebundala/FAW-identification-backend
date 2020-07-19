@@ -4,16 +4,17 @@ import {
 } from '@prisma/client';
 import {
     ResponseCreateInput, Response, ResponseResult,
-    ResponseUpdateInput, ResponseWhereUniqueInput, State, AnswerQueryInput, OrderByInput, AttachmentQueryInput, Answer
+    ResponseUpdateInput, ResponseWhereUniqueInput, State, AnswerQueryInput, OrderByInput, AttachmentQueryInput, Answer, ResponseQueryInput, ResponseListResult
 } from 'src/models/graphql';
 import { QueryHelper } from '../query-helper/query-helper';
 
 @Injectable()
 export class ResponseService {
+ 
 
     constructor(private readonly prisma: PrismaClient,
         private readonly helper: QueryHelper) { }
-    async createResponse(data: ResponseCreateInput, uid: string): Promise<any | ResponseResult> {
+    async createResponse(data: ResponseCreateInput, uid: string):  Promise<any | ResponseResult> {
         return this.prisma.response.create({
             data: {
                 state: data.state || State.PENDING,
@@ -77,6 +78,28 @@ export class ResponseService {
                 message: message || 'Failed to delete the response'
             }
         })
+    }
+    // get users responses
+    async  responses(where: ResponseQueryInput,uid:string): Promise<any | ResponseListResult> {
+        var args = this.helper.responseQueryBuilder(where);
+        if(args.where){
+            args.where.author = {id:uid}
+        }else{
+            args.where = {author:{id:uid}}
+        }
+        
+       return this.prisma.response.findMany(args).then((responses)=>{
+           return {
+               status: true,
+               message: "success",
+               responses
+           }
+       }).catch(({message})=>{
+           return {
+               status:false,
+               message:message||"Failed to retrieve responses"
+           }
+       });
     }
     async answers(parent: Response, where: AnswerQueryInput, ctx: any, uid: String): Promise<any[]> {
         const args: FindManyAnswerArgs = this.helper.answersQueryBuilder(where);

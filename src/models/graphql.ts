@@ -499,6 +499,8 @@ export class FormListResult {
 export abstract class IQuery {
     abstract forms(where?: FormQueryInput): FormListResult | Promise<FormListResult>;
 
+    abstract responses(where: ResponseQueryInput): ResponseListResult | Promise<ResponseListResult>;
+
     abstract version(): string | Promise<string>;
 }
 

@@ -60,3 +60,6 @@ extend type Mutation{
     updateResponse(data:ResponseUpdateInput): ResponseResult!
     deleteResponse(where:ResponseWhereUniqueInput):ResponseResult!
 }
+extend type Query{
+  responses(where: ResponseQueryInput!): ResponseListResult!
+}
