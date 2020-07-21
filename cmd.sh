@@ -3,7 +3,10 @@ CMD=${1?Error: no command given}
 APP=${2:-faw-identification-backend_app_1}
     case $CMD in 
     'deploy')
+      chmod +x ./scripts/*.sh
      ./scripts/deploy.sh
+     chmod +x cmd.sh
+     chmod +x ./scripts/*.sh
      ./scripts/restart.sh
     ;;   
     'up')

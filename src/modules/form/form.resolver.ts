@@ -1,4 +1,4 @@
-import { Resolver, Mutation, Context, Args, Query, ResolveField, Parent } from '@nestjs/graphql';
+import { Resolver, Mutation, Context, Args, Query, ResolveField, Parent, Info } from '@nestjs/graphql';
 import {
     Form, FormResult, FormCreateInput,
     FormUpdateInput, FormWhereUniqueInput,
@@ -53,7 +53,8 @@ export class FormResolver {
     }
     //Queries
     @Query((returns) => FormListResult)
-    async forms(@Args('where', { type: () => FormQueryInput }) where: FormQueryInput, @Context() ctx): Promise<FormListResult> {
+    async forms(@Args('where', { type: () => FormQueryInput }) where: FormQueryInput, @Context() ctx,
+    @Info() info): Promise<FormListResult> {
         if (ctx.auth && ctx.auth.uid)
         return this.formService.getForms(where);
     }
