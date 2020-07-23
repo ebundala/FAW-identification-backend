@@ -30,7 +30,7 @@ import { FindManyResponseArgs,
 
 @Injectable()
 export class QueryHelper {
-    answersQueryBuilder(where: AnswerQueryInput) {
+   public answersQueryBuilder(where: AnswerQueryInput) {
         const args: FindManyAnswerArgs = {};
         if (where) {
             if (where.take) {
