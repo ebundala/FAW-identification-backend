@@ -14,6 +14,9 @@ import { AnswerModule } from './modules/answer/answer.module';
 import { AttachmentModule } from './modules/attachment/attachment.module';
 import { RecommendationModule } from './modules/recommendation/recommendation.module';
 import { UserModule } from './modules/user/user.module';
+import { ForumModule } from './modules/forum/forum.module';
+import { ForumAnswerModule } from './modules/forum-answer/forum-answer.module';
+import { CommentModule } from './modules/comment/comment.module';
 
 @Module({
   imports: [
@@ -47,9 +50,13 @@ import { UserModule } from './modules/user/user.module';
     AnswerModule,
     AttachmentModule,
     RecommendationModule,
+    ForumModule,
+    ForumAnswerModule,
+    CommentModule,
   ],
   
 })
+
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(AuthMiddleware).forRoutes('/graphql')

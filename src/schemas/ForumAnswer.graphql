@@ -1,0 +1,73 @@
+type ForumAnswer{
+  id:   ID!
+  content:       String!
+  state:       State!      
+  author:      User!  
+  forum:       Forum!    
+  comments(where: CommentQueryInput):      [Comment!]
+  commentsEnabled: Boolean
+  attachments(where:AttachmentQueryInput): [Attachment!]
+  createdAt:   String
+  updatedAt:   String
+}
+
+type ForumAnswerResult{
+    status: Boolean!
+    message: String!
+    forumAnswer: ForumAnswer
+}
+type ForumAnswerListResult{
+    status: Boolean!
+    message: String!
+    forumAnswers: [ForumAnswer!]
+}
+input ForumAnswerCreateInput{
+  content:       String!
+  forum: ForumWhereUniqueInput!
+  state:       State 
+  commentsEnabled: Boolean    
+ 
+  attachments: [AttachmentWhereUniqueInput!]!
+}
+input ForumAnswerUpdateDataInput{
+  content:       String
+  commentsEnabled: String
+  state:       State  
+  attachments: [AttachmentWhereUniqueInput!]    
+}
+input ForumAnswerWhereUniqueInput{
+    id:  ID!
+}
+input ForumAnswerUpdateInput{
+    where: ForumAnswerWhereUniqueInput
+    update: ForumAnswerUpdateDataInput
+}
+
+input ForumAnswerOrderBy{
+  id: OrderByInput
+  content: OrderByInput
+  commentsEnabled: OrderByInput
+  state: OrderByInput
+  createdAt: OrderByInput
+  updatedAt: OrderByInput
+}
+input ForumAnswerWhereQuery{
+  id: ID
+  content: String
+  commentsEnabled: Boolean
+  author: UserWhereUniqueInput
+  state: State
+}
+input ForumAnswerQueryInput{
+  take: Int
+  skip: Int
+  where: ForumAnswerWhereQuery
+  orderBy:ForumAnswerOrderBy
+  cursor: ForumAnswerWhereUniqueInput
+}
+extend type Mutation{
+    createForumAnswer(data:ForumAnswerCreateInput!):ForumAnswerResult!
+    updateForumAnswer(data: ForumAnswerUpdateInput!):ForumAnswerResult!
+    deleteForumAnswer(where:ForumAnswerWhereUniqueInput!):ForumAnswerResult!
+}
+

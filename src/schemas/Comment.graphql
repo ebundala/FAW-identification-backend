@@ -1,0 +1,76 @@
+type Comment{
+  id:   ID!
+  content:       String!
+  state:       State!      
+  author:      User!  
+  forum:       Forum
+  forumAnswer: ForumAnswer 
+  parent:     Comment 
+  comments(where: CommentQueryInput):      [Comment!]
+  commentsEnabled: Boolean
+  attachments(where:AttachmentQueryInput): [Attachment!]
+  createdAt:   String
+  updatedAt:   String
+}
+
+type CommentResult{
+    status: Boolean!
+    message: String!
+    comment: Comment
+}
+type CommentListResult{
+    status: Boolean!
+    message: String!
+    comments: [Comment!]
+}
+input CommentCreateInput{
+  content:       String!
+  comment: CommentWhereUniqueInput
+  forum:       ForumWhereUniqueInput
+  forumAnswer: ForumAnswerWhereUniqueInput
+  state:       State 
+  commentsEnabled: Boolean  
+  attachments: [AttachmentWhereUniqueInput!]!
+}
+input CommentUpdateDataInput{
+  content:       String
+  commentsEnabled: String
+  state:       State  
+  attachments: [AttachmentWhereUniqueInput!]    
+}
+input CommentWhereUniqueInput{
+    id:  ID!
+}
+input CommentUpdateInput{
+    where: CommentWhereUniqueInput
+    update: CommentUpdateDataInput
+}
+
+input CommentOrderBy{
+  id: OrderByInput
+  content: OrderByInput
+  commentsEnabled: OrderByInput
+  state: OrderByInput
+  createdAt: OrderByInput
+  updatedAt: OrderByInput
+}
+input CommentWhereQuery{
+  id: ID
+  content: String
+  commentsEnabled: Boolean
+  author: UserWhereUniqueInput
+  state: State
+}
+input CommentQueryInput{
+  take: Int
+  skip: Int
+  where: CommentWhereQuery
+  orderBy:CommentOrderBy
+  cursor: CommentWhereUniqueInput
+}
+extend type Mutation{
+    createComment(data:CommentCreateInput!):CommentResult!
+    updateComment(data: CommentUpdateInput!):CommentResult!
+    deleteComment(where:CommentWhereUniqueInput!):CommentResult!
+}
+

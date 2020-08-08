@@ -45,10 +45,7 @@ input FormUpdateInput{
     where: FormWhereUniqueInput
     update: FormUpdateDataInput
 }
-enum OrderByInput{
-  asc
-  desc
-}
+
 input FormOrderBy{
   id: OrderByInput
   title: OrderByInput

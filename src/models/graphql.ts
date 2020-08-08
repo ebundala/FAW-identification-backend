@@ -119,6 +119,57 @@ export class AttachmentQueryInput {
     cursor?: AttachmentWhereUniqueInput;
 }
 
+export class CommentCreateInput {
+    content: string;
+    comment?: CommentWhereUniqueInput;
+    forum?: ForumWhereUniqueInput;
+    forumAnswer?: ForumAnswerWhereUniqueInput;
+    state?: State;
+    commentsEnabled?: boolean;
+    attachments: AttachmentWhereUniqueInput[];
+}
+
+export class CommentUpdateDataInput {
+    content?: string;
+    commentsEnabled?: string;
+    state?: State;
+    attachments?: AttachmentWhereUniqueInput[];
+}
+
+export class CommentWhereUniqueInput {
+    id: string;
+}
+
+export class CommentUpdateInput {
+    where?: CommentWhereUniqueInput;
+    update?: CommentUpdateDataInput;
+}
+
+export class CommentOrderBy {
+    id?: OrderByInput;
+    content?: OrderByInput;
+    commentsEnabled?: OrderByInput;
+    state?: OrderByInput;
+    createdAt?: OrderByInput;
+    updatedAt?: OrderByInput;
+}
+
+export class CommentWhereQuery {
+    id?: string;
+    content?: string;
+    commentsEnabled?: boolean;
+    author?: UserWhereUniqueInput;
+    state?: State;
+}
+
+export class CommentQueryInput {
+    take?: number;
+    skip?: number;
+    where?: CommentWhereQuery;
+    orderBy?: CommentOrderBy;
+    cursor?: CommentWhereUniqueInput;
+}
+
 export class FormCreateInput {
     title: string;
     description?: string;
@@ -162,6 +213,104 @@ export class FormQueryInput {
     where?: FormWhereQuery;
     orderBy?: FormOrderBy;
     cursor?: FormWhereUniqueInput;
+}
+
+export class ForumCreateInput {
+    question: string;
+    description: string;
+    state?: State;
+    attachments: AttachmentWhereUniqueInput[];
+}
+
+export class ForumUpdateDataInput {
+    question?: string;
+    description?: string;
+    state?: State;
+    attachments?: AttachmentWhereUniqueInput[];
+}
+
+export class ForumWhereUniqueInput {
+    id: string;
+}
+
+export class ForumUpdateInput {
+    where?: ForumWhereUniqueInput;
+    update?: ForumUpdateDataInput;
+}
+
+export class ForumOrderBy {
+    id?: OrderByInput;
+    question?: OrderByInput;
+    description?: OrderByInput;
+    state?: OrderByInput;
+    createdAt?: OrderByInput;
+    updatedAt?: OrderByInput;
+}
+
+export class ForumWhereQuery {
+    id?: string;
+    question?: string;
+    description?: string;
+    commentsEnabled?: boolean;
+    author?: UserWhereUniqueInput;
+    state?: State;
+}
+
+export class ForumQueryInput {
+    take?: number;
+    skip?: number;
+    where?: ForumWhereQuery;
+    orderBy?: ForumOrderBy;
+    cursor?: ForumWhereUniqueInput;
+}
+
+export class ForumAnswerCreateInput {
+    content: string;
+    forum: ForumWhereUniqueInput;
+    state?: State;
+    commentsEnabled?: boolean;
+    attachments: AttachmentWhereUniqueInput[];
+}
+
+export class ForumAnswerUpdateDataInput {
+    content?: string;
+    commentsEnabled?: string;
+    state?: State;
+    attachments?: AttachmentWhereUniqueInput[];
+}
+
+export class ForumAnswerWhereUniqueInput {
+    id: string;
+}
+
+export class ForumAnswerUpdateInput {
+    where?: ForumAnswerWhereUniqueInput;
+    update?: ForumAnswerUpdateDataInput;
+}
+
+export class ForumAnswerOrderBy {
+    id?: OrderByInput;
+    content?: OrderByInput;
+    commentsEnabled?: OrderByInput;
+    state?: OrderByInput;
+    createdAt?: OrderByInput;
+    updatedAt?: OrderByInput;
+}
+
+export class ForumAnswerWhereQuery {
+    id?: string;
+    content?: string;
+    commentsEnabled?: boolean;
+    author?: UserWhereUniqueInput;
+    state?: State;
+}
+
+export class ForumAnswerQueryInput {
+    take?: number;
+    skip?: number;
+    where?: ForumAnswerWhereQuery;
+    orderBy?: ForumAnswerOrderBy;
+    cursor?: ForumAnswerWhereUniqueInput;
 }
 
 export class GradeCreateInput {
@@ -409,11 +558,29 @@ export abstract class IMutation {
 
     abstract deleteAttachment(where: AttachmentWhereUniqueInput): AttachmentResult | Promise<AttachmentResult>;
 
+    abstract createComment(data: CommentCreateInput): CommentResult | Promise<CommentResult>;
+
+    abstract updateComment(data: CommentUpdateInput): CommentResult | Promise<CommentResult>;
+
+    abstract deleteComment(where: CommentWhereUniqueInput): CommentResult | Promise<CommentResult>;
+
     abstract createForm(data: FormCreateInput): FormResult | Promise<FormResult>;
 
     abstract updateForm(data: FormUpdateInput): FormResult | Promise<FormResult>;
 
     abstract deleteForm(where: FormWhereUniqueInput): FormResult | Promise<FormResult>;
+
+    abstract createForum(data: ForumCreateInput): ForumResult | Promise<ForumResult>;
+
+    abstract updateForum(data: ForumUpdateInput): ForumResult | Promise<ForumResult>;
+
+    abstract deleteForum(where: ForumWhereUniqueInput): ForumResult | Promise<ForumResult>;
+
+    abstract createForumAnswer(data: ForumAnswerCreateInput): ForumAnswerResult | Promise<ForumAnswerResult>;
+
+    abstract updateForumAnswer(data: ForumAnswerUpdateInput): ForumAnswerResult | Promise<ForumAnswerResult>;
+
+    abstract deleteForumAnswer(where: ForumAnswerWhereUniqueInput): ForumAnswerResult | Promise<ForumAnswerResult>;
 
     abstract createGrade(data: GradeCreateInput): GradeResult | Promise<GradeResult>;
 
@@ -470,6 +637,33 @@ export class AttachmentListResult {
     files?: Attachment[];
 }
 
+export class Comment {
+    id: string;
+    content: string;
+    state: State;
+    author: User;
+    forum?: Forum;
+    forumAnswer?: ForumAnswer;
+    parent?: Comment;
+    comments?: Comment[];
+    commentsEnabled?: boolean;
+    attachments?: Attachment[];
+    createdAt?: string;
+    updatedAt?: string;
+}
+
+export class CommentResult {
+    status: boolean;
+    message: string;
+    comment?: Comment;
+}
+
+export class CommentListResult {
+    status: boolean;
+    message: string;
+    comments?: Comment[];
+}
+
 export class Form {
     id: string;
     title: string;
@@ -499,9 +693,62 @@ export class FormListResult {
 export abstract class IQuery {
     abstract forms(where?: FormQueryInput): FormListResult | Promise<FormListResult>;
 
+    abstract forums(where?: ForumQueryInput): ForumListResult | Promise<ForumListResult>;
+
     abstract responses(where: ResponseQueryInput): ResponseListResult | Promise<ResponseListResult>;
 
     abstract version(): string | Promise<string>;
+}
+
+export class Forum {
+    id: string;
+    question: string;
+    description: string;
+    state: State;
+    author: User;
+    forumAnswers?: ForumAnswer[];
+    comments?: Comment[];
+    commentsEnabled?: boolean;
+    attachments?: Attachment[];
+    createdAt?: string;
+    updatedAt?: string;
+}
+
+export class ForumResult {
+    status: boolean;
+    message: string;
+    forum?: Forum;
+}
+
+export class ForumListResult {
+    status: boolean;
+    message: string;
+    forums?: Forum[];
+}
+
+export class ForumAnswer {
+    id: string;
+    content: string;
+    state: State;
+    author: User;
+    forum: Forum;
+    comments?: Comment[];
+    commentsEnabled?: boolean;
+    attachments?: Attachment[];
+    createdAt?: string;
+    updatedAt?: string;
+}
+
+export class ForumAnswerResult {
+    status: boolean;
+    message: string;
+    forumAnswer?: ForumAnswer;
+}
+
+export class ForumAnswerListResult {
+    status: boolean;
+    message: string;
+    forumAnswers?: ForumAnswer[];
 }
 
 export class Grade {

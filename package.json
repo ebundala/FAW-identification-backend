@@ -46,6 +46,7 @@
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.0",
     "rxjs": "^6.5.3",
+    "sharp": "0.25.4",
     "uuid": "^8.2.0",
     "validator": "^13.1.1",
     "ws": "^7.3.0"
