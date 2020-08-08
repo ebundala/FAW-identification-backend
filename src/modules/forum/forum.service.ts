@@ -26,7 +26,7 @@ export class ForumService {
             return this.prisma.forum.create(args).then((forum) => {
                 return {
                     status: true,
-                    message: 'Form created successfully',
+                    message: 'Forum created successfully',
                     forum
                 }
             })

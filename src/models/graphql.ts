@@ -219,7 +219,7 @@ export class ForumCreateInput {
     question: string;
     description: string;
     state?: State;
-    attachments: AttachmentWhereUniqueInput[];
+    attachments?: AttachmentWhereUniqueInput[];
 }
 
 export class ForumUpdateDataInput {
@@ -269,7 +269,7 @@ export class ForumAnswerCreateInput {
     forum: ForumWhereUniqueInput;
     state?: State;
     commentsEnabled?: boolean;
-    attachments: AttachmentWhereUniqueInput[];
+    attachments?: AttachmentWhereUniqueInput[];
 }
 
 export class ForumAnswerUpdateDataInput {

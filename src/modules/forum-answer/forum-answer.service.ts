@@ -59,7 +59,7 @@ export class ForumAnswerService {
                 .then((forumAnswer) => {
                     return {
                         status: true,
-                        message: 'Forum updated successfully',
+                        message: 'Forum answer updated successfully',
                         forumAnswer
                     }
                 })
@@ -78,7 +78,7 @@ export class ForumAnswerService {
             }).then((forumAnswer) => {
                 return {
                     status: true,
-                    message: 'Forum deleted successfully',
+                    message: 'Forum answer deleted successfully',
                     forumAnswer
                 }
             }).catch(({ message }) => {

@@ -27,7 +27,7 @@ input ForumAnswerCreateInput{
   state:       State 
   commentsEnabled: Boolean    
  
-  attachments: [AttachmentWhereUniqueInput!]!
+  attachments: [AttachmentWhereUniqueInput!]
 }
 input ForumAnswerUpdateDataInput{
   content:       String

@@ -30,7 +30,7 @@ input ForumCreateInput{
  # questions:   [Question]!
  # grades:      [Grade!]
  # responses:   [Response!]!
-  attachments: [AttachmentWhereUniqueInput!]!
+  attachments: [AttachmentWhereUniqueInput!]
 }
 input ForumUpdateDataInput{
   question:       String
