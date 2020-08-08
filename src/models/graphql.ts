@@ -131,7 +131,7 @@ export class CommentCreateInput {
 
 export class CommentUpdateDataInput {
     content?: string;
-    commentsEnabled?: string;
+    commentsEnabled?: boolean;
     state?: State;
     attachments?: AttachmentWhereUniqueInput[];
 }
@@ -274,7 +274,7 @@ export class ForumAnswerCreateInput {
 
 export class ForumAnswerUpdateDataInput {
     content?: string;
-    commentsEnabled?: string;
+    commentsEnabled?: boolean;
     state?: State;
     attachments?: AttachmentWhereUniqueInput[];
 }
@@ -518,7 +518,7 @@ export class AuthInput {
 }
 
 export class UserWhereUniqueInput {
-    id?: number;
+    id?: string;
     email?: string;
 }
 
@@ -644,7 +644,7 @@ export class Comment {
     author: User;
     forum?: Forum;
     forumAnswer?: ForumAnswer;
-    parent?: Comment;
+    comment?: Comment;
     comments?: Comment[];
     commentsEnabled?: boolean;
     attachments?: Attachment[];

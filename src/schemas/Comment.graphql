@@ -5,7 +5,7 @@ type Comment{
   author:      User!  
   forum:       Forum
   forumAnswer: ForumAnswer 
-  parent:     Comment 
+  comment:     Comment 
   comments(where: CommentQueryInput):      [Comment!]
   commentsEnabled: Boolean
   attachments(where:AttachmentQueryInput): [Attachment!]
@@ -34,7 +34,7 @@ input CommentCreateInput{
 }
 input CommentUpdateDataInput{
   content:       String
-  commentsEnabled: String
+  commentsEnabled: Boolean
   state:       State  
   attachments: [AttachmentWhereUniqueInput!]    
 }

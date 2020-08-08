@@ -6,7 +6,10 @@ import { FormQueryInput,
      QuestionQueryInput, 
      RecommendationQueryInput, 
      OrderByInput, 
-     AnswerQueryInput } from '../../models/graphql';
+     AnswerQueryInput, 
+     ForumQueryInput,
+     ForumAnswerQueryInput,
+     CommentQueryInput} from '../../models/graphql';
 import { FindManyResponseArgs,
      ResponseWhereInput, 
      FormOrderByInput, 
@@ -26,7 +29,16 @@ import { FindManyResponseArgs,
        RecommendationOrderByInput, 
        FindManyAnswerArgs, 
        AnswerWhereInput, 
-       AnswerOrderByInput } from '@prisma/client';
+       AnswerOrderByInput, 
+       FindManyForumArgs,
+       ForumWhereInput,
+       ForumOrderByInput,
+       FindManyForumAnswerArgs,
+       ForumAnswerWhereInput,
+       ForumAnswerOrderByInput,
+       CommentWhereInput,
+       CommentOrderByInput,
+       FindManyCommentArgs} from '@prisma/client';
 
 @Injectable()
 export class QueryHelper {
@@ -534,4 +546,181 @@ export class QueryHelper {
         }
         return args; 
     }
+
+    public commentQueryBuilder(where: CommentQueryInput) {
+        const args: FindManyCommentArgs = {};
+        if (where) {
+            if (where.take) {
+                args.take = where.take;
+            }
+            if (where.skip) {
+                args.skip = where.skip;
+            }
+            if (where.where) {
+                const whereInput: CommentWhereInput = {};
+                if (where.where.id) {
+                    whereInput.id = where.where.id;
+                }
+                if (where.where.author) {
+                 //   whereInput.authorId = where.where.author.id;
+                }
+                if (where.where.state) {
+                    whereInput.state = where.where.state;
+                }
+                args.where = whereInput;
+            }
+            if (where.cursor) {
+                args.cursor = where.cursor;
+            }
+            if (where.orderBy) {
+                const orderBy: CommentOrderByInput = {};
+                if (where.orderBy.createdAt == OrderByInput.asc) {
+                    orderBy.createdAt = "asc";
+                }
+                if (where.orderBy.createdAt == OrderByInput.desc) {
+                    orderBy.createdAt = "desc";
+                }
+                if (where.orderBy.updatedAt == OrderByInput.asc) {
+                    orderBy.updatedAt = "asc";
+                }
+                if (where.orderBy.updatedAt == OrderByInput.desc) {
+                    orderBy.updatedAt = "desc";
+                }
+                if (where.orderBy.content == OrderByInput.asc) {
+                    orderBy.content = "asc";
+                }
+                if (where.orderBy.content == OrderByInput.desc) {
+                    orderBy.content = "desc";
+                }
+                if (where.orderBy.commentsEnabled == OrderByInput.asc) {
+                    orderBy.commentsEnabled = "asc";
+                }
+                if (where.orderBy.commentsEnabled == OrderByInput.desc) {
+                    orderBy.commentsEnabled = "desc";
+                }
+                args.orderBy = orderBy;
+            }
+
+        }
+        args.include = {
+            author: true,
+        };
+        return args;
+    }
+    public forumAnswerQueryBuilder(where: ForumAnswerQueryInput) {
+        const args: FindManyForumAnswerArgs = {};
+        if (where) {
+            if (where.take) {
+                args.take = where.take;
+            }
+            if (where.skip) {
+                args.skip = where.skip;
+            }
+            if (where.where) {
+                const whereInput: ForumAnswerWhereInput = {};
+                if (where.where.id) {
+                    whereInput.id = where.where.id;
+                }
+                if (where.where.author) {
+                  //  whereInput.authorId = where.where.author.id;
+                }
+                if (where.where.state) {
+                    whereInput.state = where.where.state;
+                }
+                args.where = whereInput;
+            }
+            if (where.cursor) {
+                args.cursor = where.cursor;
+            }
+            if (where.orderBy) {
+                const orderBy: ForumAnswerOrderByInput = {};
+                if (where.orderBy.createdAt == OrderByInput.asc) {
+                    orderBy.createdAt = "asc";
+                }
+                if (where.orderBy.createdAt == OrderByInput.desc) {
+                    orderBy.createdAt = "desc";
+                }
+                if (where.orderBy.updatedAt == OrderByInput.asc) {
+                    orderBy.updatedAt = "asc";
+                }
+                if (where.orderBy.updatedAt == OrderByInput.desc) {
+                    orderBy.updatedAt = "desc";
+                }
+                if (where.orderBy.commentsEnabled == OrderByInput.asc) {
+                    orderBy.commentsEnabled = "asc";
+                }
+                if (where.orderBy.commentsEnabled == OrderByInput.desc) {
+                    orderBy.commentsEnabled = "desc";
+                }
+                if (where.orderBy.content == OrderByInput.asc) {
+                    orderBy.content = "asc";
+                }
+                if (where.orderBy.content == OrderByInput.desc) {
+                    orderBy.content = "desc";
+                }
+                args.orderBy = orderBy;
+            }
+
+        }
+        args.include = {
+            author: true,
+        };
+        return args;
+    }
+    public forumQueryBuilder(where: ForumQueryInput) {
+        const args: FindManyForumArgs = {};
+        if (where) {
+            if (where.take) {
+                args.take = where.take;
+            }
+            if (where.skip) {
+                args.skip = where.skip;
+            }
+            if (where.where) {
+                const whereInput: ForumWhereInput = {};
+                if (where.where.id) {
+                    whereInput.id = where.where.id;
+                }
+                if (where.where.author) {
+
+                  //  whereInput.authorId = where.where.author.id;
+                }
+                if (where.where.state) {
+                    whereInput.state = where.where.state;
+                }
+                args.where = whereInput;
+            }
+            if (where.cursor) {
+                args.cursor = where.cursor;
+            }
+            if (where.orderBy) {
+                const orderBy: ForumOrderByInput = {};
+                if (where.orderBy.createdAt == OrderByInput.asc) {
+                    orderBy.createdAt = "asc";
+                }
+                if (where.orderBy.createdAt == OrderByInput.desc) {
+                    orderBy.createdAt = "desc";
+                }
+                if (where.orderBy.updatedAt == OrderByInput.asc) {
+                    orderBy.updatedAt = "asc";
+                }
+                if (where.orderBy.updatedAt == OrderByInput.desc) {
+                    orderBy.updatedAt = "desc";
+                }
+                if (where.orderBy.question == OrderByInput.asc) {
+                    orderBy.question = "asc";
+                }
+                if (where.orderBy.description == OrderByInput.desc) {
+                    orderBy.description = "desc";
+                }
+                args.orderBy = orderBy;
+            }
+
+        }
+        args.include = {
+            author: true,
+        };
+        return args;
+    }
+
 }

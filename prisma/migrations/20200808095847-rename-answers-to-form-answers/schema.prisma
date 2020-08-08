@@ -3,7 +3,7 @@
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url = "***"
 }
 
 generator client {
@@ -210,10 +210,10 @@ model Comment {
   state           State        @default(PENDING)
   createdAt       DateTime     @default(now())
   updatedAt       DateTime     @updatedAt
-  forum           Forum?       @relation(fields: [forumId], references: [id])
+  Forum           Forum?       @relation(fields: [forumId], references: [id])
   forumId         String?
-  forumAnswer     ForumAnswer? @relation(fields: [forumAnswerId], references: [id])
+  ForumAnswer     ForumAnswer? @relation(fields: [forumAnswerId], references: [id])
   forumAnswerId   String?
-  comment         Comment?     @relation("CommentToComment", fields: [commentId], references: [id])
+  Comment         Comment?     @relation("CommentToComment", fields: [commentId], references: [id])
   commentId       String?
 }

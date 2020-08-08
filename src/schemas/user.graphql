@@ -30,7 +30,7 @@ type SignOutResult{
 
 }
 input UserWhereUniqueInput {
-  id: Int
+  id: ID
   email: String
 }
 
