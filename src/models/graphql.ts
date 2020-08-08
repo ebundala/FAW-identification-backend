@@ -126,7 +126,7 @@ export class CommentCreateInput {
     forumAnswer?: ForumAnswerWhereUniqueInput;
     state?: State;
     commentsEnabled?: boolean;
-    attachments: AttachmentWhereUniqueInput[];
+    attachments?: AttachmentWhereUniqueInput[];
 }
 
 export class CommentUpdateDataInput {

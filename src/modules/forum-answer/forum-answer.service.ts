@@ -112,4 +112,5 @@ export class ForumAnswerService {
             return this.prisma.forumAnswer.findOne({ where: { id: parent.id } })
                 .author();
         }
+        
 }

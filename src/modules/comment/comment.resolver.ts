@@ -32,6 +32,11 @@ export class CommentResolver {
         if (ctx.auth && ctx.auth.uid)
             return this.commentService.comment(parent,ctx, ctx.auth.uid)
     }
+    @ResolveField((returns) => Comment)
+    async forumAnswer(@Parent() parent,@Context() ctx): Promise<any> {
+        if (ctx.auth && ctx.auth.uid)
+            return this.commentService.forumAnswer(parent,ctx, ctx.auth.uid)
+    }
     @ResolveField((returns) => [Comment])
     async comments(@Parent() parent, @Args("where", { type: () => CommentQueryInput }) where: CommentQueryInput, @Context() ctx): Promise<Comment[]> {
         if (ctx.auth && ctx.auth.uid)

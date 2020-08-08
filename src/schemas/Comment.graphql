@@ -30,7 +30,7 @@ input CommentCreateInput{
   forumAnswer: ForumAnswerWhereUniqueInput
   state:       State 
   commentsEnabled: Boolean  
-  attachments: [AttachmentWhereUniqueInput!]!
+  attachments: [AttachmentWhereUniqueInput!]
 }
 input CommentUpdateDataInput{
   content:       String
