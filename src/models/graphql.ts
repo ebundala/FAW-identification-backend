@@ -6,6 +6,13 @@
 
 /* tslint:disable */
 /* eslint-disable */
+export enum AttachmentType {
+    AUDIO = "AUDIO",
+    VIDEO = "VIDEO",
+    DOCUMENT = "DOCUMENT",
+    IMAGE = "IMAGE"
+}
+
 export enum OrderByInput {
     asc = "asc",
     desc = "desc"
@@ -620,6 +627,9 @@ export class Attachment {
     path: string;
     filename: string;
     mimetype: string;
+    duration?: number;
+    size: number;
+    type: AttachmentType;
     encoding: string;
     createdAt: string;
     updatedAt: string;

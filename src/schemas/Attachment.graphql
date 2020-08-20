@@ -4,11 +4,19 @@ type Attachment{
     path:             String!
     filename:         String!
     mimetype:         String!
+    duration:         Int
+    size:             Int!
+    type:             AttachmentType!
     encoding:         String!
     createdAt:        String!
     updatedAt:        String!
 }
-
+enum AttachmentType {
+  AUDIO
+  VIDEO
+  DOCUMENT
+  IMAGE
+}
 input AttachmentUpdateDataInput{    
     path:             String
     filename:         String

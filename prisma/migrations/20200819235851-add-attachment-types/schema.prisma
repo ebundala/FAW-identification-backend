@@ -3,7 +3,7 @@
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url = "***"
 }
 
 generator client {
@@ -35,8 +35,6 @@ model Attachment {
   filename         String?
   mimetype         String?
   encoding         String?
-  duration         Int             @default(0)
-  size             Int             @default(0)
   type             AttachmentType  @default(IMAGE)
   downloadable     Boolean         @default(false)
   placement        String          @default("default")
