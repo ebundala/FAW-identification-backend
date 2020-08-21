@@ -28,6 +28,22 @@ APP=${2:-faw-identification-backend_app_1}
     'log')
     ./scripts/logs.sh "$APP"
     ;;
+    'services')
+    cp ./scripts/services/*.service /etc/systemd/system/
+    ;;
+    'webhook-start')
+     service webhookd start
+    ;;
+    'webhook-restart')
+     service webhookd stop
+     service webhookd start
+    ;;
+    'webhook-status')
+     service webhookd status
+    ;;
+    'webhook-stop')
+     service webhookd stop
+    ;;
     *)
      echo "no command found"
     ;;

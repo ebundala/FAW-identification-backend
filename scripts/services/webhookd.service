@@ -1,0 +1,13 @@
+[Unit]
+Description = webhook service
+After = network.target network-online.target dbus.service
+Wants = network-online.target
+Requires = dbus.service
+
+
+[Service]
+ExecStart=/home/ebundala/FAW-identification-backend/scripts/webhook.sh
+#PIDFile = /var/run/webhookd.pid
+
+[Install]
+WantedBy=default.target

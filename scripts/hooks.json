@@ -1,0 +1,49 @@
+[
+    {
+        "id": "redeploy-webhook",
+        "execute-command": "/home/ebundala/FAW-identification-backend/scripts/redeploy.sh",
+        "command-working-directory": "/home/ebundala/FAW-identification-backend",
+        "response-message": "redeploy success",
+        "success-http-response-code": 200,
+        "include-command-output-in-response": false,
+        "include-command-output-in-response-on-error": true,
+        "pass-arguments-to-command": [
+            {
+                "source": "payload",
+                "name": "head_commit.id"
+            },
+            {
+                "source": "payload",
+                "name": "pusher.name"
+            },
+            {
+                "source": "payload",
+                "name": "pusher.email"
+            }
+        ],
+        "trigger-rule": {
+            "and": [
+                {
+                    "match": {
+                        "type": "payload-hash-sha1",
+                        "secret": "2ACKc7luz9rW04qm5vfRqG0ij9jNYA6bQNBbVFDwSPMM8tDwmUi8DZC9d0gHiJa4ksN37oskjcOINxKKXQi9LA==",
+                        "parameter": {
+                            "source": "header",
+                            "name": "X-Hub-Signature"
+                        }
+                    }
+                },
+                {
+                    "match": {
+                        "type": "value",
+                        "value": "refs/heads/master",
+                        "parameter": {
+                            "source": "payload",
+                            "name": "ref"
+                        }
+                    }
+                }
+            ]
+        }
+    }
+]
