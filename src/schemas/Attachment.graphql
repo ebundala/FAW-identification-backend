@@ -6,7 +6,7 @@ type Attachment{
     mimetype:         String!
     duration:         Int
     size:             Int!
-    type:             AttachmentType!
+    attachmentType:             AttachmentType!
     encoding:         String!
     createdAt:        String!
     updatedAt:        String!

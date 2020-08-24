@@ -37,7 +37,7 @@ model Attachment {
   encoding         String?
   duration         Int             @default(0)
   size             Int             @default(0)
-  type             AttachmentType  @default(IMAGE)
+  attachmentType             AttachmentType  @default(IMAGE)
   downloadable     Boolean         @default(false)
   placement        String          @default("default")
   createdAt        DateTime        @default(now())
