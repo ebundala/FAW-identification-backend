@@ -122,7 +122,7 @@ export class AttachmentService {
                         filename: fname,
                         mimetype: mimetype,
                         encoding: encoding,
-                        type:t,
+                        attachmentType:t,
                         duration: Math.ceil(duration*1000),
                         size: size
                     }

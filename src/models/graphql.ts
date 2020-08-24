@@ -629,7 +629,7 @@ export class Attachment {
     mimetype: string;
     duration?: number;
     size: number;
-    type: AttachmentType;
+    attachmentType: AttachmentType;
     encoding: string;
     createdAt: string;
     updatedAt: string;
