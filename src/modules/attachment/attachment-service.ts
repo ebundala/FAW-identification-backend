@@ -9,6 +9,7 @@ import { AppLogger } from '../app-logger/app-logger.module';
 import fs from 'fs';
 import * as mime from 'mime-types';
 import {getAudioDurationInSeconds} from 'get-audio-duration';
+import sharp from 'sharp';
 @Injectable()
 export class AttachmentService {
     constructor(private readonly prisma: PrismaClient,
@@ -48,12 +49,23 @@ export class AttachmentService {
                 }
             });
     }
-    writeStreamToFile = (rs, pth) => new Promise((resolve, reject) => {
+     resizer = sharp()
+  .resize({
+    width: 480,
+    height: 480,
+    fit: sharp.fit.cover,
+    position: sharp.strategy.entropy
+  }).png();
+    writeStreamToFile = (rs, pth,type) => new Promise((resolve, reject) => {
         const ws = fs.createWriteStream(pth);
         rs.on('error', reject);
         ws.on('error', reject);
         ws.on('finish', () => resolve(pth));
+        if(type=='IMAGE'){
+          rs.pipe(this.resizer).pipe(ws);
+        }else{
         rs.pipe(ws);
+    }
     });
     async createAttachment(file: FileUpload, uid: String): Promise<any> {
         const {
@@ -68,7 +80,7 @@ export class AttachmentService {
         let [type, subtype] = mimetype.split("/");
         let ext = mime.extension(mimetype);
         
-        if (ext === "bin" || ext === false || ext === 'mpga') {
+        if (ext === "bin" || ext === false || ext === 'mpga' || type=='image') {
             switch (type) {
                 case "image":
                     ext = "png"
@@ -104,13 +116,13 @@ export class AttachmentService {
                 t = AttachmentType.IMAGE
                 break;
         }
-        const fname = `${uuid}${filename}.${ext}`;
+        const fname = `${uuid}.${ext}`;
         const p = join(__dirname, '../../../public/uploads', fname)
         this.logger.debug(p, AttachmentService.name);
         const options = {
             encoding: encoding as BufferEncoding,
         }
-        return this.writeStreamToFile(stream, p)
+        return this.writeStreamToFile(stream, p,type)
             .then(async (p: string) => {
                 if(type === 'audio'){                    
                     duration  = await getAudioDurationInSeconds(p);
