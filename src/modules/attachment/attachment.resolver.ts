@@ -1,5 +1,5 @@
 import { Resolver, Mutation, Args, Context } from '@nestjs/graphql';
-import { Attachment, AttachmentResult, AttachmentUpdateInput, AttachmentWhereUniqueInput } from 'src/models/graphql';
+import { Attachment, AttachmentMetadata, AttachmentResult, AttachmentUpdateInput, AttachmentWhereUniqueInput } from 'src/models/graphql';
 import { AttachmentService } from './attachment-service';
 import { AttachmentCreateInput } from '@prisma/client';
 import { GraphQLUpload, FileUpload } from 'graphql-upload';
@@ -9,9 +9,9 @@ import { GraphQLUpload, FileUpload } from 'graphql-upload';
 export class AttachmentResolver {
     constructor(private readonly gradeService: AttachmentService){}
     @Mutation((returns)=>AttachmentResult)
-    async createAttachment(@Args('data',{type:()=>GraphQLUpload}) file: FileUpload,@Context() ctx): Promise<AttachmentResult>{
+    async createAttachment(@Args('data',{type:()=>GraphQLUpload}) file: FileUpload, @Args('metadata',{type:()=>AttachmentMetadata}) metadata: AttachmentMetadata,@Context() ctx): Promise<AttachmentResult>{
         if(ctx.auth&&ctx.auth.uid)
-        return this.gradeService.createAttachment(file,ctx.auth);
+        return this.gradeService.createAttachment(file,metadata,ctx.auth);
     }
     @Mutation((returns)=>AttachmentResult)
     async updateAttachment(@Args('data',{type:()=>AttachmentUpdateInput}) data:AttachmentUpdateInput,@Context() ctx): Promise<AttachmentResult>{

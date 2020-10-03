@@ -13,7 +13,7 @@
     "start:debug": "nest start --debug --watch",
     "dependencies":"yarn install",
     "migrate": "yarn run migrate:save && yarn run migrate:up",
-    "start:docker:debug": "yarn run dependencies && yarn run postinstall && yarn run prebuild && yarn run prisma:generate && nest start --debug 0.0.0.0:9229 --watch",
+    "start:docker:debug": "yarn run dependencies && yarn run prebuild && yarn run prisma:generate && nest start --debug 0.0.0.0:9229 --watch",
     "start:docker:prod": "yarn run dependencies && yarn run migrate && yarn run prebuild && yarn run prisma:generate && yarn run build && yarn run  start:prod",
 
     "start:prod": "node dist/main",

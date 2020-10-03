@@ -1,3 +1,4 @@
+
 scalar Upload
 type Attachment{
     id: ID!
@@ -21,7 +22,7 @@ input AttachmentUpdateDataInput{
     path:             String
     filename:         String
     mimetype:         String
-    encoding:         String     
+    metadata:         AttachmentMetadata       
 }
 input AttachmentWhereUniqueInput{
     id: ID!
@@ -63,8 +64,13 @@ input AttachmentQueryInput{
   orderBy: AttachmentOrderBy
   cursor: AttachmentWhereUniqueInput   
 }
+input AttachmentMetadata{
+    duration: Int
+    size: Int,
+    meta: String
+}
 extend type Mutation{
-    createAttachment(data: Upload!): AttachmentResult!
+    createAttachment(data: Upload!,metadata: AttachmentMetadata): AttachmentResult!
     updateAttachment(data: AttachmentUpdateInput!): AttachmentResult!
     deleteAttachment(where: AttachmentWhereUniqueInput!):AttachmentResult!
 }

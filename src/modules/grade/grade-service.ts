@@ -2,12 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { PrismaClient,
      FindManyRecommendationArgs,     
      FindManyAttachmentArgs,
+     FindManyQuestionArgs,
       FindManyResponseArgs} from '@prisma/client';
 import { GradeResult, 
     GradeCreateInput,
      GradeUpdateInput,
       GradeWhereUniqueInput,
        Grade, 
+       QuestionQueryInput,
        RecommendationQueryInput, 
        AttachmentQueryInput, 
        ResponseQueryInput } from 'src/models/graphql';
@@ -104,6 +106,12 @@ export class GradeService {
         return this.prisma.grade
             .findOne({ where: { id: parent.id } })
             .responses(args);
+    }
+    async questions(parent: Grade, where: QuestionQueryInput, ctx: any, uid: String): Promise<any[]> {
+        const args: FindManyQuestionArgs = this.helper.questionQueryBuilder(where);
+        return this.prisma.grade
+            .findOne({ where: { id: parent.id } })
+            .questions(args);
     }
     async  form(parent: Grade, ctx: any, uid: string) {
         return this.prisma.grade.findOne({where:{id:parent.id}}).form();

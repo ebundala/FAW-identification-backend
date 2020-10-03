@@ -13,11 +13,6 @@ export enum AttachmentType {
     IMAGE = "IMAGE"
 }
 
-export enum OrderByInput {
-    asc = "asc",
-    desc = "desc"
-}
-
 export enum QuestionType {
     BOOLEAN = "BOOLEAN",
     TEXT = "TEXT"
@@ -37,6 +32,11 @@ export enum State {
     APPROVED = "APPROVED",
     COMPLETED = "COMPLETED",
     ARCHIVED = "ARCHIVED"
+}
+
+export enum OrderByInput {
+    asc = "asc",
+    desc = "desc"
 }
 
 export class AnswerCreateInput {
@@ -88,7 +88,7 @@ export class AttachmentUpdateDataInput {
     path?: string;
     filename?: string;
     mimetype?: string;
-    encoding?: string;
+    metadata?: AttachmentMetadata;
 }
 
 export class AttachmentWhereUniqueInput {
@@ -124,6 +124,12 @@ export class AttachmentQueryInput {
     where?: AttachmentWhereQuery;
     orderBy?: AttachmentOrderBy;
     cursor?: AttachmentWhereUniqueInput;
+}
+
+export class AttachmentMetadata {
+    duration?: number;
+    size?: number;
+    meta?: string;
 }
 
 export class CommentCreateInput {
@@ -181,12 +187,14 @@ export class FormCreateInput {
     title: string;
     description?: string;
     state?: State;
+    category?: FormCategoryWhereUniqueInput;
     attachments: AttachmentWhereUniqueInput[];
 }
 
 export class FormUpdateDataInput {
     title?: string;
     description?: string;
+    category?: FormCategoryWhereUniqueInput;
     state?: State;
     attachments?: AttachmentWhereUniqueInput[];
 }
@@ -220,6 +228,52 @@ export class FormQueryInput {
     where?: FormWhereQuery;
     orderBy?: FormOrderBy;
     cursor?: FormWhereUniqueInput;
+}
+
+export class FormCategoryCreateInput {
+    name: string;
+    description?: string;
+    state?: State;
+    image?: AttachmentWhereUniqueInput;
+}
+
+export class FormCategoryUpdateDataInput {
+    name?: string;
+    description?: string;
+    state?: State;
+    image?: AttachmentWhereUniqueInput;
+}
+
+export class FormCategoryWhereUniqueInput {
+    id: string;
+}
+
+export class FormCategoryUpdateInput {
+    where?: FormCategoryWhereUniqueInput;
+    update?: FormCategoryUpdateDataInput;
+}
+
+export class FormCategoryOrderBy {
+    id?: OrderByInput;
+    name?: OrderByInput;
+    description?: OrderByInput;
+    state?: OrderByInput;
+    createdAt?: OrderByInput;
+    updatedAt?: OrderByInput;
+}
+
+export class FormCategoryWhereQuery {
+    id?: string;
+    name?: string;
+    state?: State;
+}
+
+export class FormCategoryQueryInput {
+    take?: number;
+    skip?: number;
+    where?: FormCategoryWhereQuery;
+    orderBy?: FormCategoryOrderBy;
+    cursor?: FormCategoryWhereUniqueInput;
 }
 
 export class ForumCreateInput {
@@ -385,6 +439,7 @@ export class QuestionCreateInput {
     instruction?: string;
     questionType: QuestionType;
     form: FormWhereUniqueInput;
+    grade: GradeWhereUniqueInput;
     attachments: AttachmentWhereUniqueInput[];
 }
 
@@ -394,6 +449,7 @@ export class QuestionUpdateDataInput {
     weight?: number;
     instruction?: string;
     questionType?: QuestionType;
+    grade?: GradeWhereUniqueInput;
     attachments?: AttachmentWhereUniqueInput[];
 }
 
@@ -424,6 +480,7 @@ export class QuestionWhereQuery {
     instruction?: string;
     weight?: number;
     questionType?: QuestionType;
+    grade?: GradeWhereUniqueInput;
 }
 
 export class QuestionQueryInput {
@@ -559,7 +616,7 @@ export abstract class IMutation {
 
     abstract deleteAnswer(where: AnswerWhereUniqueInput): AnswerResult | Promise<AnswerResult>;
 
-    abstract createAttachment(data: Upload): AttachmentResult | Promise<AttachmentResult>;
+    abstract createAttachment(data: Upload, metadata?: AttachmentMetadata): AttachmentResult | Promise<AttachmentResult>;
 
     abstract updateAttachment(data: AttachmentUpdateInput): AttachmentResult | Promise<AttachmentResult>;
 
@@ -576,6 +633,12 @@ export abstract class IMutation {
     abstract updateForm(data: FormUpdateInput): FormResult | Promise<FormResult>;
 
     abstract deleteForm(where: FormWhereUniqueInput): FormResult | Promise<FormResult>;
+
+    abstract createFormCategory(data: FormCategoryCreateInput): FormCategoryResult | Promise<FormCategoryResult>;
+
+    abstract updateFormCategory(data: FormCategoryUpdateInput): FormCategoryResult | Promise<FormCategoryResult>;
+
+    abstract deleteFormCategory(where: FormCategoryWhereUniqueInput): FormCategoryResult | Promise<FormCategoryResult>;
 
     abstract createForum(data: ForumCreateInput): ForumResult | Promise<ForumResult>;
 
@@ -680,6 +743,7 @@ export class Form {
     description?: string;
     state: State;
     author: User;
+    category?: FormCategory;
     questions?: Question[];
     grades?: Grade[];
     responses?: Response[];
@@ -703,11 +767,35 @@ export class FormListResult {
 export abstract class IQuery {
     abstract forms(where?: FormQueryInput): FormListResult | Promise<FormListResult>;
 
+    abstract formCategories(where?: FormCategoryQueryInput): FormCategoryListResult | Promise<FormCategoryListResult>;
+
     abstract forums(where?: ForumQueryInput): ForumListResult | Promise<ForumListResult>;
 
     abstract responses(where: ResponseQueryInput): ResponseListResult | Promise<ResponseListResult>;
 
     abstract version(): string | Promise<string>;
+}
+
+export class FormCategory {
+    id: string;
+    name: string;
+    description?: string;
+    state: State;
+    image?: Attachment;
+    createdAt?: string;
+    updatedAt?: string;
+}
+
+export class FormCategoryResult {
+    status: boolean;
+    message: string;
+    formCategory?: FormCategory;
+}
+
+export class FormCategoryListResult {
+    status: boolean;
+    message: string;
+    formCategories?: FormCategory[];
 }
 
 export class Forum {
@@ -768,6 +856,7 @@ export class Grade {
     form: Form;
     responses?: Response[];
     recommendations?: Recommendation[];
+    questions?: Question[];
     min: number;
     max: number;
     minInclusive?: boolean;
@@ -797,6 +886,7 @@ export class Question {
     instruction?: string;
     questionType: QuestionType;
     form: Form;
+    grade: Grade;
     answers?: Answer[];
     attachments?: Attachment[];
     createdAt?: string;

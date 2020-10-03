@@ -22,6 +22,9 @@ export class QuestionService {
                 },
                 attachments:{
                     connect:data.attachments
+                },
+                grade:{
+                    connect:{id:data.grade.id}
                 }
             }
         }
@@ -67,6 +70,11 @@ export class QuestionService {
                 connect:data.update.attachments
             }
         }
+        if(data.update.grade){
+            args.data.grade={
+                connect:data.update.grade
+            }
+        }
 
         return this.prisma.question.update(args).then((question) => {
             return {
@@ -110,5 +118,8 @@ export class QuestionService {
     }
    async form(parent: Question, ctx: any, uid: any) {
         return this.prisma.question.findOne({where:{id:parent.id}}).form()
+    }
+    async grade(parent: Question, ctx: any, uid: any) {
+        return this.prisma.question.findOne({where:{id:parent.id}}).grade()
     }
 }

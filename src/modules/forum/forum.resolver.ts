@@ -1,6 +1,6 @@
 import { Resolver, Mutation, Args, ResolveField, Parent, Context, Query, Info } from '@nestjs/graphql';
 import { ForumService } from './forum.service';
-import { ForumResult, FormCreateInput, ForumCreateInput, ForumUpdateInput, ForumWhereUniqueInput, ForumAnswer, ForumAnswerQueryInput, CommentQueryInput, Attachment, User, ForumListResult, ForumQueryInput, AttachmentQueryInput } from 'src/models/graphql';
+import { ForumResult, ForumCreateInput, ForumUpdateInput, ForumWhereUniqueInput, ForumAnswer, ForumAnswerQueryInput, CommentQueryInput, Attachment, User, ForumListResult, ForumQueryInput, AttachmentQueryInput } from 'src/models/graphql';
 
 @Resolver('Forum')
 export class ForumResolver {

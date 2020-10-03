@@ -41,7 +41,7 @@ services:
     image: ${NODE_TAG}
     #restart: always
     working_dir: /home/app
-    command: yarn run start:docker:prod
+    command: yarn run start:docker:debug
     depends_on: 
         - db
     ports: 

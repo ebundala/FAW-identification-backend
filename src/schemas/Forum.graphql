@@ -1,3 +1,4 @@
+
 type Forum{
   id:   ID!
   question:       String!
@@ -45,10 +46,7 @@ input ForumUpdateInput{
     where: ForumWhereUniqueInput
     update: ForumUpdateDataInput
 }
-enum OrderByInput{
-  asc
-  desc
-}
+
 input ForumOrderBy{
   id: OrderByInput
   question: OrderByInput

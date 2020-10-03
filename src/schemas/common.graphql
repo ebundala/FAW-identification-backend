@@ -1,9 +1,6 @@
 
 
-enum QuestionType {
-  BOOLEAN
-  TEXT
-}
+
 
 enum Role {
   USER

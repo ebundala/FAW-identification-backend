@@ -1,9 +1,11 @@
+
 type Form{
   id:   ID!
   title:       String!
   description: String
   state:       State!      
-  author:      User!      
+  author:      User!   
+  category: FormCategory   
   questions(where: QuestionQueryInput):   [Question!]
   grades(where: GradeQueryInput):      [Grade!]
   responses(where:ResponseQueryInput):   [Response!]
@@ -25,7 +27,8 @@ type FormListResult{
 input FormCreateInput{
   title:       String!
   description: String
-  state:       State      
+  state:       State   
+  category: FormCategoryWhereUniqueInput   
  # author:      UserWhereUniqueInput!     
  # questions:   [Question]!
  # grades:      [Grade!]
@@ -35,6 +38,7 @@ input FormCreateInput{
 input FormUpdateDataInput{
   title:       String
   description: String
+  category: FormCategoryWhereUniqueInput   
   state:       State  
   attachments: [AttachmentWhereUniqueInput!]    
 }

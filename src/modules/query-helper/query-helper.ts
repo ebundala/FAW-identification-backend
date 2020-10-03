@@ -9,7 +9,7 @@ import { FormQueryInput,
      AnswerQueryInput, 
      ForumQueryInput,
      ForumAnswerQueryInput,
-     CommentQueryInput} from '../../models/graphql';
+     CommentQueryInput, FormCategoryQueryInput} from '../../models/graphql';
 import { FindManyResponseArgs,
      ResponseWhereInput, 
      FormOrderByInput, 
@@ -38,7 +38,7 @@ import { FindManyResponseArgs,
        ForumAnswerOrderByInput,
        CommentWhereInput,
        CommentOrderByInput,
-       FindManyCommentArgs} from '@prisma/client';
+       FindManyCommentArgs, FindManyFormCategoryArgs, FormCategoryWhereInput, FormCategoryOrderByInput} from '@prisma/client';
 
 @Injectable()
 export class QueryHelper {
@@ -722,5 +722,58 @@ export class QueryHelper {
         };
         return args;
     }
+    public formCategoryQueryBuilder(where: FormCategoryQueryInput){
+        const args: FindManyFormCategoryArgs = {};
+        if(where){
+            if (where.take) {
+                args.take = where.take;
+            }
+            if (where.skip) {
+                args.skip = where.skip;
+            }
+            if (where.where) {
+                const whereInput: FormCategoryWhereInput = {};
+                if (where.where.id) {
+                    whereInput.id = where.where.id;
+                }
+                
+                if (where.where.state) {
+                    whereInput.state = where.where.state;
+                }
+                args.where = whereInput;
+            }
+            if (where.cursor) {
+                args.cursor = where.cursor;
+            }
+            if (where.orderBy) {
+                const orderBy: FormCategoryOrderByInput = {};
+                if (where.orderBy.createdAt == OrderByInput.asc) {
+                    orderBy.createdAt = "asc";
+                }
+                if (where.orderBy.createdAt == OrderByInput.desc) {
+                    orderBy.createdAt = "desc";
+                }
+                if (where.orderBy.updatedAt == OrderByInput.asc) {
+                    orderBy.updatedAt = "asc";
+                }
+                if (where.orderBy.updatedAt == OrderByInput.desc) {
+                    orderBy.updatedAt = "desc";
+                }
+                if (where.orderBy.name == OrderByInput.asc) {
+                    orderBy.name = "asc";
+                }
+                if (where.orderBy.name == OrderByInput.desc) {
+                    orderBy.name = "desc";
+                }
+                
+                args.orderBy = orderBy;
+            }
 
+        }
+        args.include = {
+            image: true,
+        };
+        return args;
+        }
+    
 }

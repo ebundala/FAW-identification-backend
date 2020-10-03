@@ -17,6 +17,7 @@ import { UserModule } from './modules/user/user.module';
 import { ForumModule } from './modules/forum/forum.module';
 import { ForumAnswerModule } from './modules/forum-answer/forum-answer.module';
 import { CommentModule } from './modules/comment/comment.module';
+import { FormCategoryModule } from './modules/form-category/form-category.module';
 
 @Module({
   imports: [
@@ -53,8 +54,8 @@ import { CommentModule } from './modules/comment/comment.module';
     ForumModule,
     ForumAnswerModule,
     CommentModule,
-  ],
-  
+    FormCategoryModule,
+  ],  
 })
 
 export class AppModule implements NestModule {

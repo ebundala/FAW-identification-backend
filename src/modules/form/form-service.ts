@@ -157,7 +157,10 @@ export class FormService {
         return this.prisma.form.findOne({ where: { id: parent.id } })
             .author();
     }
-
+    category(parent: Form, ctx: any, uid: string) {
+        return this.prisma.form.findOne({ where: { id: parent.id } })
+            .category();
+    }
     getForms(where?: FormQueryInput): Promise<any | FormListResult> {
         const args: FindManyFormArgs = this.helper.formQueryBuilder(where);
         return this.prisma.form.findMany(args).then((forms) => {

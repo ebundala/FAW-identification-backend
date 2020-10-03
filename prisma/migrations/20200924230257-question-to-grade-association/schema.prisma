@@ -3,7 +3,7 @@
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url = "***"
 }
 
 generator client {
@@ -61,36 +61,21 @@ model Attachment {
   forumAnswerId    String?
   Comment          Comment?        @relation(fields: [commentId], references: [id])
   commentId        String?
-  FormCategory     FormCategory[]
-}
-
-model FormCategory {
-  id           String      @default(cuid()) @id
-  name         String
-  description  String?
-  image        Attachment? @relation(fields: [attachmentId], references: [id])
-  state        State       @default(PENDING)
-  createdAt    DateTime    @default(now())
-  updatedAt    DateTime    @updatedAt
-  attachmentId String?
-  Form         Form[]
 }
 
 model Form {
-  id             String        @default(cuid()) @id
-  title          String
-  description    String?
-  state          State         @default(PENDING)
-  author         User          @relation(fields: [authorId], references: [id])
-  authorId       String
-  category       FormCategory? @relation(fields: [formCategoryId], references: [id])
-  questions      Question[]
-  grades         Grade[]
-  responses      Response[]
-  attachments    Attachment[]
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime      @updatedAt
-  formCategoryId String?
+  id          String       @default(cuid()) @id
+  title       String
+  description String?
+  state       State        @default(PENDING)
+  author      User         @relation(fields: [authorId], references: [id])
+  authorId    String
+  questions   Question[]
+  grades      Grade[]
+  responses   Response[]
+  attachments Attachment[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
 }
 
 model Grade {

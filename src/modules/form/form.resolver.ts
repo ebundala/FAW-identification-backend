@@ -2,7 +2,7 @@ import { Resolver, Mutation, Context, Args, Query, ResolveField, Parent, Info } 
 import {
     Form, FormResult, FormCreateInput,
     FormUpdateInput, FormWhereUniqueInput,
-    FormQueryInput, FormListResult, Response, ResponseQueryInput, Grade, GradeQueryInput, Question, QuestionQueryInput, Attachment, AttachmentQueryInput, User
+    FormQueryInput, FormListResult, Response, ResponseQueryInput, Grade, GradeQueryInput, Question, QuestionQueryInput, Attachment, AttachmentQueryInput, User, FormCategory
 } from 'src/models/graphql';
 import { FormService } from './form-service';
 import { query } from 'express';
@@ -50,6 +50,11 @@ export class FormResolver {
     async author(@Parent() parent, @Context() ctx){
         if(ctx.auth&&ctx.auth.uid)
         return this.formService.author(parent,ctx,ctx.auth.uid)
+    }
+    @ResolveField((returns)=>FormCategory)
+    async category(@Parent() parent, @Context() ctx){
+        if(ctx.auth&&ctx.auth.uid)
+        return this.formService.category(parent,ctx,ctx.auth.uid)
     }
     //Queries
     @Query((returns) => FormListResult)

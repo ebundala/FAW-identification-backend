@@ -1,3 +1,4 @@
+
 type Question{
   id: ID!
   questionNumber: Int!
@@ -5,11 +6,16 @@ type Question{
   weight:         Float
   instruction:    String
   questionType:   QuestionType!
-  form:           Form!        
+  form:           Form!  
+  grade:          Grade!      
   answers(where: AnswerQueryInput):        [Answer!]
   attachments(where: AttachmentQueryInput):    [Attachment!]
   createdAt:      String
   updatedAt:      String
+}
+enum QuestionType {
+  BOOLEAN
+  TEXT
 }
 
 input QuestionCreateInput{
@@ -19,7 +25,8 @@ input QuestionCreateInput{
     instruction: String
     questionType: QuestionType!
     form: FormWhereUniqueInput!
-     attachments: [AttachmentWhereUniqueInput!]! 
+    grade: GradeWhereUniqueInput!
+    attachments: [AttachmentWhereUniqueInput!]! 
 }
 input QuestionUpdateDataInput{
     questionNumber: Int
@@ -27,6 +34,7 @@ input QuestionUpdateDataInput{
     weight: Float
     instruction: String
     questionType: QuestionType
+    grade: GradeWhereUniqueInput
     attachments: [AttachmentWhereUniqueInput!] 
 }
 input QuestionWhereUniqueInput{
@@ -63,7 +71,7 @@ input QuestionWhereQuery{
     instruction: String
     weight: Float
     questionType: QuestionType
-
+    grade: GradeWhereUniqueInput
 }
 input QuestionQueryInput{
   take: Int
