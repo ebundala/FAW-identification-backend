@@ -82,7 +82,9 @@ export class RecommendationService {
             return {
                 status: true,
                 message: 'Recommendation deleted successfully',
-                recommendation
+                recommendation:{
+                    id:where.id
+                }
             }
         }).catch(({ message }) => {
             return {

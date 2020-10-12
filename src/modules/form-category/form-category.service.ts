@@ -73,7 +73,9 @@ export class FormCategoryService {
                 return {
                     status: true,
                     message: 'FormCategory deleted successfully',
-                    formCategory
+                    formCategory:{
+                        id:where.id
+                    }
                 }
             }).catch(({ message }) => {
                 return {

@@ -90,7 +90,9 @@ export class GradeService {
             return {
                 status: true,
                 message: 'Grade deleted successfully',
-                grade
+                grade:{
+                    id:where.id
+                }
             }
         }).catch(({ message }) => {
             return {

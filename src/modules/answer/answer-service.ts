@@ -74,7 +74,9 @@ export class AnswerService {
             return {
                 status: true,
                 message: 'Answer deleted successfully',
-                answer
+                answer:{
+                    id:where.id
+                }
             }
         }).catch(({ message }) => {
             return {

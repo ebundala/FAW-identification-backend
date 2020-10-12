@@ -122,7 +122,9 @@ export class FormService {
             return {
                 status: true,
                 message: 'Form deleted successfully',
-                form
+                form:{
+                    id:where.id
+                }
             }
         }).catch(({ message }) => {
             return {

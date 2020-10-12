@@ -79,7 +79,9 @@ export class ForumAnswerService {
                 return {
                     status: true,
                     message: 'Forum answer deleted successfully',
-                    forumAnswer
+                    forumAnswer:{
+                        id:where.id
+                    }
                 }
             }).catch(({ message }) => {
                 return {

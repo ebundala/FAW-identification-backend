@@ -21,7 +21,9 @@ export class AttachmentService {
             return {
                 status: true,
                 message: 'Attachment deleted successfully',
-                attachment
+                attachment:{
+                    id:where.id
+                }
             }
         }).catch(({ message }) => {
             return {

@@ -97,7 +97,9 @@ export class QuestionService {
             return {
                 status: true,
                 message: 'Question deleted successfully',
-                question
+                question:{
+                    id:where.id
+                }
             }
         }).catch(({ message }) => {
             return {

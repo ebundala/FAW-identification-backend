@@ -83,7 +83,9 @@ export class CommentService {
                 return {
                     status: true,
                     message: 'Forum deleted successfully',
-                    comment
+                    comment:{
+                        id:where.id
+                    }
                 }
             }).catch(({ message }) => {
                 return {

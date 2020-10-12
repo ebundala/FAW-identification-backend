@@ -70,7 +70,9 @@ export class ResponseService {
             return {
                 status: true,
                 message: 'Response deleted successfully',
-                response
+                response:{
+                    id:where.id
+                }
             }
         }).catch(({ message }) => {
             return {

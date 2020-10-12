@@ -75,7 +75,9 @@ export class ForumService {
                 return {
                     status: true,
                     message: 'Forum deleted successfully',
-                    forum
+                    forum:{
+                        id:where.id
+                    }
                 }
             }).catch(({ message }) => {
                 return {
