@@ -51,7 +51,7 @@ services:
         - ./:/home/app
        # - ./uploads:/home/app/uploads
     networks: 
-        webnet:
+        webnet: 
     deploy:
       replicas: 1
       resources:

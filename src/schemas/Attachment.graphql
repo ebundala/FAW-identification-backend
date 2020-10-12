@@ -7,7 +7,8 @@ type Attachment{
     mimetype:         String!
     duration:         Int
     size:             Int!
-    attachmentType:             AttachmentType!
+    isNew:            Boolean
+    attachmentType:   AttachmentType!
     encoding:         String!
     createdAt:        String!
     updatedAt:        String!

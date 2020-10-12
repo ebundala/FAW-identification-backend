@@ -62,6 +62,11 @@ export class FormService {
         if (data.attachments) {
             args.data.attachments = { connect: data.attachments }
         }
+
+        if (data.category) {
+            args.data.category = { connect:{id: data.category.id }}
+        }
+
         return this.prisma.form.create(args).then((form) => {
             return {
                 status: true,
@@ -89,6 +94,9 @@ export class FormService {
         }
         if (data.update.attachments) {
             args.data.attachments = { connect: data.update.attachments }
+        }
+        if (data.update.category) {
+            args.data.category = { connect:{id: data.update.category.id }}
         }
         return this.prisma.form.update(args)
             .then((form) => {
@@ -163,6 +171,7 @@ export class FormService {
     }
     getForms(where?: FormQueryInput): Promise<any | FormListResult> {
         const args: FindManyFormArgs = this.helper.formQueryBuilder(where);
+        
         return this.prisma.form.findMany(args).then((forms) => {
             return {
                 status: true,

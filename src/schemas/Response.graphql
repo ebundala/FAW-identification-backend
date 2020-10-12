@@ -57,9 +57,9 @@ input ResponseQueryInput{
   cursor: ResponseWhereUniqueInput   
 }
 extend type Mutation{
-    createResponse(data:ResponseCreateInput): ResponseResult!
-    updateResponse(data:ResponseUpdateInput): ResponseResult!
-    deleteResponse(where:ResponseWhereUniqueInput):ResponseResult!
+    createResponse(data:ResponseCreateInput!): ResponseResult!
+    updateResponse(data:ResponseUpdateInput!): ResponseResult!
+    deleteResponse(where:ResponseWhereUniqueInput!):ResponseResult!
 }
 extend type Query{
   responses(where: ResponseQueryInput!): ResponseListResult!

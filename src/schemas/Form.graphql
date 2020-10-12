@@ -61,6 +61,7 @@ input FormWhereQuery{
   id: ID
   authorId: ID
   state: State
+  category: FormCategoryWhereUniqueInput   
 }
 input FormQueryInput{
   take: Int

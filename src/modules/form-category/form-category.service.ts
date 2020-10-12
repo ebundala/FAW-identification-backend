@@ -31,7 +31,7 @@ export class FormCategoryService {
                 .catch(({ message }) => {
                     return {
                         status: false,
-                        message: message || 'Failed to create form'
+                        message: message || 'Failed to create form category'
                     }
                 });
         }

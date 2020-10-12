@@ -37,7 +37,7 @@ input UserWhereUniqueInput {
 
 
 extend type Mutation{
-    signup(credentials: AuthInput):AuthResult!
-    signin(credentials: AuthInput):AuthResult!
+    signup(credentials: AuthInput!):AuthResult!
+    signin(credentials: AuthInput!):AuthResult!
     signout:SignOutResult!
 }

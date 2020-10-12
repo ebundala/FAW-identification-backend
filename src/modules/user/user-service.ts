@@ -4,6 +4,7 @@ import { isEmail, isAlphanumeric, isLength } from 'validator';
 import { AuthInput, AuthResult, Role, User, SignOutResult, ResponseQueryInput, OrderByInput, FormQueryInput } from 'src/models/graphql';
 import { FirebaseService } from '../firebase-admin/firebase.service';
 import { QueryHelper } from 'src/modules/query-helper/query-helper';
+import { AppLogger } from '../app-logger/app-logger.module';
 
 @Injectable()
 export class UserService {
@@ -13,7 +14,8 @@ export class UserService {
     private readonly firebaseApp: FirebaseService,
     private readonly prisma: PrismaClient,
     private readonly httpService: HttpService,
-    private readonly helper: QueryHelper
+    private readonly helper: QueryHelper,
+    private readonly logger: AppLogger
   ) {
     this.httpService.axiosRef.defaults.baseURL = this.firebaseApp.signInWithProviderHost;
     this.httpService.axiosRef.defaults.headers.post['Content-Type'] = 'application/json';
@@ -102,6 +104,7 @@ export class UserService {
   }
 
   async signInWithEmail({ email, password }) {
+    
     var user = await this.prisma.user
     .findOne({where:{email},select:{id:true,role:true}});
     if(!user) {
@@ -119,6 +122,7 @@ export class UserService {
     return this.httpService.axiosRef
       .post(this.firebaseApp.signInWithEmailPath, buffer)
       .then(async ({ status, data }) => {
+        
         if (status === 200) {
           const { idToken } = data;
           const session = await this.createSessionToken(idToken).catch(
@@ -130,6 +134,7 @@ export class UserService {
           }
           return session;
         }
+        throw Error(`network error code ${status}`);
         
       }).catch(({message})=>{
         throw Error(`Invalid credentials: ${message}`);
@@ -225,6 +230,8 @@ export class UserService {
   
   async forms(parent: User, where: FormQueryInput, ctx: any, uid: String): Promise<any[]> {
     const args: FindManyFormArgs = this.helper.formQueryBuilder(where)
+   // this.logger.debug(args,UserService.name);
+    
     return this.prisma.user
       .findOne({ where: { id: parent.id } })
       .forms(args);

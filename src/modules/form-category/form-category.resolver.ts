@@ -6,17 +6,17 @@ import { FormCategoryService } from './form-category.service';
 export class FormCategoryResolver {
     constructor(private readonly formCategoryService: FormCategoryService) { }
     @Mutation((returns) => FormCategoryResult)
-    async createForm(@Args('data', { type: () => FormCategoryCreateInput }) data: FormCategoryCreateInput, @Context() ctx): Promise<FormCategoryResult> {
+    async createFormCategory(@Args('data', { type: () => FormCategoryCreateInput }) data: FormCategoryCreateInput, @Context() ctx): Promise<FormCategoryResult> {
         if (ctx.auth && ctx.auth.uid)
             return this.formCategoryService.createFormCategory(data, ctx.auth.uid);
     }
     @Mutation((returns) => FormCategoryResult)
-    async updateForm(@Args('data', { type: () => FormCategoryUpdateInput }) data: FormCategoryUpdateInput, @Context() ctx): Promise<FormCategoryResult> {
+    async updateFormCategory(@Args('data', { type: () => FormCategoryUpdateInput }) data: FormCategoryUpdateInput, @Context() ctx): Promise<FormCategoryResult> {
         if (ctx.auth && ctx.auth.uid)
             return this.formCategoryService.updateFormCategory(data);
     }
     @Mutation((returns) => FormCategoryResult)
-    async deleteForm(@Args('where', { type: () => FormCategoryWhereUniqueInput }) where: FormCategoryWhereUniqueInput, @Context() ctx): Promise<FormCategoryResult> {
+    async deleteFormCategory(@Args('where', { type: () => FormCategoryWhereUniqueInput }) where: FormCategoryWhereUniqueInput, @Context() ctx): Promise<FormCategoryResult> {
         if (ctx.auth && ctx.auth.uid)
             return this.formCategoryService.deleteFormCategory(where, ctx.auth.uid);
     }

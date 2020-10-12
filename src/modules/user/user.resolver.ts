@@ -20,46 +20,59 @@ import {
    Form, 
    FormQueryInput, 
    Attachment} from '../../models/graphql';
+import { AppLogger } from '../app-logger/app-logger.module';
 import { UserService } from './user-service';
 
 @Resolver((of) => User)
 export class UsersResolver {
   constructor(
-    private readonly userService: UserService
+    private readonly userService: UserService,
+    private readonly logger: AppLogger
   ) { }
-  @Mutation((returns) => User)
+  @Mutation((returns) => AuthResult)
   async signup(
     @Args('credentials', { type: () => AuthInput }) credentials: AuthInput,
     @Info() info,
     @Context() ctx
   ): Promise<AuthResult> {
-    return this.userService.signup(credentials);
+    const result=await this.userService.signup(credentials);
+    this.setAuth(result.user,ctx);
+    return result;
   }
 
-  @Mutation((returns) => User)
+  @Mutation((returns) => AuthResult)
   async signin(
     @Args('credentials', { type: () => AuthInput }) credentials: AuthInput,
+    @Info() info,
+    @Context() ctx
   ): Promise<AuthResult> {
-    return this.userService.signInWithEmail(credentials);
+   // this.logger.debug(ctx.req.body.query)
+   //  debugger
+    const result = await this.userService.signInWithEmail(credentials);
+    this.setAuth(result.user,ctx);
+    return result;
+  }
+  private setAuth(user,ctx){
+    ctx.auth={uid:user.id,};
   }
   @Mutation((retuns) => SignOutResult)
   async signout(@Context() ctx): Promise<SignOutResult> {
     return this.userService.signOut(ctx.token)
   }
   @ResolveField((returns) => [Response])
-  async responses(@Parent() parent, @Args("where", { type: () => ResponseQueryInput }) where: ResponseQueryInput, @Context() ctx): Promise<Response[]> {
-    if (ctx.auth && ctx.auth.uid)
-      return this.userService.responses(parent, where, ctx, ctx.auth.uid)
+  async responses(@Parent() parent: User, @Args("responsesWhere", { type: () => ResponseQueryInput }) where: ResponseQueryInput, @Context() ctx): Promise<Response[]> {
+    if (parent && parent.id)
+      return this.userService.responses(parent, where, ctx, parent.id)
   }
 
   @ResolveField((returns) => [Form])
-  async forms(@Parent() parent, @Args("where", { type: () => FormQueryInput }) where: FormQueryInput, @Context() ctx): Promise<Form[]> {
-    if (ctx.auth && ctx.auth.uid)
-      return this.userService.forms(parent, where, ctx, ctx.auth.uid)
+  async forms(@Parent() parent: User, @Args("formsWhere", { type: () => FormQueryInput }) where: FormQueryInput, @Context() ctx): Promise<Form[]> {
+    if (parent && parent.id)
+      return this.userService.forms(parent, where, ctx, parent.id)
   }
   @ResolveField((returns)=>Attachment)
     async avator(@Parent() parent: User, @Context() ctx){
-        if(ctx.auth&&ctx.auth.uid)
-        return this.userService.avator(parent,ctx,ctx.auth.uid)
+      if (parent && parent.id)
+        return this.userService.avator(parent,ctx,parent.id)
     }
 }

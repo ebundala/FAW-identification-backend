@@ -220,6 +220,7 @@ export class FormWhereQuery {
     id?: string;
     authorId?: string;
     state?: State;
+    category?: FormCategoryWhereUniqueInput;
 }
 
 export class FormQueryInput {
@@ -658,11 +659,11 @@ export abstract class IMutation {
 
     abstract deleteGrade(where: GradeWhereUniqueInput): GradeResult | Promise<GradeResult>;
 
-    abstract createQuestion(data?: QuestionCreateInput): QuestionResult | Promise<QuestionResult>;
+    abstract createQuestion(data: QuestionCreateInput): QuestionResult | Promise<QuestionResult>;
 
-    abstract updateQuestion(data?: QuestionUpdateInput): QuestionResult | Promise<QuestionResult>;
+    abstract updateQuestion(data: QuestionUpdateInput): QuestionResult | Promise<QuestionResult>;
 
-    abstract deleteQuestion(where?: QuestionWhereUniqueInput): QuestionResult | Promise<QuestionResult>;
+    abstract deleteQuestion(where: QuestionWhereUniqueInput): QuestionResult | Promise<QuestionResult>;
 
     abstract createRecommendation(data: RecommendationCreateInput): RecommendationResult | Promise<RecommendationResult>;
 
@@ -670,17 +671,17 @@ export abstract class IMutation {
 
     abstract deleteRecommendation(where: RecommendationWhereUniqueInput): RecommendationResult | Promise<RecommendationResult>;
 
-    abstract createResponse(data?: ResponseCreateInput): ResponseResult | Promise<ResponseResult>;
+    abstract createResponse(data: ResponseCreateInput): ResponseResult | Promise<ResponseResult>;
 
-    abstract updateResponse(data?: ResponseUpdateInput): ResponseResult | Promise<ResponseResult>;
+    abstract updateResponse(data: ResponseUpdateInput): ResponseResult | Promise<ResponseResult>;
 
-    abstract deleteResponse(where?: ResponseWhereUniqueInput): ResponseResult | Promise<ResponseResult>;
+    abstract deleteResponse(where: ResponseWhereUniqueInput): ResponseResult | Promise<ResponseResult>;
 
     abstract version(): string | Promise<string>;
 
-    abstract signup(credentials?: AuthInput): AuthResult | Promise<AuthResult>;
+    abstract signup(credentials: AuthInput): AuthResult | Promise<AuthResult>;
 
-    abstract signin(credentials?: AuthInput): AuthResult | Promise<AuthResult>;
+    abstract signin(credentials: AuthInput): AuthResult | Promise<AuthResult>;
 
     abstract signout(): SignOutResult | Promise<SignOutResult>;
 }
@@ -692,6 +693,7 @@ export class Attachment {
     mimetype: string;
     duration?: number;
     size: number;
+    isNew?: boolean;
     attachmentType: AttachmentType;
     encoding: string;
     createdAt: string;

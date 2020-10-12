@@ -3,6 +3,7 @@ import { PrismaClient,
      FindManyRecommendationArgs,     
      FindManyAttachmentArgs,
      FindManyQuestionArgs,
+     
       FindManyResponseArgs} from '@prisma/client';
 import { GradeResult, 
     GradeCreateInput,
@@ -12,7 +13,7 @@ import { GradeResult,
        QuestionQueryInput,
        RecommendationQueryInput, 
        AttachmentQueryInput, 
-       ResponseQueryInput } from 'src/models/graphql';
+       ResponseQueryInput, GradeUpdateDataInput } from 'src/models/graphql';
 import { QueryHelper } from '../query-helper/query-helper';
 
 @Injectable()
@@ -28,8 +29,8 @@ export class GradeService {
                 description:data.description,
                 max: data.max,
                 min: data.min,
-                maxInclusive:data.maxInclusive,
-                minInclusive: data.minInclusive,
+                maxInclusive:data.maxInclusive?true:false,
+                minInclusive: data.minInclusive?true:false,
                 form:{
                     connect:{
                         id:data.form.id
@@ -52,9 +53,17 @@ export class GradeService {
         });
     }
     async updateGrade(data: GradeUpdateInput, uid: String): Promise<any> {
+        const update:GradeUpdateDataInput={} 
+          const entries=Object.entries(data.update)
+          for(const[k,v] of entries){
+            if(v){
+                update[k]=v
+            }
+          }
+
         return this.prisma.grade.update({
             where: data.where,
-            data: data.update,
+            data: update,
            
         })
             .then((grade) => {

@@ -452,6 +452,9 @@ export class QueryHelper {
                 if (where.where.state) {
                     whereInput.state = where.where.state;
                 }
+                if (where.where.category) {
+                    whereInput.category = where.where.category;
+                }
                 args.where = whereInput;
             }
             if (where.cursor) {
@@ -683,7 +686,7 @@ export class QueryHelper {
                 }
                 if (where.where.author) {
 
-                  //  whereInput.authorId = where.where.author.id;
+                    whereInput.author = where.where.author;
                 }
                 if (where.where.state) {
                     whereInput.state = where.where.state;

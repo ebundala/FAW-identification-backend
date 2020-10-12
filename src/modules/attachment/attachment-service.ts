@@ -159,12 +159,13 @@ export class AttachmentService {
                         return {
                             status: true,
                             message: 'Attachment created successfully',
-                            file
+                            file:{isNew:true,...file}
                         }
                     }
                 );
             }).catch(
                 ({ message }) => {
+                    
                     return {
                         status: false,
                         message: message || "Unknown error failed to upload file"

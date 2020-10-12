@@ -82,8 +82,8 @@ input QuestionQueryInput{
 }
 
 extend type Mutation{
-    createQuestion(data:QuestionCreateInput): QuestionResult!
-    updateQuestion(data:QuestionUpdateInput): QuestionResult!
-    deleteQuestion(where:QuestionWhereUniqueInput):QuestionResult!
+    createQuestion(data:QuestionCreateInput!): QuestionResult!
+    updateQuestion(data:QuestionUpdateInput!): QuestionResult!
+    deleteQuestion(where:QuestionWhereUniqueInput!):QuestionResult!
 }
 
