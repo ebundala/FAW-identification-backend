@@ -587,6 +587,54 @@ export class UserWhereUniqueInput {
     email?: string;
 }
 
+export class UserUpdateDataInput {
+    email?: string;
+    displayName?: string;
+    phoneNumber?: string;
+    emailVerified?: boolean;
+    disabled?: boolean;
+    state?: State;
+    avator?: AttachmentWhereUniqueInput;
+    role?: Role;
+}
+
+export class UserUpdateInput {
+    where?: UserWhereUniqueInput;
+    update?: UserUpdateDataInput;
+}
+
+export class UserOrderBy {
+    id?: OrderByInput;
+    email?: OrderByInput;
+    displayName?: OrderByInput;
+    phoneNumber?: OrderByInput;
+    emailVerified?: OrderByInput;
+    disabled?: OrderByInput;
+    role?: OrderByInput;
+    state?: OrderByInput;
+    createdAt?: OrderByInput;
+    updatedAt?: OrderByInput;
+}
+
+export class UserWhereQuery {
+    id?: string;
+    email?: string;
+    displayName?: string;
+    phoneNumber?: string;
+    emailVerified?: boolean;
+    disabled?: boolean;
+    role?: Role;
+    state?: State;
+}
+
+export class UserQueryInput {
+    take?: number;
+    skip?: number;
+    where?: UserWhereQuery;
+    orderBy?: UserOrderBy;
+    cursor?: UserWhereUniqueInput;
+}
+
 export class Answer {
     id: string;
     response: Response;
@@ -684,6 +732,10 @@ export abstract class IMutation {
     abstract signin(credentials: AuthInput): AuthResult | Promise<AuthResult>;
 
     abstract signout(): SignOutResult | Promise<SignOutResult>;
+
+    abstract updateUser(data: UserUpdateInput): UserResult | Promise<UserResult>;
+
+    abstract deleteUser(where: UserWhereUniqueInput): UserResult | Promise<UserResult>;
 }
 
 export class Attachment {
@@ -776,6 +828,8 @@ export abstract class IQuery {
     abstract responses(where: ResponseQueryInput): ResponseListResult | Promise<ResponseListResult>;
 
     abstract version(): string | Promise<string>;
+
+    abstract users(where?: UserQueryInput): UserListResult | Promise<UserListResult>;
 }
 
 export class FormCategory {
@@ -965,6 +1019,7 @@ export class User {
     disabled: boolean;
     avator?: Attachment;
     role: Role;
+    state: State;
     forms: Form[];
     responses: Response[];
     createdAt: string;
@@ -981,6 +1036,18 @@ export class AuthResult {
 export class SignOutResult {
     status?: boolean;
     message?: string;
+}
+
+export class UserResult {
+    status: boolean;
+    message: string;
+    user?: User;
+}
+
+export class UserListResult {
+    status: boolean;
+    message: string;
+    users?: User[];
 }
 
 export type Upload = any;

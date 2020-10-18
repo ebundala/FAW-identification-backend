@@ -1,11 +1,14 @@
-import { Resolver, Mutation, Context, Args, Query, ResolveField, Parent, Info } from '@nestjs/graphql';
+import { Args, Context, Info, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
 import {
-    Form, FormResult, FormCreateInput,
+    Attachment, AttachmentQueryInput, Form,
+
+    FormCategory, FormCreateInput,
+
+    FormListResult, FormQueryInput, FormResult,
     FormUpdateInput, FormWhereUniqueInput,
-    FormQueryInput, FormListResult, Response, ResponseQueryInput, Grade, GradeQueryInput, Question, QuestionQueryInput, Attachment, AttachmentQueryInput, User, FormCategory
+    Grade, GradeQueryInput, Question, QuestionQueryInput, Response, ResponseQueryInput, User
 } from 'src/models/graphql';
 import { FormService } from './form-service';
-import { query } from 'express';
 
 @Resolver((of) => Form)
 export class FormResolver {
@@ -13,19 +16,19 @@ export class FormResolver {
     @Mutation((returns) => FormResult)
     async createForm(@Args('data', { type: () => FormCreateInput }) data: FormCreateInput, @Context() ctx): Promise<FormResult> {
         if (ctx.auth && ctx.auth.uid)
-            return this.formService.createForm(data, ctx.auth.uid);
+            return this.formService.createForm(data, ctx, ctx.auth.uid);
     }
     @Mutation((returns) => FormResult)
     async updateForm(@Args('data', { type: () => FormUpdateInput }) data: FormUpdateInput, @Context() ctx): Promise<FormResult> {
         if (ctx.auth && ctx.auth.uid)
-            return this.formService.updateForm(data);
+            return this.formService.updateForm(data, ctx);
     }
     @Mutation((returns) => FormResult)
     async deleteForm(@Args('where', { type: () => FormWhereUniqueInput }) where: FormWhereUniqueInput, @Context() ctx): Promise<FormResult> {
         if (ctx.auth && ctx.auth.uid)
-            return this.formService.deleteForm(where, ctx.auth.uid);
+            return this.formService.deleteForm(where, ctx, ctx.auth.uid);
     }
-    
+
     @ResolveField((returns) => [Response])
     async responses(@Parent() parent, @Args("where", { type: () => ResponseQueryInput }) where: ResponseQueryInput, @Context() ctx): Promise<Response[]> {
         if (ctx.auth && ctx.auth.uid)
@@ -46,21 +49,21 @@ export class FormResolver {
         if (ctx.auth && ctx.auth.uid)
             return this.formService.attachments(parent, where, ctx, ctx.auth.uid)
     }
-    @ResolveField((returns)=>User)
-    async author(@Parent() parent, @Context() ctx){
-        if(ctx.auth&&ctx.auth.uid)
-        return this.formService.author(parent,ctx,ctx.auth.uid)
+    @ResolveField((returns) => User)
+    async author(@Parent() parent, @Context() ctx) {
+        if (ctx.auth && ctx.auth.uid)
+            return this.formService.author(parent, ctx, ctx.auth.uid)
     }
-    @ResolveField((returns)=>FormCategory)
-    async category(@Parent() parent, @Context() ctx){
-        if(ctx.auth&&ctx.auth.uid)
-        return this.formService.category(parent,ctx,ctx.auth.uid)
+    @ResolveField((returns) => FormCategory)
+    async category(@Parent() parent, @Context() ctx) {
+        if (ctx.auth && ctx.auth.uid)
+            return this.formService.category(parent, ctx, ctx.auth.uid)
     }
     //Queries
     @Query((returns) => FormListResult)
     async forms(@Args('where', { type: () => FormQueryInput }) where: FormQueryInput, @Context() ctx,
-    @Info() info): Promise<FormListResult> {
+        @Info() info): Promise<FormListResult> {
         if (ctx.auth && ctx.auth.uid)
-        return this.formService.getForms(where);
+            return this.formService.getForms(where);
     }
 }

@@ -1,48 +1,323 @@
 import { Injectable } from '@nestjs/common';
-import { FormQueryInput, 
-    ResponseQueryInput, 
-    GradeQueryInput,
-     AttachmentQueryInput, 
-     QuestionQueryInput, 
-     RecommendationQueryInput, 
-     OrderByInput, 
-     AnswerQueryInput, 
-     ForumQueryInput,
-     ForumAnswerQueryInput,
-     CommentQueryInput, FormCategoryQueryInput} from '../../models/graphql';
-import { FindManyResponseArgs,
-     ResponseWhereInput, 
-     FormOrderByInput, 
-     FindManyQuestionArgs, 
-     QuestionWhereInput,
-      QuestionOrderByInput,
-       FindManyGradeArgs, 
-       GradeWhereInput, 
-       GradeOrderByInput, 
-       FindManyAttachmentArgs, 
-       AttachmentWhereInput, 
-       AttachmentOrderByInput, 
-       FindManyFormArgs, 
-       FormWhereInput, 
-       FindManyRecommendationArgs, 
-       RecommendationWhereInput, 
-       RecommendationOrderByInput, 
-       FindManyAnswerArgs, 
-       AnswerWhereInput, 
-       AnswerOrderByInput, 
-       FindManyForumArgs,
-       ForumWhereInput,
-       ForumOrderByInput,
-       FindManyForumAnswerArgs,
-       ForumAnswerWhereInput,
-       ForumAnswerOrderByInput,
-       CommentWhereInput,
-       CommentOrderByInput,
-       FindManyCommentArgs, FindManyFormCategoryArgs, FormCategoryWhereInput, FormCategoryOrderByInput} from '@prisma/client';
+import {
+    AnswerOrderByInput, AnswerWhereInput, AttachmentOrderByInput, AttachmentWhereInput,
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    CommentOrderByInput, CommentWhereInput, FindManyAnswerArgs, FindManyAttachmentArgs,
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    FindManyCommentArgs, FindManyFormArgs,
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    FindManyFormCategoryArgs, FindManyForumAnswerArgs, FindManyForumArgs, FindManyGradeArgs, FindManyQuestionArgs,
+
+
+
+
+
+
+
+
+
+
+    FindManyRecommendationArgs, FindManyResponseArgs,
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    FindManyUserArgs, FormCategoryOrderByInput, FormCategoryWhereInput, FormOrderByInput,
+
+
+
+
+
+
+
+
+
+
+    FormWhereInput,
+
+
+
+
+
+
+
+
+
+
+
+    ForumAnswerOrderByInput, ForumAnswerWhereInput, ForumOrderByInput, ForumWhereInput, GradeOrderByInput, GradeWhereInput, QuestionOrderByInput, QuestionWhereInput,
+
+
+
+
+
+
+
+
+
+
+
+    RecommendationOrderByInput, RecommendationWhereInput, ResponseWhereInput,
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    Role,
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    UserOrderByInput, UserWhereInput
+} from '@prisma/client';
+import { GraphQLError } from 'graphql';
+import {
+    AnswerQueryInput, AttachmentQueryInput,
+
+
+
+
+
+
+    CommentQueryInput, FormCategoryQueryInput, FormQueryInput,
+
+
+
+
+
+
+
+
+    ForumAnswerQueryInput, ForumQueryInput, GradeQueryInput,
+
+
+
+    OrderByInput, QuestionQueryInput,
+    RecommendationQueryInput, ResponseQueryInput,
+
+
+
+
+
+
+
+
+    UserQueryInput,
+    UserWhereUniqueInput
+} from '../../models/graphql';
 
 @Injectable()
 export class QueryHelper {
-   public answersQueryBuilder(where: AnswerQueryInput) {
+    userQueryBuilder(where: UserQueryInput): FindManyUserArgs {
+        const args: FindManyUserArgs = {};
+        if (where) {
+            if (where.take) {
+                args.take = where.take
+            }
+            if (where.skip) {
+                args.skip = where.skip
+            }
+            if (where.where) {
+                const whereInput: UserWhereInput = {}
+                if (where.where.id) {
+                    whereInput.id = where.where.id
+                }
+                if (where.where.email) {
+                    whereInput.email = where.where.email
+                }
+                if (where.where.phoneNumber) {
+                    whereInput.phoneNumber = where.where.phoneNumber
+                }
+                if (where.where.disabled) {
+                    whereInput.disabled = where.where.disabled
+                }
+                if (where.where.emailVerified) {
+                    whereInput.emailVerified = where.where.emailVerified
+                }
+                if (where.where.role) {
+                    whereInput.role = where.where.role
+                }
+                if (where.where.state) {
+                    whereInput.state = where.where.state
+                }
+                args.where = whereInput
+            }
+            if (where.cursor) {
+                args.cursor = where.cursor
+            }
+
+            if (where.orderBy) {
+                const orderBy: UserOrderByInput = {}
+                if (where.orderBy.createdAt == OrderByInput.asc) {
+                    orderBy.createdAt = "asc"
+                }
+                if (where.orderBy.createdAt == OrderByInput.desc) {
+                    orderBy.createdAt = "desc"
+                }
+                if (where.orderBy.updatedAt == OrderByInput.asc) {
+                    orderBy.updatedAt = "asc"
+                }
+                if (where.orderBy.updatedAt == OrderByInput.desc) {
+                    orderBy.updatedAt = "desc"
+                }
+                if (where.orderBy.email == OrderByInput.asc) {
+                    orderBy.email = "asc"
+                }
+                if (where.orderBy.email == OrderByInput.desc) {
+                    orderBy.email = "desc"
+                }
+                if (where.orderBy.disabled == OrderByInput.asc) {
+                    orderBy.disabled = "asc"
+                }
+                if (where.orderBy.disabled == OrderByInput.desc) {
+                    orderBy.disabled = "desc"
+                }
+                if (where.orderBy.emailVerified == OrderByInput.asc) {
+                    orderBy.emailVerified = "asc"
+                }
+                if (where.orderBy.emailVerified == OrderByInput.desc) {
+                    orderBy.emailVerified = "desc"
+                }
+                if (where.orderBy.phoneNumber == OrderByInput.asc) {
+                    orderBy.phoneNumber = "asc"
+                }
+                if (where.orderBy.phoneNumber == OrderByInput.desc) {
+                    orderBy.phoneNumber = "desc"
+                }
+                if (where.orderBy.role == OrderByInput.asc) {
+                    orderBy.role = "asc"
+                }
+                if (where.orderBy.role == OrderByInput.desc) {
+                    orderBy.role = "desc"
+                }
+                if (where.orderBy.state == OrderByInput.asc) {
+                    orderBy.state = "asc"
+                }
+                if (where.orderBy.state == OrderByInput.desc) {
+                    orderBy.state = "desc"
+                }
+                args.orderBy = orderBy;
+            }
+
+        }
+        args.include = {
+            avator: true,
+        }
+        return args
+    }
+    public answersQueryBuilder(where: AnswerQueryInput) {
         const args: FindManyAnswerArgs = {};
         if (where) {
             if (where.take) {
@@ -56,8 +331,8 @@ export class QueryHelper {
                 if (where.where.id) {
                     whereInput.id = where.where.id
                 }
-                
-                
+
+
                 args.where = whereInput
             }
             if (where.cursor) {
@@ -93,11 +368,11 @@ export class QueryHelper {
             }
 
         }
-        args.include={
-                response: true,
-                question: true,
-            }
-            return args
+        args.include = {
+            response: true,
+            question: true,
+        }
+        return args
     }
     public responseQueryBuilder(where: ResponseQueryInput) {
         const args: FindManyResponseArgs = {};
@@ -489,7 +764,7 @@ export class QueryHelper {
         };
         return args;
     }
-    public recommendationQueryBuilder(where: RecommendationQueryInput){
+    public recommendationQueryBuilder(where: RecommendationQueryInput) {
         const args: FindManyRecommendationArgs = {};
         if (where) {
             if (where.take) {
@@ -506,8 +781,8 @@ export class QueryHelper {
                 if (where.where.content) {
                     whereInput.content = where.where.content;
                 }
-                if (where.where.grade&&where.where.grade.id) {
-                    whereInput.grade = {id:where.where.grade.id};
+                if (where.where.grade && where.where.grade.id) {
+                    whereInput.grade = { id: where.where.grade.id };
                 }
                 args.where = whereInput;
             }
@@ -541,13 +816,13 @@ export class QueryHelper {
                 if (where.orderBy.id == OrderByInput.desc) {
                     orderBy.id = "desc";
                 }
-                
+
 
                 args.orderBy = orderBy;
             }
 
         }
-        return args; 
+        return args;
     }
 
     public commentQueryBuilder(where: CommentQueryInput) {
@@ -565,7 +840,7 @@ export class QueryHelper {
                     whereInput.id = where.where.id;
                 }
                 if (where.where.author) {
-                 //   whereInput.authorId = where.where.author.id;
+                    //   whereInput.authorId = where.where.author.id;
                 }
                 if (where.where.state) {
                     whereInput.state = where.where.state;
@@ -625,7 +900,7 @@ export class QueryHelper {
                     whereInput.id = where.where.id;
                 }
                 if (where.where.author) {
-                  //  whereInput.authorId = where.where.author.id;
+                    //  whereInput.authorId = where.where.author.id;
                 }
                 if (where.where.state) {
                     whereInput.state = where.where.state;
@@ -725,9 +1000,9 @@ export class QueryHelper {
         };
         return args;
     }
-    public formCategoryQueryBuilder(where: FormCategoryQueryInput){
+    public formCategoryQueryBuilder(where: FormCategoryQueryInput) {
         const args: FindManyFormCategoryArgs = {};
-        if(where){
+        if (where) {
             if (where.take) {
                 args.take = where.take;
             }
@@ -739,7 +1014,7 @@ export class QueryHelper {
                 if (where.where.id) {
                     whereInput.id = where.where.id;
                 }
-                
+
                 if (where.where.state) {
                     whereInput.state = where.where.state;
                 }
@@ -768,7 +1043,7 @@ export class QueryHelper {
                 if (where.orderBy.name == OrderByInput.desc) {
                     orderBy.name = "desc";
                 }
-                
+
                 args.orderBy = orderBy;
             }
 
@@ -777,6 +1052,24 @@ export class QueryHelper {
             image: true,
         };
         return args;
+    }
+    public isAdmin(ctx: any) {
+        if (!(ctx.auth.role === Role.ADMIN)) {
+            throw new GraphQLError("You dont have permision to perform this action");
         }
-    
+    }
+    public isOwner(where: UserWhereUniqueInput, ctx: any,) {
+        if (!where.id && !where.email)
+            throw new GraphQLError("You dont have permision to perform this action");
+
+        if (where.id)
+            if (!(ctx.auth.uid === where.id)) {
+                throw new GraphQLError("You dont have permision to perform this action");
+            }
+        if (where.email)
+            if (!(ctx.auth.email === where.email)) {
+                throw new GraphQLError("You dont have permision to perform this action");
+            }
+
+    }
 }

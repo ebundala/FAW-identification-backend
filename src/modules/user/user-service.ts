@@ -1,14 +1,15 @@
-import { Injectable, HttpService } from '@nestjs/common';
-import { PrismaClient, FindManyResponseArgs, ResponseWhereInput, ResponseOrderByInput, FindManyFormArgs, FormWhereInput, FormOrderByInput } from '@prisma/client'
-import { isEmail, isAlphanumeric, isLength } from 'validator';
-import { AuthInput, AuthResult, Role, User, SignOutResult, ResponseQueryInput, OrderByInput, FormQueryInput } from 'src/models/graphql';
-import { FirebaseService } from '../firebase-admin/firebase.service';
+import { HttpService, Injectable } from '@nestjs/common';
+import { FindManyFormArgs, FindManyResponseArgs, FindManyUserArgs, PrismaClient, State, UserUpdateArgs } from '@prisma/client';
+import { GraphQLError } from 'graphql';
+import { AuthInput, AuthResult, FormQueryInput, ResponseQueryInput, Role, SignOutResult, User, UserQueryInput, UserUpdateInput, UserWhereUniqueInput } from 'src/models/graphql';
 import { QueryHelper } from 'src/modules/query-helper/query-helper';
+import { isEmail, isLength } from 'validator';
 import { AppLogger } from '../app-logger/app-logger.module';
+import { FirebaseService } from '../firebase-admin/firebase.service';
 
 @Injectable()
 export class UserService {
-  
+
 
   constructor(
     private readonly firebaseApp: FirebaseService,
@@ -104,14 +105,20 @@ export class UserService {
   }
 
   async signInWithEmail({ email, password }) {
-    
+
     var user = await this.prisma.user
-    .findOne({where:{email},select:{id:true,role:true}});
-    if(!user) {
-      throw new Error('Signin failed user does not exist');
+      .findOne({ where: { email }, select: { id: true, state: true, role: true } });
+    if (!user) {
+      throw new GraphQLError('Signin failed user does not exist');
     }
-    if(user.role == Role.ADMIN){
-      
+    if (user.state === State.ARCHIVED || user.state === State.REJECTED || user.state === State.COMPLETED) {
+      throw new GraphQLError("Your account is deactivated")
+    }
+    if (user.state === State.PENDING || user.state === State.REVIEW) {
+      throw new GraphQLError("Your account is under review please try again later")
+    }
+    if (user.role == Role.ADMIN) {
+
       await this._setUserAdminClaims(user)
     }
     const returnSecureToken = true;
@@ -122,7 +129,7 @@ export class UserService {
     return this.httpService.axiosRef
       .post(this.firebaseApp.signInWithEmailPath, buffer)
       .then(async ({ status, data }) => {
-        
+
         if (status === 200) {
           const { idToken } = data;
           const session = await this.createSessionToken(idToken).catch(
@@ -135,8 +142,8 @@ export class UserService {
           return session;
         }
         throw Error(`network error code ${status}`);
-        
-      }).catch(({message})=>{
+
+      }).catch(({ message }) => {
         throw Error(`Invalid credentials: ${message}`);
       });
   }
@@ -166,7 +173,7 @@ export class UserService {
       .then(() => true)
       .catch(() => false);
   }
- async createSessionToken(idToken, expiresIn = 60 * 60 * 5 * 24 * 1000) {
+  async createSessionToken(idToken, expiresIn = 60 * 60 * 5 * 24 * 1000) {
 
     return this.firebaseApp.admin
       .auth()
@@ -204,7 +211,7 @@ export class UserService {
       });
   }
 
- async destroySessionToken(sessionToken) {
+  async destroySessionToken(sessionToken) {
     return this.firebaseApp.admin
       .auth()
       .verifySessionCookie(sessionToken)
@@ -221,24 +228,105 @@ export class UserService {
         }
       });
   }
- async responses(parent: User, where: ResponseQueryInput, ctx: any, uid: String): Promise<any[]> {
+  async responses(parent: User, where: ResponseQueryInput, ctx: any, uid: String): Promise<any[]> {
     const args: FindManyResponseArgs = this.helper.responseQueryBuilder(where);
     return this.prisma.user
       .findOne({ where: { id: parent.id } })
       .responses(args);
   }
-  
+
   async forms(parent: User, where: FormQueryInput, ctx: any, uid: String): Promise<any[]> {
     const args: FindManyFormArgs = this.helper.formQueryBuilder(where)
-   // this.logger.debug(args,UserService.name);
-    
+    // this.logger.debug(args,UserService.name);
+
     return this.prisma.user
       .findOne({ where: { id: parent.id } })
       .forms(args);
   }
   async avator(parent: User, ctx: any, uid: any) {
-    return this.prisma.user.findOne({where:{id:parent.id}}).avator();
+    return this.prisma.user.findOne({ where: { id: parent.id } }).avator();
   }
+
+  updateUser(data: UserUpdateInput, ctx: any, uid: any): Promise<any> {
+    this.helper.isOwner(data.where, ctx);
+    const args: UserUpdateArgs = { where: data.where, data: {} };
+    if (data.update.displayName) {
+      args.data.displayName = data.update.displayName
+    }
+    if (data.update.email) {
+      this.helper.isAdmin(ctx);
+      args.data.email = data.update.email
+    }
+    if (data.update.disabled) {
+      this.helper.isAdmin(ctx);
+      args.data.disabled = data.update.disabled
+    }
+    if (data.update.avator) {
+      args.data.avator = { connect: data.update.avator }
+    }
+    if (data.update.phoneNumber) {
+      args.data.phoneNumber = data.update.phoneNumber
+    }
+    if (data.update.emailVerified) {
+      args.data.emailVerified = data.update.emailVerified
+    }
+    if (data.update.role) {
+      this.helper.isAdmin(ctx);
+      args.data.role = data.update.role
+    }
+    return this.prisma.user.update(args)
+      .then((user) => {
+        return {
+          status: true,
+          message: 'user updated successfully',
+          user
+        }
+      })
+      .catch(({ message }) => {
+        return {
+          status: false,
+          message: message || 'Failed to update user'
+        }
+      });
+
+  }
+
+  deleteUser(where: UserWhereUniqueInput, ctx: any, uid: any): Promise<any> {
+    this.helper.isAdmin(ctx);
+    return this.prisma.forum.delete({
+      where: where,
+    }).then((forum) => {
+      return {
+        status: true,
+        message: 'User deleted successfully',
+        user: {
+          id: where.id
+        }
+      }
+    }).catch(({ message }) => {
+      return {
+        status: false,
+        message: message || 'Failed to delete user account'
+      }
+    })
+  }
+  getUsers(ctx: any, uid: any, where?: UserQueryInput,): Promise<any> {
+    this.helper.isAdmin(ctx);
+    const args: FindManyUserArgs = this.helper.userQueryBuilder(where);
+    return this.prisma.user.findMany(args).then((users) => {
+      return {
+        status: true,
+        message: 'Success',
+        users
+      }
+    }).catch(({ message }) => {
+      return {
+        status: false,
+        message: message || 'Failed to fetch users',
+      }
+    });
+  }
+
   /*
   linkIdProvider({ idToken, username }) {
     log(idToken);

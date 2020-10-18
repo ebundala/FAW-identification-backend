@@ -48,7 +48,8 @@ export class FormService {
         private readonly helper: QueryHelper,
         private readonly logger: AppLogger
     ) { }
-    createForm(data: FormCreateInput, uid: string): Promise<any | FormResult> {
+    createForm(data: FormCreateInput, ctx: any, uid: string): Promise<any | FormResult> {
+        this.helper.isAdmin(ctx);
         const args: FormCreateArgs = {
             data: {
                 title: data.title,
@@ -64,7 +65,7 @@ export class FormService {
         }
 
         if (data.category) {
-            args.data.category = { connect:{id: data.category.id }}
+            args.data.category = { connect: { id: data.category.id } }
         }
 
         return this.prisma.form.create(args).then((form) => {
@@ -81,7 +82,8 @@ export class FormService {
                 }
             });
     }
-    updateForm(data: FormUpdateInput): Promise<any> {
+    updateForm(data: FormUpdateInput, ctx: any): Promise<any> {
+        this.helper.isAdmin(ctx);
         const args: FormUpdateArgs = { where: data.where, data: {} };
         if (data.update.title) {
             args.data.title = data.update.title
@@ -96,7 +98,7 @@ export class FormService {
             args.data.attachments = { connect: data.update.attachments }
         }
         if (data.update.category) {
-            args.data.category = { connect:{id: data.update.category.id }}
+            args.data.category = { connect: { id: data.update.category.id } }
         }
         return this.prisma.form.update(args)
             .then((form) => {
@@ -115,15 +117,16 @@ export class FormService {
 
     }
 
-    deleteForm(where: FormWhereUniqueInput, uid: String): Promise<any> {
+    deleteForm(where: FormWhereUniqueInput, ctx: any, uid: String): Promise<any> {
+        this.helper.isAdmin(ctx);
         return this.prisma.form.delete({
             where: where,
         }).then((form) => {
             return {
                 status: true,
                 message: 'Form deleted successfully',
-                form:{
-                    id:where.id
+                form: {
+                    id: where.id
                 }
             }
         }).catch(({ message }) => {
@@ -173,7 +176,7 @@ export class FormService {
     }
     getForms(where?: FormQueryInput): Promise<any | FormListResult> {
         const args: FindManyFormArgs = this.helper.formQueryBuilder(where);
-        
+
         return this.prisma.form.findMany(args).then((forms) => {
             return {
                 status: true,
@@ -201,11 +204,10 @@ const _visit = (ast) => {
     })
 }
 const enter = (node, key, parent, path, ancestors) => {
-    if (node.selectionSet && (node.selectionSet.kind == Kind.SELECTION_SET)) 
-    {
+    if (node.selectionSet && (node.selectionSet.kind == Kind.SELECTION_SET)) {
 
         const selections = node.selectionSet.selections;
-       // console.log(selections);
+        // console.log(selections);
         if (selections && selections.lengh) {
             const sets = selections.map((item) => {
                 if (item.selectionSet) {
@@ -218,7 +220,7 @@ const enter = (node, key, parent, path, ancestors) => {
         }
         return { [node.name.value]: true }
     }
-return node
+    return node
 }
 
 const leave = (node, key, parent, path, ancestors) => {

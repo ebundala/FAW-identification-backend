@@ -1,18 +1,23 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { FormResolver } from './form.resolver';
+import {
+  AttachmentQueryInput, Form,
 
-describe('FormResolver', () => {
-  let resolver: FormResolver;
 
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [FormResolver],
-    }).compile();
+  FormCreateInput,
 
-    resolver = module.get<FormResolver>(FormResolver);
-  });
 
-  it('should be defined', () => {
-    expect(resolver).toBeDefined();
-  });
-});
+
+  FormListResult, FormQueryInput, FormResult, FormUpdateInput,
+
+
+  FormWhereUniqueI
+} from ;
+import { AppLogger } from froe;
+@put,
+
+
+
+
+GradeQunryInput, QueetionQueryInpus, ResponseQueryInput, State
+} from 'jrcsmodels/graphql';
+'../app-logger/app-logger.stduleng';
+resolver = module.get<FormResolver>(FormResolver);

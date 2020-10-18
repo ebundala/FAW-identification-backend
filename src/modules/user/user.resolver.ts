@@ -1,25 +1,56 @@
 import {
-  ResolveField,
-  Resolver,
-  Query,
-  Mutation,
-  Int,
   Args,
-  Parent,
-  Info,
-  Context,
+
+
+  Context, Info, Mutation,
+
+
+  Parent, Query, ResolveField,
+  Resolver
 } from '@nestjs/graphql';
-import { 
-  User,
-   AuthInput, 
-  AuthResult, 
-  Role, 
-  SignOutResult,
-   Response, 
-   ResponseQueryInput, 
-   Form, 
-   FormQueryInput, 
-   Attachment} from '../../models/graphql';
+import {
+  Attachment, AuthInput,
+  AuthResult,
+
+
+
+
+  Form,
+  FormQueryInput, Response,
+  ResponseQueryInput, SignOutResult, User,
+
+
+
+
+
+
+
+
+
+  UserListResult,
+
+
+
+
+
+
+
+
+
+  UserQueryInput,
+
+
+
+
+
+
+
+
+
+  UserResult,
+  UserUpdateInput,
+  UserWhereUniqueInput
+} from '../../models/graphql';
 import { AppLogger } from '../app-logger/app-logger.module';
 import { UserService } from './user-service';
 
@@ -35,8 +66,8 @@ export class UsersResolver {
     @Info() info,
     @Context() ctx
   ): Promise<AuthResult> {
-    const result=await this.userService.signup(credentials);
-    this.setAuth(result.user,ctx);
+    const result = await this.userService.signup(credentials);
+    this.setAuth(result.user, ctx);
     return result;
   }
 
@@ -46,18 +77,33 @@ export class UsersResolver {
     @Info() info,
     @Context() ctx
   ): Promise<AuthResult> {
-   // this.logger.debug(ctx.req.body.query)
-   //  debugger
+    // this.logger.debug(ctx.req.body.query)
+    //  debugger
     const result = await this.userService.signInWithEmail(credentials);
-    this.setAuth(result.user,ctx);
+    this.setAuth(result.user, ctx);
     return result;
   }
-  private setAuth(user,ctx){
-    ctx.auth={uid:user.id,};
+  private setAuth(user, ctx) {
+    ctx.auth = { uid: user.id, };
   }
   @Mutation((retuns) => SignOutResult)
   async signout(@Context() ctx): Promise<SignOutResult> {
     return this.userService.signOut(ctx.token)
+  }
+  @Mutation((retuns) => UserResult)
+  async deleteUser(@Args("where", { type: () => UserWhereUniqueInput }) where: UserWhereUniqueInput, @Context() ctx): Promise<UserResult> {
+    return this.userService.deleteUser(where, ctx, ctx.auth.uid);
+  }
+
+  @Mutation((retuns) => UserResult)
+  async updateUser(@Args("data", { type: () => UserUpdateInput }) data: UserUpdateInput, @Context() ctx): Promise<UserResult> {
+    return this.userService.updateUser(data, ctx, ctx.auth.uid)
+  }
+  @Query((retuns) => UserResult)
+  async users(@Args("where", { type: () => UserQueryInput }) where: UserQueryInput, @Context() ctx): Promise<UserListResult> {
+    debugger
+
+    return this.userService.getUsers(ctx, ctx.auth.uid, where)
   }
   @ResolveField((returns) => [Response])
   async responses(@Parent() parent: User, @Args("responsesWhere", { type: () => ResponseQueryInput }) where: ResponseQueryInput, @Context() ctx): Promise<Response[]> {
@@ -70,9 +116,11 @@ export class UsersResolver {
     if (parent && parent.id)
       return this.userService.forms(parent, where, ctx, parent.id)
   }
-  @ResolveField((returns)=>Attachment)
-    async avator(@Parent() parent: User, @Context() ctx){
-      if (parent && parent.id)
-        return this.userService.avator(parent,ctx,parent.id)
-    }
+  @ResolveField((returns) => Attachment)
+  async avator(@Parent() parent: User, @Context() ctx) {
+    if (parent && parent.id)
+      return this.userService.avator(parent, ctx, parent.id)
+  }
 }
+
+

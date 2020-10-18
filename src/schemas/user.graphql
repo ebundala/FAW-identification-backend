@@ -1,43 +1,104 @@
-
 type User {
-   id:            ID!          
-  email:         String!  
-  displayName:   String
-  phoneNumber:   String
-  emailVerified: Boolean!    
-  disabled:      Boolean!   
-  avator:        Attachment
-  role:          Role!     
-  forms(where:FormQueryInput):         [Form!]!
-  responses(where:ResponseQueryInput):     [Response!]!
-  createdAt:     String!  
-  updatedAt:     String!   
- 
+	id:            ID!          
+	email:         String!  
+	displayName:   String
+	phoneNumber:   String
+	emailVerified: Boolean!    
+	disabled:      Boolean!   
+	avator:        Attachment
+	role:          Role!   
+	state:         State!  
+	forms(where: FormQueryInput):         [Form!]!
+	responses(where: ResponseQueryInput):     [Response!]!
+	createdAt:     String!  
+	updatedAt:     String!   
 }
-input AuthInput{
-    email: String!
-    password: String!
-    displayName: String
+input AuthInput {
+	email: String!
+	password: String!
+	displayName: String
 }
-type AuthResult{
-    token: String
-    error: Boolean!
-    message: String!
-    user: User 
+type AuthResult {
+	token: String
+	error: Boolean!
+	message: String!
+	user: User 
 }
-type SignOutResult{
- status: Boolean
- message: String
+type SignOutResult {
+	status: Boolean
+	message: String
 
 }
 input UserWhereUniqueInput {
-  id: ID
-  email: String
+	id: ID
+	email: String
+}
+type UserResult {
+	status: Boolean!
+	message: String!
+	user: User
+}
+type UserListResult {
+	status: Boolean!
+	message: String!
+	users: [User!]
+}
+
+input UserUpdateDataInput {
+	email:         String  
+	displayName:   String
+	phoneNumber:   String
+	emailVerified: Boolean    
+	disabled:      Boolean  
+	state:         State
+	avator:        AttachmentWhereUniqueInput
+	role:          Role   
+}
+
+input UserUpdateInput {
+	where: UserWhereUniqueInput
+	update: UserUpdateDataInput
+}
+
+input UserOrderBy {
+	id: OrderByInput
+	email:         OrderByInput  
+	displayName:   OrderByInput
+	phoneNumber:   OrderByInput
+	emailVerified: OrderByInput    
+	disabled:      OrderByInput 
+	role:      OrderByInput 
+	state:     OrderByInput
+	createdAt: OrderByInput
+	updatedAt: OrderByInput
+}
+input UserWhereQuery {
+	id: ID
+	email:         String  
+	displayName:   String
+	phoneNumber:   String
+	emailVerified: Boolean    
+	disabled:      Boolean 
+	role:          Role  
+	state:         State
+}
+input UserQueryInput {
+	take: Int
+	skip: Int
+	where: UserWhereQuery
+	orderBy: UserOrderBy
+	cursor: UserWhereUniqueInput
 }
 
 
-extend type Mutation{
-    signup(credentials: AuthInput!):AuthResult!
-    signin(credentials: AuthInput!):AuthResult!
-    signout:SignOutResult!
+extend type Query {
+	users(where: UserQueryInput): UserListResult!
+}
+
+extend type Mutation {
+	signup(credentials: AuthInput!): AuthResult!
+	signin(credentials: AuthInput!): AuthResult!
+	signout: SignOutResult!
+	updateUser(data: UserUpdateInput!): UserResult!
+	deleteUser(where: UserWhereUniqueInput!): UserResult!
 }

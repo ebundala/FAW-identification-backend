@@ -122,8 +122,8 @@ export class ResponseService {
         return this.prisma.response.findOne({ where: { id: parent.id } }).author();
     }
     async grade(parent: Response, ctx: any, uid: any) {
-        //calculate grade here;
-
+        //TODO calculate grade here;
+    /*
         const response = await this.prisma.response.findOne({
             where: { id: parent.id },
             include: {
@@ -169,7 +169,7 @@ export class ResponseService {
                 return grades[0];
             }
             return null;
-        }
+        }*/
     }
 
 }
