@@ -31,7 +31,6 @@ type SignOutResult {
 }
 input UserWhereUniqueInput {
 	id: ID
-	email: String
 }
 type UserResult {
 	status: Boolean!

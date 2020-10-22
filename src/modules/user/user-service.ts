@@ -248,7 +248,9 @@ export class UserService {
   }
 
   updateUser(data: UserUpdateInput, ctx: any, uid: any): Promise<any> {
+    debugger
     this.helper.isOwner(data.where, ctx);
+
     const args: UserUpdateArgs = { where: data.where, data: {} };
     if (data.update.displayName) {
       args.data.displayName = data.update.displayName
@@ -268,11 +270,16 @@ export class UserService {
       args.data.phoneNumber = data.update.phoneNumber
     }
     if (data.update.emailVerified) {
+      this.helper.isAdmin(ctx);
       args.data.emailVerified = data.update.emailVerified
     }
     if (data.update.role) {
       this.helper.isAdmin(ctx);
       args.data.role = data.update.role
+    }
+    if (data.update.state) {
+      this.helper.isAdmin(ctx);
+      args.data.state = data.update.state;
     }
     return this.prisma.user.update(args)
       .then((user) => {

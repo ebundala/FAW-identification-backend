@@ -1,15 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaClient, AttachmentType } from '@prisma/client';
-import { AttachmentUpdateInput, AttachmentWhereUniqueInput, AttachmentResult, AttachmentMetadata } from 'src/models/graphql';
-import { createWriteStream, ReadStream } from 'fs';
-import { join } from 'path';
-import { v4 as uuidv4 } from 'uuid';
-import { FileUpload } from 'graphql-upload';
-import { AppLogger } from '../app-logger/app-logger.module';
-import fs from 'fs';
-import * as mime from 'mime-types';
+import { AttachmentType, PrismaClient } from '@prisma/client';
+import fs, { ReadStream } from 'fs';
 import { getAudioDurationInSeconds } from 'get-audio-duration';
+import { FileUpload } from 'graphql-upload';
+import * as mime from 'mime-types';
+import { join } from 'path';
 import sharp from 'sharp';
+import { AttachmentMetadata, AttachmentResult, AttachmentUpdateInput, AttachmentWhereUniqueInput } from 'src/models/graphql';
+import { v4 as uuidv4 } from 'uuid';
+import { AppLogger } from '../app-logger/app-logger.module';
 @Injectable()
 export class AttachmentService {
     constructor(private readonly prisma: PrismaClient,
@@ -21,8 +20,8 @@ export class AttachmentService {
             return {
                 status: true,
                 message: 'Attachment deleted successfully',
-                attachment:{
-                    id:where.id
+                attachment: {
+                    id: where.id
                 }
             }
         }).catch(({ message }) => {
@@ -51,25 +50,42 @@ export class AttachmentService {
                 }
             });
     }
-    resizer(){
-        return sharp()
-        .resize({
-            width: 480,
-            height: 480,
-            fit: sharp.fit.cover,
-            position: sharp.strategy.entropy
-        }).webp();
+    resizer(rs: ReadStream, ws: fs.WriteStream) {
+        const st = sharp()
+            .resize({
+                width: 480,
+                height: 480,
+                fit: sharp.fit.cover,
+                position: sharp.strategy.entropy
+            }).webp();
+        const onError = (e) => {
+
+            this.logger.error(e.message);
+            rs.emit("error", e);
+            ws.emit("error", e);
+
+        }
+        st.on('error', onError.bind(this));
+        return st;
     }
-    writeStreamToFile = (rs, path, type: AttachmentType) => new Promise((resolve, reject) => {
+    writeStreamToFile = (rs: ReadStream, path: string, type: AttachmentType) => new Promise((resolve, reject) => {
         const ws = fs.createWriteStream(path);
-        rs.on('error', reject);
-        ws.on('error', reject);
+        const onError = (e) => {
+            ws.close();
+            rs.close();
+
+            reject(e)
+            this.logger.error(e);
+        }
+        rs.on('error', onError.bind(this));
+        ws.on('error', onError.bind(this));
         ws.on('finish', () => {
-           const size= ws.bytesWritten;
-           ws.close();
-            resolve({path,size});});
+            const size = ws.bytesWritten;
+            ws.close();
+            resolve({ path, size });
+        });
         if (type == AttachmentType.IMAGE) {
-            rs.pipe(this.resizer()).pipe(ws);
+            rs.pipe(this.resizer(rs, ws)).pipe(ws);
         } else {
             rs.pipe(ws);
         }
@@ -128,15 +144,16 @@ export class AttachmentService {
         const options = {
             encoding: encoding as BufferEncoding,
         }
+
         return this.writeStreamToFile(stream, p, t)
-            .then(async (r:{path: string,size: number}) => {
+            .then(async (r: { path: string, size: number }) => {
                 let duration = 0
-                let size=r.size||0;
-                    if (metadata) {
-                        size = size || metadata.size;
-                    }
+                let size = r.size || 0;
+                if (metadata) {
+                    size = size || metadata.size;
+                }
                 if (t === AttachmentType.AUDIO) {
-                    
+
                     if (metadata && !metadata.duration) {
                         duration = await getAudioDurationInSeconds(p);
                     } else if (metadata && metadata.duration) {
@@ -161,13 +178,13 @@ export class AttachmentService {
                         return {
                             status: true,
                             message: 'Attachment created successfully',
-                            file:{isNew:true,...file}
+                            file: { isNew: true, ...file }
                         }
                     }
                 );
             }).catch(
                 ({ message }) => {
-                    
+
                     return {
                         status: false,
                         message: message || "Unknown error failed to upload file"

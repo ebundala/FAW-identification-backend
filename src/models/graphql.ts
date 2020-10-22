@@ -584,7 +584,6 @@ export class AuthInput {
 
 export class UserWhereUniqueInput {
     id?: string;
-    email?: string;
 }
 
 export class UserUpdateDataInput {

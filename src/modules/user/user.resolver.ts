@@ -97,12 +97,11 @@ export class UsersResolver {
 
   @Mutation((retuns) => UserResult)
   async updateUser(@Args("data", { type: () => UserUpdateInput }) data: UserUpdateInput, @Context() ctx): Promise<UserResult> {
+    debugger
     return this.userService.updateUser(data, ctx, ctx.auth.uid)
   }
   @Query((retuns) => UserResult)
   async users(@Args("where", { type: () => UserQueryInput }) where: UserQueryInput, @Context() ctx): Promise<UserListResult> {
-    debugger
-
     return this.userService.getUsers(ctx, ctx.auth.uid, where)
   }
   @ResolveField((returns) => [Response])

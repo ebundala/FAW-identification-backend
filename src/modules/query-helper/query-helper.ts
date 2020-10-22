@@ -1059,17 +1059,15 @@ export class QueryHelper {
         }
     }
     public isOwner(where: UserWhereUniqueInput, ctx: any,) {
-        if (!where.id && !where.email)
-            throw new GraphQLError("You dont have permision to perform this action");
+        if (!(ctx.auth.role === Role.ADMIN)) {
+            if (!where.id)
+                throw new GraphQLError("You dont have permision to perform this action");
 
-        if (where.id)
+
             if (!(ctx.auth.uid === where.id)) {
                 throw new GraphQLError("You dont have permision to perform this action");
             }
-        if (where.email)
-            if (!(ctx.auth.email === where.email)) {
-                throw new GraphQLError("You dont have permision to perform this action");
-            }
 
+        }
     }
 }
