@@ -67,7 +67,7 @@ export class UsersResolver {
     @Context() ctx
   ): Promise<AuthResult> {
     const result = await this.userService.signup(credentials);
-    this.setAuth(result.user, ctx);
+    //this.setAuth(result.user, ctx);
     return result;
   }
 
