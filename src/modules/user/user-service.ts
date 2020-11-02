@@ -32,11 +32,11 @@ export class UserService {
   async signupWithEmail(data: AuthInput): Promise<AuthResult> {
     const { email, password, displayName } = data;
     if (!isEmail(email)) {
-      throw new Error('Invalid Email');
+      throw new GraphQLError('Invalid Email');
     } else if (!isLength(password, 6)) {
-      throw new Error('Password must be atleast 6 characters long');
+      throw new GraphQLError('Password must be atleast 6 characters long');
     } else if (!isLength(displayName, 3)) {
-      throw new Error('Username must be 3 characters or more');
+      throw new GraphQLError('Username must be 3 characters or more');
     }/* else if (!isAlphanumeric(displayName)) {
       throw new Error('Username can not contain special characters');
     }*/ else {
@@ -45,7 +45,7 @@ export class UserService {
         .findOne({ where: { email } })
         .catch(() => false);
       if (exist) {
-        throw new Error(
+        throw new GraphQLError(
           'The email address is already in use by another account',
         );
       } else {
@@ -61,28 +61,36 @@ export class UserService {
                 emailVerified: user.emailVerified,
                 role: Role.USER,
               },
-            }).catch(async (e) => {
+            }).catch(async ({ message }) => {
               await users.delete({ where: { email } });
-              throw e;
+              throw new GraphQLError(message || "Failed to create user account");
             })
           )
           .then(async (user) => {
             const setClaims = await this._setUserClaims(user);
             if (setClaims) {
-              const session = await this.signInWithEmail({ email, password })
-                .catch((e) => e);
+              /*const session = await this.signInWithEmail({ email, password })
+                 .catch((e) => e);
+ 
+               if (session instanceof Error) {
+                 await this.cleanUpOnSignUpFailure(user);
+                 throw session;
+               }
+               return session;*/
+              // return {
+              //  error:false,
 
-              if (session instanceof Error) {
-                await this.cleanUpOnSignUpFailure(user);
-                throw session;
+              // };
+              return {
+                error: false,
+                message: "Thank you for registering\n you will receive a confimation email when your account is ready",
               }
-              return session;
             }
 
             if (!await this.cleanUpOnSignUpFailure(user)) {
-              throw Error('Failed to cleanup user signup errors')
+              throw new GraphQLError('Failed to cleanup user signup errors')
             };
-            throw Error('Failed to create user account')
+            throw new GraphQLError('Failed to create user account')
 
           })
           .then((session) => session);
