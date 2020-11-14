@@ -38,15 +38,18 @@ services:
       restart_policy:
         condition: on-failure
   app:
-    image: ${NODE_TAG}    
+    image: ${NODE_TAG}
+    #restart: always
     working_dir: /home/app
-    command: yarn run start:docker:prod
+    command: yarn run start:docker:debug
     depends_on:
       - db
     ports:
       - ${APP_PORT}:3000
+      - 9228:9229 #debugger port disable in production
     volumes:
       - ./:/home/app
+      # - ./uploads:/home/app/uploads
     networks:
       webnet:
     deploy:
