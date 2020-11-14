@@ -1,2 +1,2 @@
 #!/bin/sh
-./cmd.sh deploy
+./faw deploy
