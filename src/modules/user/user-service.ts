@@ -1,11 +1,20 @@
 import { HttpService, Injectable } from '@nestjs/common';
-import { FindManyFormArgs, FindManyResponseArgs, FindManyUserArgs, PrismaClient, State, UserUpdateArgs } from '@prisma/client';
+import {
+  FindManyFormArgs,
+  FindManyResponseArgs, FindManyUserArgs, PrismaClient, Role as _Role,
+  State, State as _State, User as _User,
+  UserUpdateArgs
+} from '@prisma/client';
 import { GraphQLError } from 'graphql';
-import { AuthInput, AuthResult, FormQueryInput, ResponseQueryInput, Role, SignOutResult, User, UserQueryInput, UserUpdateInput, UserWhereUniqueInput } from 'src/models/graphql';
+import {
+  AuthInput, AuthResult, FormQueryInput, ResponseQueryInput,
+  Role, SignOutResult, User, UserQueryInput, UserUpdateInput, UserWhereUniqueInput
+} from 'src/models/graphql';
 import { QueryHelper } from 'src/modules/query-helper/query-helper';
 import { isEmail, isLength } from 'validator';
 import { AppLogger } from '../app-logger/app-logger.module';
 import { FirebaseService } from '../firebase-admin/firebase.service';
+import { MailService } from '../mail/mail.service';
 
 @Injectable()
 export class UserService {
@@ -16,13 +25,19 @@ export class UserService {
     private readonly prisma: PrismaClient,
     private readonly httpService: HttpService,
     private readonly helper: QueryHelper,
-    private readonly logger: AppLogger
+    private readonly logger: AppLogger,
+    private readonly mail: MailService
   ) {
     this.httpService.axiosRef.defaults.baseURL = this.firebaseApp.signInWithProviderHost;
     this.httpService.axiosRef.defaults.headers.post['Content-Type'] = 'application/json';
+    this.logger.setContext(UserService.name);
   }
   async signup(credentials: AuthInput): Promise<AuthResult> {
-    return this.signupWithEmail(credentials)
+    const res = await this.signupWithEmail(credentials);
+    if (!res.error) {
+      await this.mail.sendWelcomeEmail(credentials.email).catch((e) => { this.logger.debug(e) });
+    }
+    return res;
   }
 
   signOut(token: String): Promise<SignOutResult> {
@@ -81,6 +96,7 @@ export class UserService {
               //  error:false,
 
               // };
+
               return {
                 error: false,
                 message: "Thank you for registering\n you will receive a confimation email when your account is ready",
@@ -255,9 +271,10 @@ export class UserService {
     return this.prisma.user.findOne({ where: { id: parent.id } }).avator();
   }
 
-  updateUser(data: UserUpdateInput, ctx: any, uid: any): Promise<any> {
-    debugger
+  async updateUser(data: UserUpdateInput, ctx: any, uid: any): Promise<any> {
+
     this.helper.isOwner(data.where, ctx);
+    const _user = await this.prisma.user.findOne({ where: { id: data.where.id } });
 
     const args: UserUpdateArgs = { where: data.where, data: {} };
     if (data.update.displayName) {
@@ -270,6 +287,7 @@ export class UserService {
     if (data.update.disabled) {
       this.helper.isAdmin(ctx);
       args.data.disabled = data.update.disabled
+
     }
     if (data.update.avator) {
       args.data.avator = { connect: data.update.avator }
@@ -289,7 +307,7 @@ export class UserService {
       this.helper.isAdmin(ctx);
       args.data.state = data.update.state;
     }
-    return this.prisma.user.update(args)
+    const result = await this.prisma.user.update(args)
       .then((user) => {
         return {
           status: true,
@@ -300,10 +318,49 @@ export class UserService {
       .catch(({ message }) => {
         return {
           status: false,
-          message: message || 'Failed to update user'
+          message: message || 'Failed to update user',
+          user: undefined
         }
       });
+    if (result.status) {
+      const __user = (result.user as _User);
+      if (_user.role != __user.role) {
+        if (__user.role == _Role.ADMIN) {
+          //Todo admin activated
+          await this.mail.sendAccountMadeAdminEmail(__user.id).catch((e) => {
+            this.logger.error(e);
+          });
+        }
+        else if (_user.role == _Role.ADMIN) {
+          //todo admin deactivated
+          await this.mail.sendAccountRemovedAdminEmail(__user.id).catch((e) => {
+            this.logger.error(e);
+          });
+        }
 
+      }
+      if (_user.state != __user.state) {
+        if (__user.state == _State.APPROVED) {
+          //user approved
+          await this.mail.sendAccountActivationEmail(__user.id).catch((e) => {
+            this.logger.error(e);
+          });
+        }
+        else if (__user.state == _State.REJECTED) {
+          //user deactivated
+          await this.mail.sendAccountDeactivationEmail(__user.id).catch((e) => {
+            this.logger.error(e);
+          });
+        }
+        else if (__user.state == _State.ARCHIVED) {
+          //user archived
+          await this.mail.sendAccountDeactivationEmail(__user.id).catch((e) => {
+            this.logger.error(e);
+          });
+        }
+      }
+    }
+    return result;
   }
 
   deleteUser(where: UserWhereUniqueInput, ctx: any, uid: any): Promise<any> {

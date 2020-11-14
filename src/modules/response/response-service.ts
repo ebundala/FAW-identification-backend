@@ -122,63 +122,66 @@ export class ResponseService {
     }
     async grade(parent: Response, ctx: any, uid: any) {
         //TODO calculate grade here;
-
-        const response = await this.prisma.response.findOne({
-            where: { id: parent.id, },
-            include: {
-                answers: {
-                    include: {
-                        question: {
-                            include: {
-                                grade: {
-                                    include: {
-                                        recommendations: true
-                                    }
-                                },
+        try {
+            const response = await this.prisma.response.findOne({
+                where: { id: parent.id, },
+                include: {
+                    answers: {
+                        include: {
+                            question: {
+                                include: {
+                                    grade: {
+                                        include: {
+                                            recommendations: true
+                                        }
+                                    },
+                                }
                             }
                         }
-                    }
-                },
-
-                form: {
-                    include: {
-                        grades: {
-                            include: {
-
-                                recommendations: true,
-                                questions: true
-                            }
-                        },
-                        questions: true
                     },
 
-                }
-            }
-        });
-        // debugger;
-        if (response.state === State.APPROVED) {
-            const { questions, grades } = response.form;
-            const { answers } = response;
-            const gradeScore = grades.map((grade) => {
-                const gTotal = grade.max;
-                const cutof = grade.min;
-                if (grade.questions.length) {
-                    const wTotal = grade.questions.map((v) => v.weight).reduce((p, c) => p + c);
-                    const score = answers.filter((a) => a.question.gradeId === grade.id && a.booleanValue === true)
-                        .map((p) => p.question.weight)
-                        .reduce((p, c) => p + c);
-                    //calculate grade score;
-                    const gScore = (score / wTotal) * gTotal;
-                    const passed = gScore > cutof;
-                    return { grade, gScore, passed };
-                }
-                return { grade, gScore: 0, passed: false }
-            });
-            const sorted = gradeScore.filter((g) => g.passed).sort((a, b) => a.gScore - b.gScore);
+                    form: {
+                        include: {
+                            grades: {
+                                include: {
 
-            return sorted.length ? sorted[0].grade : null;
+                                    recommendations: true,
+                                    questions: true
+                                }
+                            },
+                            questions: true
+                        },
+
+                    }
+                }
+            });
+            // debugger;
+            if (response.state === State.APPROVED) {
+                const { questions, grades } = response.form;
+                const { answers } = response;
+                const gradeScore = grades.map((grade) => {
+                    const gTotal = grade.max;
+                    const cutof = grade.min;
+                    if (grade.questions.length) {
+                        const wTotal = grade.questions.map((v) => v.weight).reduce((p, c) => p + c);
+                        const score = answers.filter((a) => a.question.gradeId === grade.id && a.booleanValue === true)
+                            .map((p) => p.question.weight)
+                            .reduce((p, c) => p + c);
+                        //calculate grade score;
+                        const gScore = (score / wTotal) * gTotal;
+                        const passed = gScore > cutof;
+                        return { grade, gScore, passed };
+                    }
+                    return { grade, gScore: 0, passed: false }
+                });
+                const sorted = gradeScore.filter((g) => g.passed).sort((a, b) => a.gScore - b.gScore);
+
+                return sorted.length ? sorted[0].grade : null;
+            }
         }
-        /* if (response.state === State.APPROVED) {
+        catch {
+            return
+        }    /* if (response.state === State.APPROVED) {
              const totalWeight = response.answers.map((ans, i) => {
                  return ans.question.weight;
              }).reduce((i = 0, v) => i + v);

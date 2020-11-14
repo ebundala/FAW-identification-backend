@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { FindManyAttachmentArgs, FindManyCommentArgs, FindManyForumAnswerArgs, FindManyForumArgs, ForumCreateArgs, ForumUpdateArgs, PrismaClient } from '@prisma/client';
 import { AttachmentQueryInput, CommentQueryInput, Forum, ForumAnswerQueryInput, ForumCreateInput, ForumQueryInput, ForumResult, ForumUpdateInput, ForumWhereUniqueInput, State } from 'src/models/graphql';
+import { AppLogger } from '../app-logger/app-logger.module';
+import { MailService } from '../mail/mail.service';
 import { QueryHelper } from '../query-helper/query-helper';
 
 @Injectable()
@@ -8,7 +10,11 @@ export class ForumService {
 
     constructor(
         private readonly prisma: PrismaClient,
-        private readonly helper: QueryHelper) { }
+        private readonly mail: MailService,
+        private readonly logger: AppLogger,
+        private readonly helper: QueryHelper) {
+        this.logger.setContext(ForumService.name);
+    }
     createForum(data: ForumCreateInput, uid: string): Promise<any | ForumResult> {
         const args: ForumCreateArgs = {
             data: {
@@ -23,7 +29,10 @@ export class ForumService {
         if (data.attachments) {
             args.data.attachments = { connect: data.attachments }
         }
-        return this.prisma.forum.create(args).then((forum) => {
+        return this.prisma.forum.create(args).then(async (forum) => {
+            await this.mail.sendNewQuestionPostedEmail(forum.id).catch((e) => {
+                this.logger.error(e);
+            });
             return {
                 status: true,
                 message: 'Forum created successfully',

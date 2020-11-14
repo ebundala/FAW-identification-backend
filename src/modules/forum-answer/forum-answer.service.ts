@@ -1,13 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { FindManyAttachmentArgs, FindManyCommentArgs, ForumAnswerCreateArgs, ForumAnswerUpdateArgs, PrismaClient } from '@prisma/client';
 import { AttachmentQueryInput, CommentQueryInput, ForumAnswer, ForumAnswerCreateInput, ForumAnswerResult, ForumAnswerUpdateInput, ForumAnswerWhereUniqueInput, State } from 'src/models/graphql';
+import { AppLogger } from '../app-logger/app-logger.module';
+import { MailService } from '../mail/mail.service';
 import { QueryHelper } from '../query-helper/query-helper';
 
 @Injectable()
 export class ForumAnswerService {
     constructor(
         private readonly prisma: PrismaClient,
-        private readonly helper: QueryHelper) { }
+        private readonly mail: MailService,
+        private readonly logger: AppLogger,
+        private readonly helper: QueryHelper) {
+        this.logger.setContext(ForumAnswerService.name);
+    }
     createForumAnswer(data: ForumAnswerCreateInput, ctx: any, uid: string): Promise<any | ForumAnswerResult> {
         this.helper.isAdmin(ctx);
         const args: ForumAnswerCreateArgs = {
@@ -28,17 +34,21 @@ export class ForumAnswerService {
         if (data.attachments) {
             args.data.attachments = { connect: data.attachments }
         }
-        return this.prisma.forumAnswer.create(args).then((forumAnswer) => {
+        return this.prisma.forumAnswer.create(args).then(async (forumAnswer) => {
+            await this.mail.sendQuestionAnsweredEmail(forumAnswer.id).catch((e) => {
+                this.logger.error(e);
+
+            })
             return {
                 status: true,
-                message: 'Form created successfully',
+                message: 'Answer created successfully',
                 forumAnswer
             }
         })
             .catch(({ message }) => {
                 return {
                     status: false,
-                    message: message || 'Failed to create form'
+                    message: message || 'Failed to create answer'
                 }
             });
     }
