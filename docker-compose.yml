@@ -38,7 +38,7 @@ services:
       restart_policy:
         condition: on-failure
   app:
-    image: ${NODE_TAG}    
+    image: ${NODE_TAG}
     working_dir: /home/app
     command: yarn run start:docker:prod
     depends_on:

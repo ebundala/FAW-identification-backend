@@ -5,6 +5,7 @@ import {
     ResponseListResult, ResponseQueryInput, ResponseResult,
     ResponseUpdateInput, ResponseWhereUniqueInput, State
 } from 'src/models/graphql';
+import { AppLogger } from '../app-logger/app-logger.module';
 import { QueryHelper } from '../query-helper/query-helper';
 
 @Injectable()
@@ -12,7 +13,10 @@ export class ResponseService {
 
 
     constructor(private readonly prisma: PrismaClient,
-        private readonly helper: QueryHelper) { }
+        private readonly logger: AppLogger,
+        private readonly helper: QueryHelper) {
+        this.logger.setContext(ResponseService.name);
+    }
     async createResponse(data: ResponseCreateInput, uid: string): Promise<any | ResponseResult> {
         return this.prisma.response.create({
             data: {
@@ -128,15 +132,7 @@ export class ResponseService {
                 include: {
                     answers: {
                         include: {
-                            question: {
-                                include: {
-                                    grade: {
-                                        include: {
-                                            recommendations: true
-                                        }
-                                    },
-                                }
-                            }
+                            question: true
                         }
                     },
 
@@ -144,44 +140,71 @@ export class ResponseService {
                         include: {
                             grades: {
                                 include: {
-
-                                    recommendations: true,
+                                    recommendations: {
+                                        include: {
+                                            attachments: true
+                                        }
+                                    },
                                     questions: true
                                 }
                             },
-                            questions: true
+                            //  questions: true
                         },
 
                     }
                 }
             });
-            // debugger;
-            if (response.state === State.APPROVED) {
-                const { questions, grades } = response.form;
-                const { answers } = response;
-                const gradeScore = grades.map((grade) => {
-                    const gTotal = grade.max;
-                    const cutof = grade.min;
-                    if (grade.questions.length) {
-                        const wTotal = grade.questions.map((v) => v.weight).reduce((p, c) => p + c);
-                        const score = answers.filter((a) => a.question.gradeId === grade.id && a.booleanValue === true)
-                            .map((p) => p.question.weight)
-                            .reduce((p, c) => p + c);
-                        //calculate grade score;
-                        const gScore = (score / wTotal) * gTotal;
-                        const passed = gScore > cutof;
-                        return { grade, gScore, passed };
-                    }
-                    return { grade, gScore: 0, passed: false }
-                });
-                const sorted = gradeScore.filter((g) => g.passed).sort((a, b) => a.gScore - b.gScore);
 
-                return sorted.length ? sorted[0].grade : null;
+            if (response.state === State.APPROVED) {
+                const { grades } = response.form;
+                const { answers } = response;
+                const answersMap = new Map();
+
+                answers.forEach((answer, i) => {
+                    const { question: { id, weight }, booleanValue } = answer;
+                    answersMap.set(id, booleanValue);
+                });
+                const gradeScores = grades.filter((g) => g.questions && g.questions.length)
+                    .map((grade) => {
+                        const questionWeight = 100 / grade.questions.length;
+                        const score = grade.questions.map(({ id }) => {
+                            if (answersMap.get(id) === true) {
+                                return questionWeight;
+                            }
+                            else {
+                                return 0;
+                            }
+                        }).reduce((a, b) => a + b);
+                        return { grade, score }
+                    }).filter(({ grade, score }) => score >= grade.min);
+                const sorted = gradeScores.sort((a, b) => a.score - b.score)
+                this.logger.debug(sorted);
+                return sorted[0].grade;
+                /* const gradeScore = grades.map((grade) => {
+                     const gTotal = grade.max;
+                     const cutof = grade.min;
+                     if (grade.questions.length) {
+                         const wTotal = grade.questions.map((v) => v.weight).reduce((p, c) => p + c);
+                         const score = answers.filter((a) => a.question.gradeId === grade.id && a.booleanValue === true)
+                             .map((p) => p.question.weight)
+                             .reduce((p, c) => p + c);
+                         //calculate grade score;
+                         const gScore = (score / wTotal) * gTotal;
+                         const passed = gScore > cutof;
+                         return { grade, gScore, passed };
+                     }
+                     return { grade, gScore: 0, passed: false }
+                 });
+                 const sorted = gradeScore.filter((g) => g.passed).sort((a, b) => a.gScore - b.gScore);
+ 
+                 return sorted.length ? sorted[0].grade : null;*/
             }
         }
         catch {
             return
-        }    /* if (response.state === State.APPROVED) {
+        }
+
+        /* if (response.state === State.APPROVED) {
              const totalWeight = response.answers.map((ans, i) => {
                  return ans.question.weight;
              }).reduce((i = 0, v) => i + v);

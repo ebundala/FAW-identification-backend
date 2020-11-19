@@ -20,7 +20,19 @@ APP=${2:-faw-identification-backend_app_1}
      'restart')
     echo $CMD
     ./scripts/restart.sh
+    ;; 
+    'updev')
+    echo $CMD
+    ./scripts/updev.sh
+    ;; 
+     'downdev')
+    echo $CMD
+    ./scripts/downdev.sh
     ;;  
+     'restartdev')
+    echo $CMD
+    ./scripts/restartdev.sh
+    ;; 
      'shell')
       echo $CMD
       ./scripts/shell.sh "$APP"
