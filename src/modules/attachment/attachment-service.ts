@@ -1,14 +1,18 @@
 import { Injectable } from '@nestjs/common';
-import { AttachmentType, PrismaClient } from '@prisma/client';
+import { AttachmentType } from '@prisma/client';
 import fs, { ReadStream } from 'fs';
 import { getAudioDurationInSeconds } from 'get-audio-duration';
 import { FileUpload } from 'graphql-upload';
 import * as mime from 'mime-types';
 import { join } from 'path';
 import sharp from 'sharp';
-import { AttachmentMetadata, AttachmentResult, AttachmentUpdateInput, AttachmentWhereUniqueInput } from 'src/models/graphql';
+import {
+    AttachmentMetadata, AttachmentResult,
+    AttachmentUpdateInput, AttachmentWhereUniqueInput
+} from 'src/models/graphql';
 import { v4 as uuidv4 } from 'uuid';
 import { AppLogger } from '../app-logger/app-logger.module';
+import { PrismaClient } from '../prisma-client/prisma-client-service';
 @Injectable()
 export class AttachmentService {
     constructor(private readonly prisma: PrismaClient,
@@ -154,7 +158,7 @@ export class AttachmentService {
                 }
                 if (t === AttachmentType.AUDIO) {
 
-                    if (metadata && !metadata.duration) {
+                    if (metadata && !metadata.duration || !metadata) {
                         duration = await getAudioDurationInSeconds(p);
                     } else if (metadata && metadata.duration) {
                         duration = metadata.duration;

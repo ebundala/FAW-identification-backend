@@ -1,11 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { FindManyAnswerArgs, PrismaClient } from '@prisma/client';
+import { FindManyAnswerArgs } from '@prisma/client';
 import {
     AnswerQueryInput, AttachmentQueryInput, Response, ResponseCreateInput,
     ResponseListResult, ResponseQueryInput, ResponseResult,
     ResponseUpdateInput, ResponseWhereUniqueInput, State
 } from 'src/models/graphql';
 import { AppLogger } from '../app-logger/app-logger.module';
+import { PrismaClient } from '../prisma-client/prisma-client-service';
 import { QueryHelper } from '../query-helper/query-helper';
 
 @Injectable()

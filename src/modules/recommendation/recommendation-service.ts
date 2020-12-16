@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaClient, RecommendationUpdateArgs, AttachmentUpdateManyWithoutRecommendationInput, RecommendationCreateArgs, } from '@prisma/client';
+import { RecommendationUpdateArgs, AttachmentUpdateManyWithoutRecommendationInput, RecommendationCreateArgs, } from '@prisma/client';
 import { RecommendationWhereUniqueInput, RecommendationResult, RecommendationCreateInput, RecommendationUpdateInput, Recommendation, RecommendationQueryInput, AttachmentQueryInput } from 'src/models/graphql';
+import { PrismaClient } from '../prisma-client/prisma-client-service';
 import { QueryHelper } from '../query-helper/query-helper';
 
 @Injectable()
@@ -82,8 +83,8 @@ export class RecommendationService {
             return {
                 status: true,
                 message: 'Recommendation deleted successfully',
-                recommendation:{
-                    id:where.id
+                recommendation: {
+                    id: where.id
                 }
             }
         }).catch(({ message }) => {

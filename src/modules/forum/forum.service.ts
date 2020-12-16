@@ -1,8 +1,17 @@
 import { Injectable } from '@nestjs/common';
-import { FindManyAttachmentArgs, FindManyCommentArgs, FindManyForumAnswerArgs, FindManyForumArgs, ForumCreateArgs, ForumUpdateArgs, PrismaClient } from '@prisma/client';
-import { AttachmentQueryInput, CommentQueryInput, Forum, ForumAnswerQueryInput, ForumCreateInput, ForumQueryInput, ForumResult, ForumUpdateInput, ForumWhereUniqueInput, State } from 'src/models/graphql';
+import {
+    FindManyAttachmentArgs, FindManyCommentArgs,
+    FindManyForumAnswerArgs, FindManyForumArgs, ForumCreateArgs,
+    ForumUpdateArgs
+} from '@prisma/client';
+import {
+    AttachmentQueryInput, CommentQueryInput,
+    Forum, ForumAnswerQueryInput, ForumCreateInput, ForumQueryInput, ForumResult,
+    ForumUpdateInput, ForumWhereUniqueInput, State
+} from 'src/models/graphql';
 import { AppLogger } from '../app-logger/app-logger.module';
 import { MailService } from '../mail/mail.service';
+import { PrismaClient } from '../prisma-client/prisma-client-service';
 import { QueryHelper } from '../query-helper/query-helper';
 
 @Injectable()

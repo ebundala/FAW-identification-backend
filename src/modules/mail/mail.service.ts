@@ -1,9 +1,10 @@
 import { SendGridService } from '@anchan828/nest-sendgrid';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { PrismaClient, Role } from '@prisma/client';
+import { Role } from '@prisma/client';
 import { MailDataRequired } from "@sendgrid/helpers/classes/mail";
 import { AppLogger } from '../app-logger/app-logger.module';
+import { PrismaClient } from '../prisma-client/prisma-client-service';
 
 @Injectable()
 export class MailService {

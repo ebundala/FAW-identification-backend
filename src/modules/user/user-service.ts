@@ -1,7 +1,7 @@
 import { HttpService, Injectable } from '@nestjs/common';
 import {
   FindManyFormArgs,
-  FindManyResponseArgs, FindManyUserArgs, PrismaClient, Role as _Role,
+  FindManyResponseArgs, FindManyUserArgs, Role as _Role,
   State, State as _State, User as _User,
   UserUpdateArgs
 } from '@prisma/client';
@@ -15,6 +15,7 @@ import { isEmail, isLength } from 'validator';
 import { AppLogger } from '../app-logger/app-logger.module';
 import { FirebaseService } from '../firebase-admin/firebase.service';
 import { MailService } from '../mail/mail.service';
+import { PrismaClient } from '../prisma-client/prisma-client-service';
 
 @Injectable()
 export class UserService {
@@ -41,6 +42,7 @@ export class UserService {
   }
 
   signOut(token: String): Promise<SignOutResult> {
+
     return this.destroySessionToken(token);
   }
 
@@ -156,6 +158,8 @@ export class UserService {
 
         if (status === 200) {
           const { idToken } = data;
+
+          debugger;
           const session = await this.createSessionToken(idToken).catch(
             (e) => e,
           );
@@ -197,7 +201,7 @@ export class UserService {
       .then(() => true)
       .catch(() => false);
   }
-  async createSessionToken(idToken, expiresIn = 60 * 60 * 5 * 24 * 1000) {
+  async createSessionToken(idToken, expiresIn = 60 * 60 * 5 * 24 * 1000,) {
 
     return this.firebaseApp.admin
       .auth()
@@ -271,7 +275,7 @@ export class UserService {
     return this.prisma.user.findOne({ where: { id: parent.id } }).avator();
   }
 
-  async updateUser(data: UserUpdateInput, ctx: any, uid: any): Promise<any> {
+  async updateUser(data: UserUpdateInput, ctx: any, uid: any, info): Promise<any> {
 
     this.helper.isOwner(data.where, ctx);
     const _user = await this.prisma.user.findOne({ where: { id: data.where.id } });
@@ -365,7 +369,7 @@ export class UserService {
 
   deleteUser(where: UserWhereUniqueInput, ctx: any, uid: any): Promise<any> {
     this.helper.isAdmin(ctx);
-    return this.prisma.forum.delete({
+    return this.prisma.user.delete({
       where: where,
     }).then((forum) => {
       return {

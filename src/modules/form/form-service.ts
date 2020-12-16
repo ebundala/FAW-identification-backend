@@ -1,44 +1,39 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import {
-    visit,
-    DocumentNode, ASTNode, Kind, ObjectTypeDefinitionNode,
-    NamedTypeNode, DirectiveDefinitionNode, FieldDefinitionNode,
-    ArgumentNode, StringValueNode, UnionTypeDefinitionNode,
-    InterfaceTypeDefinitionNode, EnumTypeDefinitionNode,
-    EnumValueDefinitionNode,
+    FindManyAttachmentArgs, FindManyFormArgs,
 
 
-} from 'graphql';
+    FindManyGradeArgs, FindManyQuestionArgs, FindManyResponseArgs,
 
-import {
-    PrismaClient,
-    FindManyFormArgs,
-    FindManyResponseArgs,
-    FindManyQuestionArgs,
-    FindManyGradeArgs,
-    FindManyAttachmentArgs,
-    FormUpdateArgs,
-    FormArgs,
-    FormCreateArgs
 
+
+
+
+    FormCreateArgs, FormUpdateArgs
 } from '@prisma/client';
+import { Kind, visit } from 'graphql';
 import {
-    Form,
-    State,
-    FormUpdateInput,
+    AttachmentQueryInput, Form,
+
+
     FormCreateInput,
-    FormResult,
+
+
+
+    FormListResult, FormQueryInput, FormResult, FormUpdateInput,
+
+
     FormWhereUniqueInput,
-    FormQueryInput,
-    FormListResult,
-    ResponseQueryInput,
-    QuestionQueryInput,
-    GradeQueryInput,
-    AttachmentQueryInput
+
+
+
+
+    GradeQueryInput, QuestionQueryInput, ResponseQueryInput, State
 } from 'src/models/graphql';
 import { QueryHelper } from 'src/modules/query-helper/query-helper';
 import { AppLogger } from '../app-logger/app-logger.module';
-import { selectionSetFromFieldSet } from '@apollo/gateway/dist/FieldSet';
+import { PrismaClient } from '../prisma-client/prisma-client-service';
+
 
 @Injectable()
 export class FormService {

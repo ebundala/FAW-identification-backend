@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { FindManyFormCategoryArgs, FormCategoryCreateArgs, FormCategoryUpdateArgs, PrismaClient } from '@prisma/client';
+import { FindManyFormCategoryArgs, FormCategoryCreateArgs, FormCategoryUpdateArgs } from '@prisma/client';
 import { FormCategory, FormCategoryCreateInput, FormCategoryQueryInput, FormCategoryResult, FormCategoryUpdateInput, FormCategoryWhereUniqueInput, State } from 'src/models/graphql';
+import { PrismaClient } from '../prisma-client/prisma-client-service';
 import { QueryHelper } from '../query-helper/query-helper';
 
 @Injectable()

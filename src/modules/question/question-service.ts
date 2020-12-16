@@ -1,17 +1,18 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaClient, QuestionCreateArgs, QuestionUpdateArgs } from '@prisma/client';
-import { QuestionCreateInput, QuestionResult, QuestionWhereUniqueInput, QuestionUpdateInput, Answer, AnswerQueryInput, Attachment, AttachmentQueryInput, Question } from 'src/models/graphql';
+import { QuestionCreateArgs, QuestionUpdateArgs } from '@prisma/client';
+import { AnswerQueryInput, AttachmentQueryInput, Question, QuestionCreateInput, QuestionResult, QuestionUpdateInput, QuestionWhereUniqueInput } from 'src/models/graphql';
+import { PrismaClient } from '../prisma-client/prisma-client-service';
 import { QueryHelper } from '../query-helper/query-helper';
 
 @Injectable()
 export class QuestionService {
-    
+
     constructor(private readonly prisma: PrismaClient,
         private readonly helper: QueryHelper) { }
 
     async createQuestion(data: QuestionCreateInput, uid: String): Promise<any | QuestionResult> {
         const args: QuestionCreateArgs = {
-            data:{
+            data: {
                 question: data.question,
                 questionNumber: data.questionNumber,
                 questionType: data.questionType,
@@ -20,15 +21,15 @@ export class QuestionService {
                 form: {
                     connect: { id: data.form.id }
                 },
-                attachments:{
-                    connect:data.attachments
+                attachments: {
+                    connect: data.attachments
                 },
-                grade:{
-                    connect:{id:data.grade.id}
+                grade: {
+                    connect: { id: data.grade.id }
                 }
             }
         }
-        
+
         return this.prisma.question.create(args).then((question) => {
             return {
                 status: true,
@@ -49,30 +50,30 @@ export class QuestionService {
             data: {}
         };
         debugger
-        if(data.update.question){
+        if (data.update.question) {
             args.data.question = data.update.question;
         }
-        
-        if(data.update.questionNumber){
+
+        if (data.update.questionNumber) {
 
         }
-        if(data.update.instruction){
-            args.data.instruction=data.update.instruction
+        if (data.update.instruction) {
+            args.data.instruction = data.update.instruction
         }
-        if(data.update.questionType){
-            args.data.questionType=data.update.questionType;
+        if (data.update.questionType) {
+            args.data.questionType = data.update.questionType;
         }
-        if(data.update.weight){
-            args.data.weight=data.update.weight;
+        if (data.update.weight) {
+            args.data.weight = data.update.weight;
         }
-        if(data.update.attachments){
-            args.data.attachments={
-                connect:data.update.attachments
+        if (data.update.attachments) {
+            args.data.attachments = {
+                connect: data.update.attachments
             }
         }
-        if(data.update.grade){
-            args.data.grade={
-                connect:data.update.grade
+        if (data.update.grade) {
+            args.data.grade = {
+                connect: data.update.grade
             }
         }
 
@@ -97,8 +98,8 @@ export class QuestionService {
             return {
                 status: true,
                 message: 'Question deleted successfully',
-                question:{
-                    id:where.id
+                question: {
+                    id: where.id
                 }
             }
         }).catch(({ message }) => {
@@ -108,20 +109,20 @@ export class QuestionService {
             }
         });
     }
-    async answers(parent: Question,where: AnswerQueryInput,ctx:any,uid:String){
-     const args = this.helper.answersQueryBuilder(where);
-     return this.prisma.question.findOne({where:{id:parent.id}})
-     .answers(args);
+    async answers(parent: Question, where: AnswerQueryInput, ctx: any, uid: String) {
+        const args = this.helper.answersQueryBuilder(where);
+        return this.prisma.question.findOne({ where: { id: parent.id } })
+            .answers(args);
     }
-    async attachments(parent: Question,where:AttachmentQueryInput,ctx:any,uid:String){
+    async attachments(parent: Question, where: AttachmentQueryInput, ctx: any, uid: String) {
         const args = this.helper.attachmentQueryBuilder(where);
-     return this.prisma.question.findOne({where:{id:parent.id}})
-     .attachments(args);
+        return this.prisma.question.findOne({ where: { id: parent.id } })
+            .attachments(args);
     }
-   async form(parent: Question, ctx: any, uid: any) {
-        return this.prisma.question.findOne({where:{id:parent.id}}).form()
+    async form(parent: Question, ctx: any, uid: any) {
+        return this.prisma.question.findOne({ where: { id: parent.id } }).form()
     }
     async grade(parent: Question, ctx: any, uid: any) {
-        return this.prisma.question.findOne({where:{id:parent.id}}).grade()
+        return this.prisma.question.findOne({ where: { id: parent.id } }).grade()
     }
 }

@@ -1,23 +1,26 @@
 import {
   Args,
-
-
   Context, Info, Mutation,
-
-
-  Parent, Query, ResolveField,
+  Parent,
+  Query,
+  ResolveField,
   Resolver
 } from '@nestjs/graphql';
+import { sdlInputs } from '@paljs/plugins';
 import {
-  Attachment, AuthInput,
+  Attachment,
+  AuthInput,
   AuthResult,
 
 
 
 
+
+
+
+
+
   Form,
-  FormQueryInput, Response,
-  ResponseQueryInput, SignOutResult, User,
 
 
 
@@ -27,26 +30,20 @@ import {
 
 
 
+  FormQueryInput,
+
+
+
+
+
+
+
+
+
+  Response, ResponseQueryInput,
+  SignOutResult, User,
   UserListResult,
-
-
-
-
-
-
-
-
-
   UserQueryInput,
-
-
-
-
-
-
-
-
-
   UserResult,
   UserUpdateInput,
   UserWhereUniqueInput
@@ -77,8 +74,8 @@ export class UsersResolver {
     @Info() info,
     @Context() ctx
   ): Promise<AuthResult> {
-    // this.logger.debug(ctx.req.body.query)
-    //  debugger
+    const sdl = sdlInputs();
+    this.logger.debug(sdl);
     const result = await this.userService.signInWithEmail(credentials);
     this.setAuth(result.user, ctx);
     return result;
@@ -87,27 +84,28 @@ export class UsersResolver {
     ctx.auth = { uid: user.id, };
   }
   @Mutation((retuns) => SignOutResult)
-  async signout(@Context() ctx): Promise<SignOutResult> {
+  async signout(@Context() ctx, @Info() info,): Promise<SignOutResult> {
     return this.userService.signOut(ctx.token)
   }
   @Mutation((retuns) => UserResult)
-  async deleteUser(@Args("where", { type: () => UserWhereUniqueInput }) where: UserWhereUniqueInput, @Context() ctx): Promise<UserResult> {
+  async deleteUser(@Info() info, @Args("where", { type: () => UserWhereUniqueInput }) where: UserWhereUniqueInput, @Context() ctx): Promise<UserResult> {
     return this.userService.deleteUser(where, ctx, ctx.auth.uid);
   }
 
   @Mutation((retuns) => UserResult)
-  async updateUser(@Args("data", { type: () => UserUpdateInput }) data: UserUpdateInput, @Context() ctx): Promise<UserResult> {
+  async updateUser(@Info() info, @Args("data", { type: () => UserUpdateInput }) data: UserUpdateInput, @Context() ctx): Promise<UserResult> {
 
-    return this.userService.updateUser(data, ctx, ctx.auth.uid)
+    return this.userService.updateUser(data, ctx, ctx.auth.uid, info)
   }
   @Query((retuns) => UserResult)
-  async users(@Args("where", { type: () => UserQueryInput }) where: UserQueryInput, @Context() ctx): Promise<UserListResult> {
-    return this.userService.getUsers(ctx, ctx.auth.uid, where)
+  async users(@Info() info, @Args("where", { type: () => UserQueryInput }) where: UserQueryInput, @Context() ctx): Promise<UserListResult> {
+    return this.userService.getUsers(ctx, ctx.auth.uid, where,)
   }
   @ResolveField((returns) => [Response])
   async responses(@Parent() parent: User, @Args("responsesWhere", { type: () => ResponseQueryInput }) where: ResponseQueryInput, @Context() ctx): Promise<Response[]> {
     if (parent && parent.id)
       return this.userService.responses(parent, where, ctx, parent.id)
+
   }
 
   @ResolveField((returns) => [Form])
