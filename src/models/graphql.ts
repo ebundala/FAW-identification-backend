@@ -46,6 +46,12 @@ export class AnswerCreateInput {
     textValue?: string;
 }
 
+export class AnswerCreateInputWithoutResponse {
+    question: QuestionWhereUniqueInput;
+    booleanValue?: boolean;
+    textValue?: string;
+}
+
 export class AnswerUpdateDataInput {
     booleanValue?: boolean;
     textValue?: string;
@@ -538,10 +544,12 @@ export class RecommendationQueryInput {
 export class ResponseCreateInput {
     form: FormWhereUniqueInput;
     state: State;
+    answers?: AnswerCreateInputWithoutResponse[];
 }
 
 export class ResponseUpdateDataInput {
     state?: State;
+    answers?: AnswerUpdateInput[];
 }
 
 export class ResponseWhereUniqueInput {
@@ -719,6 +727,8 @@ export abstract class IMutation {
     abstract deleteRecommendation(where: RecommendationWhereUniqueInput): RecommendationResult | Promise<RecommendationResult>;
 
     abstract createResponse(data: ResponseCreateInput): ResponseResult | Promise<ResponseResult>;
+
+    abstract createResponses(data: ResponseCreateInput): ResponseResult | Promise<ResponseResult>;
 
     abstract updateResponse(data: ResponseUpdateInput): ResponseResult | Promise<ResponseResult>;
 
@@ -986,7 +996,7 @@ export class Response {
     author: User;
     form: Form;
     answers?: Answer[];
-    grade?: Grade;
+    grades?: Grade[];
     attachments?: Attachment[];
     state: State;
     createdAt: string;

@@ -10,6 +10,7 @@ export class ResponseResolver {
         if (ctx.auth && ctx.auth.uid)
             return this.responseService.createResponse(data, ctx.auth.uid);
     }
+
     @Mutation((returns) => ResponseResult)
     async updateResponse(@Args('data', { type: () => ResponseUpdateInput }) data: ResponseUpdateInput, @Context() ctx): Promise<ResponseResult> {
         if (ctx.auth && ctx.auth.uid)
@@ -31,9 +32,9 @@ export class ResponseResolver {
             return this.responseService.attachments(parent, where, ctx, ctx.auth.uid)
     }
     @ResolveField((returns) => Grade)
-    async grade(@Parent() parent: Response, @Context() ctx) {
+    async grades(@Parent() parent: Response, @Context() ctx) {
         if (ctx.auth && ctx.auth.uid)
-            return this.responseService.grade(parent, ctx, ctx.auth.uid)
+            return this.responseService.grades(parent, ctx, ctx.auth.uid)
     }
     @ResolveField((returns) => User)
     async author(@Parent() parent: Response, @Context() ctx) {

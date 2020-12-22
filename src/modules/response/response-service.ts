@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { FindManyAnswerArgs } from '@prisma/client';
+import { AnswerCreateWithoutResponseInput, FindManyAnswerArgs, ResponseCreateArgs, ResponseUpdateArgs } from '@prisma/client';
 import {
     AnswerQueryInput, AttachmentQueryInput, Response, ResponseCreateInput,
     ResponseListResult, ResponseQueryInput, ResponseResult,
@@ -19,7 +19,7 @@ export class ResponseService {
         this.logger.setContext(ResponseService.name);
     }
     async createResponse(data: ResponseCreateInput, uid: string): Promise<any | ResponseResult> {
-        return this.prisma.response.create({
+        const args: ResponseCreateArgs = {
             data: {
                 state: data.state || State.PENDING,
                 form: {
@@ -31,7 +31,21 @@ export class ResponseService {
                     connect: { id: uid }
                 }
             }
-        }).then((response) => {
+        }
+        if (data.answers != null && data.answers.length) {
+            const create: AnswerCreateWithoutResponseInput[] = data.answers.map((v) => ({
+                booleanValue: v.booleanValue,
+                textValue: v.textValue,
+                question: {
+                    connect: {
+                        id: v.question.id
+                    }
+                }
+            }))
+
+            args.data.answers = { create }
+        }
+        return this.prisma.response.create(args).then((response) => {
             return {
                 status: true,
                 message: 'Response created successfully',
@@ -46,11 +60,28 @@ export class ResponseService {
             });
 
     }
+
     async updateResponse(data: ResponseUpdateInput, uid: String): Promise<any> {
-        return this.prisma.response.update({
+        const args: ResponseUpdateArgs = {
             where: data.where,
-            data: data.update
-        })
+            data: {
+                answers: {
+                    updateMany: [
+                        { where: { id: "" }, data: {} }
+                    ]
+                }
+            }
+        }
+        if (data.update) {
+            if (data.update.state) {
+                args.data.state = data.update.state;
+            }
+            if (data.update.answers && data.update.answers.length) {
+                const updateMany = data.update.answers.map((v) => ({ where: v.where, data: v.update }))
+                args.data.answers = { updateMany }
+            }
+        }
+        return this.prisma.response.update(args)
             .then((response) => {
                 return {
                     status: true,
@@ -125,7 +156,7 @@ export class ResponseService {
     async author(parent: Response, ctx: any, uid: any) {
         return this.prisma.response.findOne({ where: { id: parent.id } }).author();
     }
-    async grade(parent: Response, ctx: any, uid: any) {
+    async grades(parent: Response, ctx: any, uid: any) {
         //TODO calculate grade here;
         try {
             const response = await this.prisma.response.findOne({
@@ -178,9 +209,9 @@ export class ResponseService {
                         }).reduce((a, b) => a + b);
                         return { grade, score }
                     }).filter(({ grade, score }) => score >= grade.min);
-                const sorted = gradeScores.sort((a, b) => a.score - b.score)
+                const sorted = gradeScores.sort((a, b) => a.score - b.score).map((v) => v.grade);
                 this.logger.debug(sorted);
-                return sorted[0].grade;
+                return sorted;
                 /* const gradeScore = grades.map((grade) => {
                      const gTotal = grade.max;
                      const cutof = grade.min;

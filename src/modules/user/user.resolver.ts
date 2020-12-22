@@ -6,7 +6,6 @@ import {
   ResolveField,
   Resolver
 } from '@nestjs/graphql';
-import { sdlInputs } from '@paljs/plugins';
 import {
   Attachment,
   AuthInput,
@@ -74,8 +73,6 @@ export class UsersResolver {
     @Info() info,
     @Context() ctx
   ): Promise<AuthResult> {
-    const sdl = sdlInputs();
-    this.logger.debug(sdl);
     const result = await this.userService.signInWithEmail(credentials);
     this.setAuth(result.user, ctx);
     return result;

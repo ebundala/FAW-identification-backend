@@ -63,6 +63,7 @@ export class FormResolver {
     @Query((returns) => FormListResult)
     async forms(@Args('where', { type: () => FormQueryInput }) where: FormQueryInput, @Context() ctx,
         @Info() info): Promise<FormListResult> {
+        debugger;
         if (ctx.auth && ctx.auth.uid)
             return this.formService.getForms(where);
     }

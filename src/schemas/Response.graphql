@@ -1,66 +1,71 @@
-
-type Response{
-  id: ID!
-  author:      User!     
-  form:        Form!     
-  answers(where:AnswerQueryInput):     [Answer!]
-  grade:       Grade  
-  attachments(where: AttachmentQueryInput): [Attachment!]
-  state:       State!   
-  createdAt:   String!
-  updatedAt:   String! 
+type Response {
+	id: ID!
+	author:      User!     
+	form:        Form!     
+	answers(where: AnswerQueryInput):     [Answer!]
+	grades:       [Grade!]  
+	attachments(where: AttachmentQueryInput): [Attachment!]
+	state:       State!   
+	createdAt:   String!
+	updatedAt:   String! 
 }
 
-input ResponseCreateInput{  
-  form:        FormWhereUniqueInput!      
-  state:       State!
+input ResponseCreateInput {
+	form:        FormWhereUniqueInput!      
+	state:       State!
+	answers: [AnswerCreateInputWithoutResponse!]
 }
-input ResponseUpdateDataInput{    
-  state:       State        
+
+input ResponseUpdateDataInput {
+	state:       State 
+	answers: [AnswerUpdateInput!]       
 }
-input ResponseWhereUniqueInput{
-    id: ID!
+input ResponseWhereUniqueInput {
+	id: ID!
 }
-input ResponseUpdateInput{
-    where:ResponseWhereUniqueInput
-    update: ResponseUpdateDataInput
+
+input ResponseUpdateInput {
+	where: ResponseWhereUniqueInput
+	update: ResponseUpdateDataInput
 }
-type ResponseResult{
-    status: Boolean!
-    message: String!
-    response: Response
+
+type ResponseResult {
+	status: Boolean!
+	message: String!
+	response: Response
 }
-type ResponseListResult{
-    status: Boolean!
-    message: String!
-    responses: [Response!]
+type ResponseListResult {
+	status: Boolean!
+	message: String!
+	responses: [Response!]
 }
-input ResponseOrderBy{
-    state: OrderByInput      
-    id: OrderByInput
-    createdAt: OrderByInput
-    updatedAt: OrderByInput
+input ResponseOrderBy {
+	state: OrderByInput      
+	id: OrderByInput
+	createdAt: OrderByInput
+	updatedAt: OrderByInput
 }
-input ResponseWhereQuery{
-   id:               ID
-  state: State
-  authorId: ID
-  form: FormWhereUniqueInput
-  grade: GradeWhereUniqueInput
+input ResponseWhereQuery {
+	id:               ID
+	state: State
+	authorId: ID
+	form: FormWhereUniqueInput
+	grade: GradeWhereUniqueInput
 
 }
-input ResponseQueryInput{
- take: Int
-  skip: Int
-  where: ResponseWhereQuery
-  orderBy: ResponseOrderBy
-  cursor: ResponseWhereUniqueInput   
+input ResponseQueryInput {
+	take: Int
+	skip: Int
+	where: ResponseWhereQuery
+	orderBy: ResponseOrderBy
+	cursor: ResponseWhereUniqueInput   
 }
-extend type Mutation{
-    createResponse(data:ResponseCreateInput!): ResponseResult!
-    updateResponse(data:ResponseUpdateInput!): ResponseResult!
-    deleteResponse(where:ResponseWhereUniqueInput!):ResponseResult!
+extend type Mutation {
+	createResponse(data: ResponseCreateInput!): ResponseResult!
+	createResponses(data: ResponseCreateInput!): ResponseResult!
+	updateResponse(data: ResponseUpdateInput!): ResponseResult!
+	deleteResponse(where: ResponseWhereUniqueInput!): ResponseResult!
 }
-extend type Query{
-  responses(where: ResponseQueryInput!): ResponseListResult!
+extend type Query {
+	responses(where: ResponseQueryInput!): ResponseListResult!
 }
