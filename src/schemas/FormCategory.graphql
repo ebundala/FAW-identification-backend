@@ -1,70 +1,68 @@
-
-type FormCategory{
-  id:   ID!
-  name:       String!
-  description: String
-  state:       State!      
-  image:      Attachment
-  createdAt:   String
-  updatedAt:   String
+type FormCategory {
+	id:   ID!
+	name:       String!
+	description: String
+	state:       State!      
+	image:      Attachment
+	createdAt:   String
+	updatedAt:   String
 }
 
-type FormCategoryResult{
-    status: Boolean!
-    message: String!
-    formCategory: FormCategory
+type FormCategoryResult {
+	status: Boolean!
+	message: String!
+	formCategory: FormCategory
 }
-type FormCategoryListResult{
-    status: Boolean!
-    message: String!
-    formCategories: [FormCategory!]
+type FormCategoryListResult {
+	status: Boolean!
+	message: String!
+	formCategories: [FormCategory!]
 }
-input FormCategoryCreateInput{
-  name:       String!
-  description: String
-  state:       State 
-  image: AttachmentWhereUniqueInput
+input FormCategoryCreateInput {
+	name:       String!
+	description: String
+	state:       State 
+	image: AttachmentWhereUniqueInput
 }
-input FormCategoryUpdateDataInput{
-  name:       String
-  description: String
-  state:       State  
-  image: AttachmentWhereUniqueInput   
+input FormCategoryUpdateDataInput {
+	name:       String
+	description: String
+	state:       State  
+	image: AttachmentWhereUniqueInput   
 }
-input FormCategoryWhereUniqueInput{
-    id:  ID!
+input FormCategoryWhereUniqueInput {
+	id:  ID!
 }
-input FormCategoryUpdateInput{
-    where: FormCategoryWhereUniqueInput
-    update: FormCategoryUpdateDataInput
-}
-
-input FormCategoryOrderBy{
-  id: OrderByInput
-  name: OrderByInput
-  description: OrderByInput
-  state: OrderByInput
-  createdAt: OrderByInput
-  updatedAt: OrderByInput
-}
-input FormCategoryWhereQuery{
-  id: ID
-  name: ID
-  state: State
-}
-input FormCategoryQueryInput{
-  take: Int
-  skip: Int
-  where: FormCategoryWhereQuery
-  orderBy:FormCategoryOrderBy
-  cursor: FormCategoryWhereUniqueInput
-}
-extend type Mutation{
-    createFormCategory(data:FormCategoryCreateInput!):FormCategoryResult!
-    updateFormCategory(data: FormCategoryUpdateInput!):FormCategoryResult!
-    deleteFormCategory(where:FormCategoryWhereUniqueInput!):FormCategoryResult!
+input FormCategoryUpdateInput {
+	where: FormCategoryWhereUniqueInput
+	update: FormCategoryUpdateDataInput
 }
 
-extend type Query{
-  formCategories(where:FormCategoryQueryInput):FormCategoryListResult!
+input FormCategoryOrderBy {
+	id: OrderByInput
+	name: OrderByInput
+	description: OrderByInput
+	state: OrderByInput
+	createdAt: OrderByInput
+	updatedAt: OrderByInput
+}
+input FormCategoryWhereQuery {
+	id: ID
+	name: ID
+	state: State
+}
+input FormCategoryQueryInput {
+	take: Int
+	skip: Int
+	where: FormCategoryWhereQuery
+	orderBy: FormCategoryOrderBy
+	cursor: FormCategoryWhereUniqueInput
+}
+extend type Mutation {
+	createFormCategory(data: FormCategoryCreateInput!): FormCategoryResult!
+	updateFormCategory(data: FormCategoryUpdateInput!): FormCategoryResult!
+	deleteFormCategory(where: FormCategoryWhereUniqueInput!): FormCategoryResult!
+}
+extend type Query {
+	formCategories(where: FormCategoryQueryInput): FormCategoryListResult!
 }

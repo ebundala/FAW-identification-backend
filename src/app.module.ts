@@ -2,6 +2,8 @@ import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ServeStaticModule } from '@nestjs/serve-static';
+import { writeFileSync } from 'fs';
+import { printSchema } from 'graphql';
 import { join } from 'path';
 import { AuthMiddleware } from './auth.middleware';
 import { AnswerModule } from './modules/answer/answer.module';
@@ -27,13 +29,19 @@ import { UserModule } from './modules/user/user.module';
       isGlobal: true,
     }),
     GraphQLModule.forRoot({
-      typePaths: ['./**/*.graphql'],
+      typePaths: ['./src/schemas/*.graphql'],
       definitions: {
         path: join(process.cwd(), 'src/models/graphql.ts'),
         outputAs: 'class',
       },
       context: ({ req }) => {
         return { auth: req.auth, token: req.token }
+      },
+      transformSchema: (schema) => {
+        const txt = printSchema(schema);
+
+        writeFileSync(join(process.cwd(), 'src/models/schema.g.graphql'), txt)
+        return schema;
       },
       debug: true,
       playground: true,

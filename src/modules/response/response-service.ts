@@ -66,9 +66,10 @@ export class ResponseService {
             where: data.where,
             data: {
                 answers: {
-                    updateMany: [
-                        { where: { id: "" }, data: {} }
-                    ]
+                    upsert: [
+
+                    ],
+
                 }
             }
         }
@@ -76,16 +77,33 @@ export class ResponseService {
             if (data.update.state) {
                 args.data.state = data.update.state;
             }
+
             if (data.update.answers && data.update.answers.length) {
-                const updateMany = data.update.answers.map((v) => ({ where: v.where, data: v.update }))
-                args.data.answers = { updateMany }
+                const upsert = data.update.answers.map((v) => {
+                    const where = v.where.id ? v.where.id : undefined;
+
+                    return {
+                        where: { id: where || "" },
+                        create: {
+                            question: {
+                                connect: { id: v.question.id }
+                            },
+                            ...v.data,
+
+                        },
+                        update: {
+                            ...v.data,
+                        }
+                    }
+                })
+                args.data.answers = { upsert }
             }
         }
         return this.prisma.response.update(args)
             .then((response) => {
                 return {
                     status: true,
-                    message: 'Response updated successfully',
+                    message: 'Response updated succesfuly',
                     response
                 }
             })

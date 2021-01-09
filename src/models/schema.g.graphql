@@ -1,0 +1,1015 @@
+type Answer {
+  id: ID!
+  response: Response!
+  question: Question!
+  attachments(where: AttachmentQueryInput): [Attachment!]
+  booleanValue: Boolean
+  textValue: String
+  createdAt: String!
+  updatedAt: String!
+}
+
+input AnswerCreateInput {
+  response: ResponseWhereUniqueInput!
+  question: QuestionWhereUniqueInput!
+  booleanValue: Boolean
+  textValue: String
+}
+
+input AnswerCreateInputWithoutResponse {
+  question: QuestionWhereUniqueInput!
+  booleanValue: Boolean
+  textValue: String
+}
+
+input AnswerUpdateDataInput {
+  booleanValue: Boolean
+  textValue: String
+}
+
+input AnswerWhereUniqueInput {
+  id: ID!
+}
+
+input AnswerUpdateInput {
+  where: AnswerWhereUniqueInput
+  update: AnswerUpdateDataInput
+}
+
+type AnswerResult {
+  status: Boolean!
+  message: String!
+  answer: Answer
+}
+
+type AnswerListResult {
+  status: Boolean!
+  message: String!
+  answers: [Answer!]
+}
+
+input AnswerOrderBy {
+  id: OrderByInput
+  booleanValue: OrderByInput
+  textValue: OrderByInput
+  createdAt: OrderByInput
+  updatedAt: OrderByInput
+}
+
+input AnswerWhereQuery {
+  id: ID
+  response: ResponseWhereUniqueInput
+  question: QuestionWhereUniqueInput
+  booleanValue: Boolean
+  textValue: String
+}
+
+input AnswerQueryInput {
+  take: Int
+  skip: Int
+  where: AnswerWhereQuery
+  orderBy: AnswerOrderBy
+  cursor: AnswerWhereUniqueInput
+}
+
+type Mutation {
+  createAnswer(data: AnswerCreateInput!): AnswerResult!
+  updateAnswer(data: AnswerUpdateInput!): AnswerResult!
+  deleteAnswer(where: AnswerWhereUniqueInput!): AnswerResult!
+  createAttachment(data: Upload!, metadata: AttachmentMetadata): AttachmentResult!
+  updateAttachment(data: AttachmentUpdateInput!): AttachmentResult!
+  deleteAttachment(where: AttachmentWhereUniqueInput!): AttachmentResult!
+  createComment(data: CommentCreateInput!): CommentResult!
+  updateComment(data: CommentUpdateInput!): CommentResult!
+  deleteComment(where: CommentWhereUniqueInput!): CommentResult!
+  createForm(data: FormCreateInput!): FormResult!
+  updateForm(data: FormUpdateInput!): FormResult!
+  deleteForm(where: FormWhereUniqueInput!): FormResult!
+  createFormCategory(data: FormCategoryCreateInput!): FormCategoryResult!
+  updateFormCategory(data: FormCategoryUpdateInput!): FormCategoryResult!
+  deleteFormCategory(where: FormCategoryWhereUniqueInput!): FormCategoryResult!
+  createForum(data: ForumCreateInput!): ForumResult!
+  updateForum(data: ForumUpdateInput!): ForumResult!
+  deleteForum(where: ForumWhereUniqueInput!): ForumResult!
+  createForumAnswer(data: ForumAnswerCreateInput!): ForumAnswerResult!
+  updateForumAnswer(data: ForumAnswerUpdateInput!): ForumAnswerResult!
+  deleteForumAnswer(where: ForumAnswerWhereUniqueInput!): ForumAnswerResult!
+  createGrade(data: GradeCreateInput!): GradeResult!
+  updateGrade(data: GradeUpdateInput!): GradeResult!
+  deleteGrade(where: GradeWhereUniqueInput!): GradeResult!
+  createQuestion(data: QuestionCreateInput!): QuestionResult!
+  updateQuestion(data: QuestionUpdateInput!): QuestionResult!
+  deleteQuestion(where: QuestionWhereUniqueInput!): QuestionResult!
+  createRecommendation(data: RecommendationCreateInput!): RecommendationResult!
+  updateRecommendation(data: RecommendationUpdateInput!): RecommendationResult!
+  deleteRecommendation(where: RecommendationWhereUniqueInput!): RecommendationResult!
+  createResponse(data: ResponseCreateInput!): ResponseResult!
+  updateResponse(data: ResponseUpdateInput!): ResponseResult!
+  deleteResponse(where: ResponseWhereUniqueInput!): ResponseResult!
+  version: String
+  signup(credentials: AuthInput!): AuthResult!
+  signin(credentials: AuthInput!): AuthResult!
+  signout: SignOutResult!
+  updateUser(data: UserUpdateInput!): UserResult!
+  deleteUser(where: UserWhereUniqueInput!): UserResult!
+}
+
+scalar Upload
+
+type Attachment {
+  id: ID!
+  path: String!
+  filename: String!
+  mimetype: String!
+  duration: Int
+  size: Int!
+  isNew: Boolean
+  attachmentType: AttachmentType!
+  encoding: String!
+  createdAt: String!
+  updatedAt: String!
+}
+
+enum AttachmentType {
+  AUDIO
+  VIDEO
+  DOCUMENT
+  IMAGE
+}
+
+input AttachmentUpdateDataInput {
+  path: String
+  filename: String
+  mimetype: String
+  metadata: AttachmentMetadata
+}
+
+input AttachmentWhereUniqueInput {
+  id: ID!
+}
+
+input AttachmentUpdateInput {
+  where: AttachmentWhereUniqueInput
+  update: AttachmentUpdateDataInput
+}
+
+type AttachmentResult {
+  status: Boolean!
+  message: String!
+  file: Attachment
+}
+
+type AttachmentListResult {
+  status: Boolean!
+  message: String!
+  files: [Attachment!]
+}
+
+input AttachmentOrderBy {
+  id: OrderByInput
+  path: OrderByInput
+  filename: OrderByInput
+  mimetype: OrderByInput
+  encoding: OrderByInput
+  createdAt: OrderByInput
+  updatedAt: OrderByInput
+}
+
+input AttachmentWhereQuery {
+  id: ID
+  path: String
+  filename: String
+  mimetype: String
+  encoding: String
+}
+
+input AttachmentQueryInput {
+  take: Int
+  skip: Int
+  where: AttachmentWhereQuery
+  orderBy: AttachmentOrderBy
+  cursor: AttachmentWhereUniqueInput
+}
+
+input AttachmentMetadata {
+  duration: Int
+  size: Int
+  meta: String
+}
+
+type Comment {
+  id: ID!
+  content: String!
+  state: State!
+  author: User!
+  forum: Forum
+  forumAnswer: ForumAnswer
+  comment: Comment
+  comments(where: CommentQueryInput): [Comment!]
+  commentsEnabled: Boolean
+  attachments(where: AttachmentQueryInput): [Attachment!]
+  createdAt: String
+  updatedAt: String
+}
+
+type CommentResult {
+  status: Boolean!
+  message: String!
+  comment: Comment
+}
+
+type CommentListResult {
+  status: Boolean!
+  message: String!
+  comments: [Comment!]
+}
+
+input CommentCreateInput {
+  content: String!
+  comment: CommentWhereUniqueInput
+  forum: ForumWhereUniqueInput
+  forumAnswer: ForumAnswerWhereUniqueInput
+  state: State
+  commentsEnabled: Boolean
+  attachments: [AttachmentWhereUniqueInput!]
+}
+
+input CommentUpdateDataInput {
+  content: String
+  commentsEnabled: Boolean
+  state: State
+  attachments: [AttachmentWhereUniqueInput!]
+}
+
+input CommentWhereUniqueInput {
+  id: ID!
+}
+
+input CommentUpdateInput {
+  where: CommentWhereUniqueInput
+  update: CommentUpdateDataInput
+}
+
+input CommentOrderBy {
+  id: OrderByInput
+  content: OrderByInput
+  commentsEnabled: OrderByInput
+  state: OrderByInput
+  createdAt: OrderByInput
+  updatedAt: OrderByInput
+}
+
+input CommentWhereQuery {
+  id: ID
+  content: String
+  commentsEnabled: Boolean
+  author: UserWhereUniqueInput
+  state: State
+}
+
+input CommentQueryInput {
+  take: Int
+  skip: Int
+  where: CommentWhereQuery
+  orderBy: CommentOrderBy
+  cursor: CommentWhereUniqueInput
+}
+
+type Form {
+  id: ID!
+  title: String!
+  description: String
+  state: State!
+  author: User!
+  category: FormCategory
+  questions(where: QuestionQueryInput): [Question!]
+  grades(where: GradeQueryInput): [Grade!]
+  responses(where: ResponseQueryInput): [Response!]
+  attachments(where: AttachmentQueryInput): [Attachment!]
+  createdAt: String
+  updatedAt: String
+}
+
+type FormResult {
+  status: Boolean!
+  message: String!
+  form: Form
+}
+
+type FormListResult {
+  status: Boolean!
+  message: String!
+  forms: [Form!]
+}
+
+input FormCreateInput {
+  title: String!
+  description: String
+  state: State
+  category: FormCategoryWhereUniqueInput
+  attachments: [AttachmentWhereUniqueInput!]!
+}
+
+input FormUpdateDataInput {
+  title: String
+  description: String
+  category: FormCategoryWhereUniqueInput
+  state: State
+  attachments: [AttachmentWhereUniqueInput!]
+}
+
+input FormWhereUniqueInput {
+  id: ID!
+}
+
+input FormUpdateInput {
+  where: FormWhereUniqueInput
+  update: FormUpdateDataInput
+}
+
+input FormOrderBy {
+  id: OrderByInput
+  title: OrderByInput
+  state: OrderByInput
+  createdAt: OrderByInput
+  updatedAt: OrderByInput
+}
+
+input FormWhereQuery {
+  id: ID
+  authorId: ID
+  state: State
+  category: FormCategoryWhereUniqueInput
+}
+
+input FormQueryInput {
+  take: Int
+  skip: Int
+  where: FormWhereQuery
+  orderBy: FormOrderBy
+  cursor: FormWhereUniqueInput
+}
+
+type Query {
+  forms(where: FormQueryInput): FormListResult!
+  formCategories(where: FormCategoryQueryInput): FormCategoryListResult!
+  forums(where: ForumQueryInput): ForumListResult!
+  responses(where: ResponseQueryInput!): ResponseListResult!
+  version: String
+  users(where: UserQueryInput): UserListResult!
+}
+
+type FormCategory {
+  id: ID!
+  name: String!
+  description: String
+  state: State!
+  image: Attachment
+  createdAt: String
+  updatedAt: String
+}
+
+type FormCategoryResult {
+  status: Boolean!
+  message: String!
+  formCategory: FormCategory
+}
+
+type FormCategoryListResult {
+  status: Boolean!
+  message: String!
+  formCategories: [FormCategory!]
+}
+
+input FormCategoryCreateInput {
+  name: String!
+  description: String
+  state: State
+  image: AttachmentWhereUniqueInput
+}
+
+input FormCategoryUpdateDataInput {
+  name: String
+  description: String
+  state: State
+  image: AttachmentWhereUniqueInput
+}
+
+input FormCategoryWhereUniqueInput {
+  id: ID!
+}
+
+input FormCategoryUpdateInput {
+  where: FormCategoryWhereUniqueInput
+  update: FormCategoryUpdateDataInput
+}
+
+input FormCategoryOrderBy {
+  id: OrderByInput
+  name: OrderByInput
+  description: OrderByInput
+  state: OrderByInput
+  createdAt: OrderByInput
+  updatedAt: OrderByInput
+}
+
+input FormCategoryWhereQuery {
+  id: ID
+  name: ID
+  state: State
+}
+
+input FormCategoryQueryInput {
+  take: Int
+  skip: Int
+  where: FormCategoryWhereQuery
+  orderBy: FormCategoryOrderBy
+  cursor: FormCategoryWhereUniqueInput
+}
+
+type Forum {
+  id: ID!
+  question: String!
+  description: String!
+  state: State!
+  author: User!
+  forumAnswers(where: ForumAnswerQueryInput): [ForumAnswer!]
+  comments(where: CommentQueryInput): [Comment!]
+  commentsEnabled: Boolean
+  attachments(where: AttachmentQueryInput): [Attachment!]
+  createdAt: String
+  updatedAt: String
+}
+
+type ForumResult {
+  status: Boolean!
+  message: String!
+  forum: Forum
+}
+
+type ForumListResult {
+  status: Boolean!
+  message: String!
+  forums: [Forum!]
+}
+
+input ForumCreateInput {
+  question: String!
+  description: String!
+  state: State
+  attachments: [AttachmentWhereUniqueInput!]
+}
+
+input ForumUpdateDataInput {
+  question: String
+  description: String
+  state: State
+  attachments: [AttachmentWhereUniqueInput!]
+}
+
+input ForumWhereUniqueInput {
+  id: ID!
+}
+
+input ForumUpdateInput {
+  where: ForumWhereUniqueInput
+  update: ForumUpdateDataInput
+}
+
+input ForumOrderBy {
+  id: OrderByInput
+  question: OrderByInput
+  description: OrderByInput
+  state: OrderByInput
+  createdAt: OrderByInput
+  updatedAt: OrderByInput
+}
+
+input ForumWhereQuery {
+  id: ID
+  question: String
+  description: String
+  commentsEnabled: Boolean
+  author: UserWhereUniqueInput
+  state: State
+}
+
+input ForumQueryInput {
+  take: Int
+  skip: Int
+  where: ForumWhereQuery
+  orderBy: ForumOrderBy
+  cursor: ForumWhereUniqueInput
+}
+
+type ForumAnswer {
+  id: ID!
+  content: String!
+  state: State!
+  author: User!
+  forum: Forum!
+  comments(where: CommentQueryInput): [Comment!]
+  commentsEnabled: Boolean
+  attachments(where: AttachmentQueryInput): [Attachment!]
+  createdAt: String
+  updatedAt: String
+}
+
+type ForumAnswerResult {
+  status: Boolean!
+  message: String!
+  forumAnswer: ForumAnswer
+}
+
+type ForumAnswerListResult {
+  status: Boolean!
+  message: String!
+  forumAnswers: [ForumAnswer!]
+}
+
+input ForumAnswerCreateInput {
+  content: String!
+  forum: ForumWhereUniqueInput!
+  state: State
+  commentsEnabled: Boolean
+  attachments: [AttachmentWhereUniqueInput!]
+}
+
+input ForumAnswerUpdateDataInput {
+  content: String
+  commentsEnabled: Boolean
+  state: State
+  attachments: [AttachmentWhereUniqueInput!]
+}
+
+input ForumAnswerWhereUniqueInput {
+  id: ID!
+}
+
+input ForumAnswerUpdateInput {
+  where: ForumAnswerWhereUniqueInput
+  update: ForumAnswerUpdateDataInput
+}
+
+input ForumAnswerOrderBy {
+  id: OrderByInput
+  content: OrderByInput
+  commentsEnabled: OrderByInput
+  state: OrderByInput
+  createdAt: OrderByInput
+  updatedAt: OrderByInput
+}
+
+input ForumAnswerWhereQuery {
+  id: ID
+  content: String
+  commentsEnabled: Boolean
+  author: UserWhereUniqueInput
+  state: State
+}
+
+input ForumAnswerQueryInput {
+  take: Int
+  skip: Int
+  where: ForumAnswerWhereQuery
+  orderBy: ForumAnswerOrderBy
+  cursor: ForumAnswerWhereUniqueInput
+}
+
+type Grade {
+  id: ID!
+  name: String!
+  description: String
+  form: Form!
+  responses(where: ResponseQueryInput): [Response!]
+  recommendations(where: RecommendationQueryInput): [Recommendation!]
+  questions(where: QuestionQueryInput): [Question!]
+  min: Float!
+  max: Float!
+  minInclusive: Boolean
+  maxInclusive: Boolean
+  attachments(where: AttachmentQueryInput): [Attachment!]
+  createdAt: String!
+  updatedAt: String!
+}
+
+input GradeCreateInput {
+  name: String!
+  description: String
+  min: Float!
+  max: Float!
+  minInclusive: Boolean
+  maxInclusive: Boolean
+  form: FormWhereUniqueInput!
+}
+
+input GradeUpdateDataInput {
+  name: String
+  description: String
+  min: Float
+  max: Float
+  minInclusive: Boolean
+  maxInclusive: Boolean
+}
+
+input GradeWhereUniqueInput {
+  id: ID!
+}
+
+input GradeUpdateInput {
+  where: GradeWhereUniqueInput
+  update: GradeUpdateDataInput
+}
+
+type GradeResult {
+  status: Boolean!
+  message: String!
+  grade: Grade
+}
+
+type GradeListResult {
+  status: Boolean!
+  message: String!
+  grades: [Grade!]
+}
+
+input GradeOrderBy {
+  name: OrderByInput
+  description: OrderByInput
+  min: OrderByInput
+  max: OrderByInput
+  minInclusive: OrderByInput
+  maxInclusive: OrderByInput
+  id: OrderByInput
+  createdAt: OrderByInput
+  updatedAt: OrderByInput
+}
+
+input GradeWhereQuery {
+  id: ID
+  name: String
+  description: String
+  min: Float
+  max: Float
+  minInclusive: Boolean
+  maxInclusive: Boolean
+}
+
+input GradeQueryInput {
+  take: Int
+  skip: Int
+  where: GradeWhereQuery
+  orderBy: GradeOrderBy
+  cursor: GradeWhereUniqueInput
+}
+
+type Question {
+  id: ID!
+  questionNumber: Int!
+  question: String!
+  weight: Float
+  instruction: String
+  questionType: QuestionType!
+  form: Form!
+  grade: Grade!
+  answers(where: AnswerQueryInput): [Answer!]
+  attachments(where: AttachmentQueryInput): [Attachment!]
+  createdAt: String
+  updatedAt: String
+}
+
+enum QuestionType {
+  BOOLEAN
+  TEXT
+}
+
+input QuestionCreateInput {
+  questionNumber: Int!
+  question: String
+  weight: Float!
+  instruction: String
+  questionType: QuestionType!
+  form: FormWhereUniqueInput!
+  grade: GradeWhereUniqueInput!
+  attachments: [AttachmentWhereUniqueInput!]!
+}
+
+input QuestionUpdateDataInput {
+  questionNumber: Int
+  question: String
+  weight: Float
+  instruction: String
+  questionType: QuestionType
+  grade: GradeWhereUniqueInput
+  attachments: [AttachmentWhereUniqueInput!]
+}
+
+input QuestionWhereUniqueInput {
+  id: ID!
+}
+
+input QuestionUpdateInput {
+  where: QuestionWhereUniqueInput
+  update: QuestionUpdateDataInput
+}
+
+type QuestionResult {
+  status: Boolean!
+  message: String!
+  question: Question
+}
+
+type QuestionListResult {
+  status: Boolean!
+  message: String!
+  questions: [Question!]
+}
+
+input QuestionOrderBy {
+  questionNumber: OrderByInput
+  weight: OrderByInput
+  question: OrderByInput
+  instruction: OrderByInput
+  questionType: OrderByInput
+  id: OrderByInput
+  createdAt: OrderByInput
+  updatedAt: OrderByInput
+}
+
+input QuestionWhereQuery {
+  id: ID
+  questionNumber: Int
+  question: String
+  instruction: String
+  weight: Float
+  questionType: QuestionType
+  grade: GradeWhereUniqueInput
+}
+
+input QuestionQueryInput {
+  take: Int
+  skip: Int
+  where: QuestionWhereQuery
+  orderBy: QuestionOrderBy
+  cursor: QuestionWhereUniqueInput
+}
+
+type Recommendation {
+  id: ID!
+  content: String!
+  attachments(where: AttachmentQueryInput): [Attachment!]
+  grade: Grade!
+  createdAt: String
+  updatedAt: String
+}
+
+input RecommendationCreateInput {
+  content: String!
+  grade: GradeWhereUniqueInput!
+  attachments: [AttachmentWhereUniqueInput!]!
+}
+
+input RecommendationUpdateDataInput {
+  content: String
+  grade: GradeWhereUniqueInput
+  attachments: [AttachmentWhereUniqueInput!]
+  disconnected: [AttachmentWhereUniqueInput!]
+}
+
+input RecommendationWhereUniqueInput {
+  id: ID!
+}
+
+input RecommendationUpdateInput {
+  where: RecommendationWhereUniqueInput
+  update: RecommendationUpdateDataInput
+}
+
+type RecommendationResult {
+  status: Boolean!
+  message: String!
+  recommendation: Recommendation
+}
+
+type RecommendationListResult {
+  status: Boolean!
+  message: String!
+  recommendations: [Recommendation!]
+}
+
+input RecommendationOrderBy {
+  id: OrderByInput
+  content: OrderByInput
+  createdAt: OrderByInput
+  updatedAt: OrderByInput
+}
+
+input RecommendationWhereQuery {
+  id: ID
+  content: String
+  grade: GradeWhereUniqueInput!
+}
+
+input RecommendationQueryInput {
+  take: Int
+  skip: Int
+  where: RecommendationWhereQuery
+  orderBy: RecommendationOrderBy
+  cursor: RecommendationWhereUniqueInput
+}
+
+type Response {
+  id: ID!
+  author: User!
+  form: Form!
+  answers(where: AnswerQueryInput): [Answer!]
+  grades: [Grade!]
+  attachments(where: AttachmentQueryInput): [Attachment!]
+  state: State!
+  createdAt: String!
+  updatedAt: String!
+}
+
+input ResponseCreateInput {
+  form: FormWhereUniqueInput!
+  state: State!
+  answers: [AnswerCreateInputWithoutResponse!]
+}
+
+input UpsertAnswersInput {
+  where: AnswerWhereUniqueInput
+  question: QuestionWhereUniqueInput!
+  data: AnswerUpdateDataInput!
+}
+
+input ResponseUpdateDataInput {
+  state: State
+  answers: [UpsertAnswersInput!]
+}
+
+input ResponseWhereUniqueInput {
+  id: ID!
+}
+
+input ResponseUpdateInput {
+  where: ResponseWhereUniqueInput
+  update: ResponseUpdateDataInput
+}
+
+type ResponseResult {
+  status: Boolean!
+  message: String!
+  response: Response
+}
+
+type ResponseListResult {
+  status: Boolean!
+  message: String!
+  responses: [Response!]
+}
+
+input ResponseOrderBy {
+  state: OrderByInput
+  id: OrderByInput
+  createdAt: OrderByInput
+  updatedAt: OrderByInput
+}
+
+input ResponseWhereQuery {
+  id: ID
+  state: State
+  authorId: ID
+  form: FormWhereUniqueInput
+  grade: GradeWhereUniqueInput
+}
+
+input ResponseQueryInput {
+  take: Int
+  skip: Int
+  where: ResponseWhereQuery
+  orderBy: ResponseOrderBy
+  cursor: ResponseWhereUniqueInput
+}
+
+enum Role {
+  USER
+  ADMIN
+  MODERATOR
+  ORGANIZATION
+}
+
+enum State {
+  PENDING
+  REVIEW
+  REJECTED
+  APPROVED
+  COMPLETED
+  ARCHIVED
+}
+
+enum OrderByInput {
+  asc
+  desc
+}
+
+type Subscription {
+  version: String
+}
+
+type User {
+  id: ID!
+  email: String!
+  displayName: String
+  phoneNumber: String
+  emailVerified: Boolean!
+  disabled: Boolean!
+  avator: Attachment
+  role: Role!
+  state: State!
+  forms(where: FormQueryInput): [Form!]!
+  responses(where: ResponseQueryInput): [Response!]!
+  createdAt: String!
+  updatedAt: String!
+}
+
+input AuthInput {
+  email: String!
+  password: String!
+  displayName: String
+}
+
+type AuthResult {
+  token: String
+  error: Boolean!
+  message: String!
+  user: User
+}
+
+type SignOutResult {
+  status: Boolean
+  message: String
+}
+
+input UserWhereUniqueInput {
+  id: ID
+}
+
+type UserResult {
+  status: Boolean!
+  message: String!
+  user: User
+}
+
+type UserListResult {
+  status: Boolean!
+  message: String!
+  users: [User!]
+}
+
+input UserUpdateDataInput {
+  email: String
+  displayName: String
+  phoneNumber: String
+  emailVerified: Boolean
+  disabled: Boolean
+  state: State
+  avator: AttachmentWhereUniqueInput
+  role: Role
+}
+
+input UserUpdateInput {
+  where: UserWhereUniqueInput
+  update: UserUpdateDataInput
+}
+
+input UserOrderBy {
+  id: OrderByInput
+  email: OrderByInput
+  displayName: OrderByInput
+  phoneNumber: OrderByInput
+  emailVerified: OrderByInput
+  disabled: OrderByInput
+  role: OrderByInput
+  state: OrderByInput
+  createdAt: OrderByInput
+  updatedAt: OrderByInput
+}
+
+input UserWhereQuery {
+  id: ID
+  email: String
+  displayName: String
+  phoneNumber: String
+  emailVerified: Boolean
+  disabled: Boolean
+  role: Role
+  state: State
+}
+
+input UserQueryInput {
+  take: Int
+  skip: Int
+  where: UserWhereQuery
+  orderBy: UserOrderBy
+  cursor: UserWhereUniqueInput
+}

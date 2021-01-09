@@ -9,6 +9,7 @@ export class ResponseResolver {
     async createResponse(@Args('data', { type: () => ResponseCreateInput }) data: ResponseCreateInput, @Context() ctx): Promise<ResponseResult> {
         if (ctx.auth && ctx.auth.uid)
             return this.responseService.createResponse(data, ctx.auth.uid);
+
     }
 
     @Mutation((returns) => ResponseResult)

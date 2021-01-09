@@ -15,11 +15,17 @@ input ResponseCreateInput {
 	state:       State!
 	answers: [AnswerCreateInputWithoutResponse!]
 }
+input UpsertAnswersInput {
+	where: AnswerWhereUniqueInput
+	question: QuestionWhereUniqueInput!
+	data: AnswerUpdateDataInput!
+}
 
 input ResponseUpdateDataInput {
 	state:       State 
-	answers: [AnswerUpdateInput!]       
+	answers: [UpsertAnswersInput!]       
 }
+
 input ResponseWhereUniqueInput {
 	id: ID!
 }
@@ -62,7 +68,6 @@ input ResponseQueryInput {
 }
 extend type Mutation {
 	createResponse(data: ResponseCreateInput!): ResponseResult!
-	createResponses(data: ResponseCreateInput!): ResponseResult!
 	updateResponse(data: ResponseUpdateInput!): ResponseResult!
 	deleteResponse(where: ResponseWhereUniqueInput!): ResponseResult!
 }

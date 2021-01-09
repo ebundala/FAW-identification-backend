@@ -547,9 +547,15 @@ export class ResponseCreateInput {
     answers?: AnswerCreateInputWithoutResponse[];
 }
 
+export class UpsertAnswersInput {
+    where?: AnswerWhereUniqueInput;
+    question: QuestionWhereUniqueInput;
+    data: AnswerUpdateDataInput;
+}
+
 export class ResponseUpdateDataInput {
     state?: State;
-    answers?: AnswerUpdateInput[];
+    answers?: UpsertAnswersInput[];
 }
 
 export class ResponseWhereUniqueInput {
@@ -727,8 +733,6 @@ export abstract class IMutation {
     abstract deleteRecommendation(where: RecommendationWhereUniqueInput): RecommendationResult | Promise<RecommendationResult>;
 
     abstract createResponse(data: ResponseCreateInput): ResponseResult | Promise<ResponseResult>;
-
-    abstract createResponses(data: ResponseCreateInput): ResponseResult | Promise<ResponseResult>;
 
     abstract updateResponse(data: ResponseUpdateInput): ResponseResult | Promise<ResponseResult>;
 
