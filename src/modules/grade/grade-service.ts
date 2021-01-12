@@ -9,13 +9,6 @@ import {
 } from '@prisma/client';
 import {
     AttachmentQueryInput, Grade, GradeCreateInput, GradeResult,
-
-
-
-
-
-
-
     GradeUpdateDataInput, GradeUpdateInput,
     GradeWhereUniqueInput,
 
@@ -64,13 +57,7 @@ export class GradeService {
             });
     }
     async updateGrade(data: GradeUpdateInput, uid: String): Promise<any> {
-        const update: GradeUpdateDataInput = {}
-        const entries = Object.entries(data.update)
-        for (const [k, v] of entries) {
-            if (v) {
-                update[k] = v
-            }
-        }
+        const update: GradeUpdateDataInput = this.helper.filterUpdateDataInput<GradeUpdateDataInput>(data.update);
 
         return this.prisma.grade.update({
             where: data.where,
@@ -92,6 +79,8 @@ export class GradeService {
             });
 
     }
+
+
 
     async deleteGrade(where: GradeWhereUniqueInput, uid: String): Promise<any> {
         return this.prisma.grade.delete({

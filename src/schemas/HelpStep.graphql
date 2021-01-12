@@ -1,0 +1,69 @@
+type HelpStep {
+	id: ID!
+	stepNumber: Int!
+	title: String!
+	description: String
+	attachments: [Attachment!]
+	help: Help!
+	createdAt: String!
+	updatedAt: String!
+}
+
+input HelpStepCreateInput {
+	stepNumber: Int!
+	title: String!
+	description: String
+	attachments: [AttachmentWhereUniqueInput!]
+	help: HelpWhereUniqueInput!
+}
+input HelpStepUpdateDataInput {
+	stepNumber: Int
+	title: String
+	description: String
+	attachments: [AttachmentWhereUniqueInput!]
+}
+input HelpStepWhereUniqueInput {
+	id: ID!
+}
+input HelpStepUpdateInput {
+	where: HelpStepWhereUniqueInput
+	update: HelpStepUpdateDataInput
+}
+type HelpStepResult {
+	status: Boolean!
+	message: String!
+	helpStep: HelpStep
+}
+type HelpStepListResult {
+	status: Boolean!
+	message: String!
+	helpSteps: [HelpStep!]
+}
+
+input HelpStepOrderBy {
+	id:           OrderByInput
+	stepNumber: OrderByInput
+	title: OrderByInput
+	description: OrderByInput
+	createdAt: OrderByInput
+	updatedAt: OrderByInput
+}
+input HelpStepWhereQuery {
+	id:               ID
+	stepNumber: Int
+	title: String
+	description: String  
+
+}
+input HelpStepQueryInput {
+	take: Int
+	skip: Int
+	where: HelpStepWhereQuery
+	orderBy: HelpStepOrderBy
+	cursor: HelpStepWhereUniqueInput   
+}
+extend type Mutation {
+	createHelpStep(data: HelpStepCreateInput!): HelpStepResult!
+	updateHelpStep(data: HelpStepUpdateInput!): HelpStepResult!
+	deleteHelpStep(where: HelpStepWhereUniqueInput!): HelpStepResult!
+}

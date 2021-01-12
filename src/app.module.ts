@@ -16,6 +16,8 @@ import { FormModule } from './modules/form/form.module';
 import { ForumAnswerModule } from './modules/forum-answer/forum-answer.module';
 import { ForumModule } from './modules/forum/forum.module';
 import { GradeModule } from './modules/grade/grade.module';
+import { HelpStepModule } from './modules/help-step/help-step.module';
+import { HelpModule } from './modules/help/help.module';
 import { QuestionModule } from './modules/question/question.module';
 import { RecommendationModule } from './modules/recommendation/recommendation.module';
 import { ResponseModule } from './modules/response/response.module';
@@ -64,6 +66,8 @@ import { UserModule } from './modules/user/user.module';
     ForumAnswerModule,
     CommentModule,
     FormCategoryModule,
+    HelpModule,
+    HelpStepModule,
   ],
 })
 

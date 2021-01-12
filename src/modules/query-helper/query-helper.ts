@@ -220,6 +220,16 @@ import {
 
 @Injectable()
 export class QueryHelper {
+    filterUpdateDataInput<T>(data) {
+        const update: T = {} as T;
+        const entries = Object.entries(data);
+        for (const [k, v] of entries) {
+            if (v) {
+                update[k] = v;
+            }
+        }
+        return update;
+    }
     userQueryBuilder(where: UserQueryInput): FindManyUserArgs {
         const args: FindManyUserArgs = {};
         if (where) {

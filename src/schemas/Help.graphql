@@ -1,0 +1,62 @@
+type Help {
+	id: ID!
+	topic: String!
+	description: String
+	steps(where: HelpStepQueryInput): [HelpStep!]
+	createdAt:        String!
+	updatedAt:        String!
+}
+
+
+
+input HelpCreateInput {
+	topic:           String!
+	description:      String
+}
+input HelpUpdateDataInput {
+	topic:           String
+	description:      String       
+}
+input HelpWhereUniqueInput {
+	id: ID!
+}
+input HelpUpdateInput {
+	where: HelpWhereUniqueInput
+	update: HelpUpdateDataInput
+}
+type HelpResult {
+	status: Boolean!
+	message: String!
+	help: Help
+}
+type HelpListResult {
+	status: Boolean!
+	message: String!
+	helps: [Help!]
+}
+
+input HelpOrderBy {
+	id:           OrderByInput
+	description:      OrderByInput
+	topic:              OrderByInput
+	createdAt: OrderByInput
+	updatedAt: OrderByInput
+}
+input HelpWhereQuery {
+	id:               ID
+	topic:             String
+	description:      String   
+
+}
+input HelpQueryInput {
+	take: Int
+	skip: Int
+	where: HelpWhereQuery
+	orderBy: HelpOrderBy
+	cursor: HelpWhereUniqueInput   
+}
+extend type Mutation {
+	createHelp(data: HelpCreateInput!): HelpResult!
+	updateHelp(data: HelpUpdateInput!): HelpResult!
+	deleteHelp(where: HelpWhereUniqueInput!): HelpResult!
+}

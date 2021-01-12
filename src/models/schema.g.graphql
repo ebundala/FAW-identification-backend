@@ -97,6 +97,12 @@ type Mutation {
   createGrade(data: GradeCreateInput!): GradeResult!
   updateGrade(data: GradeUpdateInput!): GradeResult!
   deleteGrade(where: GradeWhereUniqueInput!): GradeResult!
+  createHelp(data: HelpCreateInput!): HelpResult!
+  updateHelp(data: HelpUpdateInput!): HelpResult!
+  deleteHelp(where: HelpWhereUniqueInput!): HelpResult!
+  createHelpStep(data: HelpStepCreateInput!): HelpStepResult!
+  updateHelpStep(data: HelpStepUpdateInput!): HelpStepResult!
+  deleteHelpStep(where: HelpStepWhereUniqueInput!): HelpStepResult!
   createQuestion(data: QuestionCreateInput!): QuestionResult!
   updateQuestion(data: QuestionUpdateInput!): QuestionResult!
   deleteQuestion(where: QuestionWhereUniqueInput!): QuestionResult!
@@ -662,6 +668,139 @@ input GradeQueryInput {
   where: GradeWhereQuery
   orderBy: GradeOrderBy
   cursor: GradeWhereUniqueInput
+}
+
+type Help {
+  id: ID!
+  topic: String!
+  description: String
+  steps: [HelpStep!]
+  createdAt: String!
+  updatedAt: String!
+}
+
+input HelpCreateInput {
+  topic: String!
+  description: String
+}
+
+input HelpUpdateDataInput {
+  topic: String
+  description: String
+}
+
+input HelpWhereUniqueInput {
+  id: ID!
+}
+
+input HelpUpdateInput {
+  where: HelpWhereUniqueInput
+  update: HelpUpdateDataInput
+}
+
+type HelpResult {
+  status: Boolean!
+  message: String!
+  help: Help
+}
+
+type HelpListResult {
+  status: Boolean!
+  message: String!
+  helps: [Help!]
+}
+
+input HelpOrderBy {
+  id: OrderByInput
+  description: OrderByInput
+  topic: OrderByInput
+  createdAt: OrderByInput
+  updatedAt: OrderByInput
+}
+
+input HelpWhereQuery {
+  id: ID
+  topic: String
+  description: String
+}
+
+input HelpQueryInput {
+  take: Int
+  skip: Int
+  where: HelpWhereQuery
+  orderBy: HelpOrderBy
+  cursor: HelpWhereUniqueInput
+}
+
+type HelpStep {
+  id: ID!
+  stepNumber: Int!
+  title: String!
+  description: String
+  attachments: [Attachment!]
+  help: Help!
+  createdAt: String!
+  updatedAt: String!
+}
+
+input HelpStepCreateInput {
+  stepNumber: Int!
+  title: String!
+  description: String
+  attachments: [AttachmentWhereUniqueInput!]
+  help: HelpWhereUniqueInput!
+}
+
+input HelpStepUpdateDataInput {
+  stepNumber: Int
+  title: String
+  description: String
+  attachments: [AttachmentWhereUniqueInput!]
+}
+
+input HelpStepWhereUniqueInput {
+  id: ID!
+}
+
+input HelpStepUpdateInput {
+  where: HelpStepWhereUniqueInput
+  update: HelpStepUpdateDataInput
+}
+
+type HelpStepResult {
+  status: Boolean!
+  message: String!
+  helpStep: HelpStep
+}
+
+type HelpStepListResult {
+  status: Boolean!
+  message: String!
+  helpSteps: [HelpStep!]
+}
+
+input HelpStepOrderBy {
+  id: OrderByInput
+  stepNumber: OrderByInput
+  title: OrderByInput
+  description: OrderByInput
+  createdAt: OrderByInput
+  updatedAt: OrderByInput
+}
+
+input HelpStepWhereQuery {
+  id: ID
+  stepNumber: Int
+  title: String
+  description: String
+}
+
+input HelpStepQueryInput {
+  take: Int
+  skip: Int
+  where: HelpStepWhereQuery
+  orderBy: HelpStepOrderBy
+  cursor: HelpStepWhereUniqueInput
 }
 
 type Question {

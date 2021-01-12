@@ -439,6 +439,95 @@ export class GradeQueryInput {
     cursor?: GradeWhereUniqueInput;
 }
 
+export class HelpCreateInput {
+    topic: string;
+    description?: string;
+}
+
+export class HelpUpdateDataInput {
+    topic?: string;
+    description?: string;
+}
+
+export class HelpWhereUniqueInput {
+    id: string;
+}
+
+export class HelpUpdateInput {
+    where?: HelpWhereUniqueInput;
+    update?: HelpUpdateDataInput;
+}
+
+export class HelpOrderBy {
+    id?: OrderByInput;
+    description?: OrderByInput;
+    topic?: OrderByInput;
+    createdAt?: OrderByInput;
+    updatedAt?: OrderByInput;
+}
+
+export class HelpWhereQuery {
+    id?: string;
+    topic?: string;
+    description?: string;
+}
+
+export class HelpQueryInput {
+    take?: number;
+    skip?: number;
+    where?: HelpWhereQuery;
+    orderBy?: HelpOrderBy;
+    cursor?: HelpWhereUniqueInput;
+}
+
+export class HelpStepCreateInput {
+    stepNumber: number;
+    title: string;
+    description?: string;
+    attachments?: AttachmentWhereUniqueInput[];
+    help: HelpWhereUniqueInput;
+}
+
+export class HelpStepUpdateDataInput {
+    stepNumber?: number;
+    title?: string;
+    description?: string;
+    attachments?: AttachmentWhereUniqueInput[];
+}
+
+export class HelpStepWhereUniqueInput {
+    id: string;
+}
+
+export class HelpStepUpdateInput {
+    where?: HelpStepWhereUniqueInput;
+    update?: HelpStepUpdateDataInput;
+}
+
+export class HelpStepOrderBy {
+    id?: OrderByInput;
+    stepNumber?: OrderByInput;
+    title?: OrderByInput;
+    description?: OrderByInput;
+    createdAt?: OrderByInput;
+    updatedAt?: OrderByInput;
+}
+
+export class HelpStepWhereQuery {
+    id?: string;
+    stepNumber?: number;
+    title?: string;
+    description?: string;
+}
+
+export class HelpStepQueryInput {
+    take?: number;
+    skip?: number;
+    where?: HelpStepWhereQuery;
+    orderBy?: HelpStepOrderBy;
+    cursor?: HelpStepWhereUniqueInput;
+}
+
 export class QuestionCreateInput {
     questionNumber: number;
     question?: string;
@@ -720,6 +809,18 @@ export abstract class IMutation {
 
     abstract deleteGrade(where: GradeWhereUniqueInput): GradeResult | Promise<GradeResult>;
 
+    abstract createHelp(data: HelpCreateInput): HelpResult | Promise<HelpResult>;
+
+    abstract updateHelp(data: HelpUpdateInput): HelpResult | Promise<HelpResult>;
+
+    abstract deleteHelp(where: HelpWhereUniqueInput): HelpResult | Promise<HelpResult>;
+
+    abstract createHelpStep(data: HelpStepCreateInput): HelpStepResult | Promise<HelpStepResult>;
+
+    abstract updateHelpStep(data: HelpStepUpdateInput): HelpStepResult | Promise<HelpStepResult>;
+
+    abstract deleteHelpStep(where: HelpStepWhereUniqueInput): HelpStepResult | Promise<HelpStepResult>;
+
     abstract createQuestion(data: QuestionCreateInput): QuestionResult | Promise<QuestionResult>;
 
     abstract updateQuestion(data: QuestionUpdateInput): QuestionResult | Promise<QuestionResult>;
@@ -947,6 +1048,50 @@ export class GradeListResult {
     status: boolean;
     message: string;
     grades?: Grade[];
+}
+
+export class Help {
+    id: string;
+    topic: string;
+    description?: string;
+    steps?: HelpStep[];
+    createdAt: string;
+    updatedAt: string;
+}
+
+export class HelpResult {
+    status: boolean;
+    message: string;
+    help?: Help;
+}
+
+export class HelpListResult {
+    status: boolean;
+    message: string;
+    helps?: Help[];
+}
+
+export class HelpStep {
+    id: string;
+    stepNumber: number;
+    title: string;
+    description?: string;
+    attachments?: Attachment[];
+    help: Help;
+    createdAt: string;
+    updatedAt: string;
+}
+
+export class HelpStepResult {
+    status: boolean;
+    message: string;
+    helpStep?: HelpStep;
+}
+
+export class HelpStepListResult {
+    status: boolean;
+    message: string;
+    helpSteps?: HelpStep[];
 }
 
 export class Question {
