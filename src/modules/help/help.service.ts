@@ -1,10 +1,26 @@
 import { Injectable } from '@nestjs/common';
-import { Help, HelpCreateInput, HelpResult, HelpStepQueryInput, HelpUpdateDataInput, HelpUpdateInput, HelpWhereUniqueInput } from 'src/models/graphql';
+import { Help, HelpCreateInput, HelpListResult, HelpQueryInput, HelpResult, HelpStepQueryInput, HelpUpdateDataInput, HelpUpdateInput, HelpWhereUniqueInput } from 'src/models/graphql';
 import { PrismaClient } from '../prisma-client/prisma-client-service';
 import { QueryHelper } from '../query-helper/query-helper';
 
 @Injectable()
 export class HelpService {
+    async getHelps(where: HelpQueryInput): Promise<any | HelpListResult> {
+        return this.prisma.help.findMany(where).then((helps) => {
+            return {
+                status: true,
+                message: "success",
+                helps
+            }
+        })
+            .catch(({ message }) => {
+                return {
+                    status: false,
+                    message: message || 'Failed to fetch help'
+                }
+            });
+
+    }
 
     constructor(
         private readonly prisma: PrismaClient,
@@ -67,6 +83,7 @@ export class HelpService {
     }
 
     async steps(parent: Help, where: HelpStepQueryInput, ctx: any, uid: any) {
-        return this.prisma.help.findOne({ where: { id: parent.id } }).steps(where)
+        const args = this.helper.helpStepQueryBuilder(where);
+        return this.prisma.help.findOne({ where: { id: parent.id } }).steps(args)
     }
 }

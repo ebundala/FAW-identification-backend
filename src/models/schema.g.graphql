@@ -361,6 +361,7 @@ type Query {
   forms(where: FormQueryInput): FormListResult!
   formCategories(where: FormCategoryQueryInput): FormCategoryListResult!
   forums(where: ForumQueryInput): ForumListResult!
+  getHelp(where: HelpQueryInput): HelpListResult!
   responses(where: ResponseQueryInput!): ResponseListResult!
   version: String
   users(where: UserQueryInput): UserListResult!
@@ -674,7 +675,7 @@ type Help {
   id: ID!
   topic: String!
   description: String
-  steps: [HelpStep!]
+  steps(where: HelpStepQueryInput): [HelpStep!]
   createdAt: String!
   updatedAt: String!
 }
@@ -737,7 +738,7 @@ type HelpStep {
   stepNumber: Int!
   title: String!
   description: String
-  attachments: [Attachment!]
+  attachments(where: AttachmentQueryInput): [Attachment!]
   help: Help!
   createdAt: String!
   updatedAt: String!

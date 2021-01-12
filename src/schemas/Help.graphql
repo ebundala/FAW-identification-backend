@@ -60,3 +60,7 @@ extend type Mutation {
 	updateHelp(data: HelpUpdateInput!): HelpResult!
 	deleteHelp(where: HelpWhereUniqueInput!): HelpResult!
 }
+
+extend type Query {
+	getHelp(where: HelpQueryInput): HelpListResult!
+}

@@ -52,7 +52,7 @@ import {
 
 
 
-    FindManyFormCategoryArgs, FindManyForumAnswerArgs, FindManyForumArgs, FindManyGradeArgs, FindManyQuestionArgs,
+    FindManyFormCategoryArgs, FindManyForumAnswerArgs, FindManyForumArgs, FindManyGradeArgs, FindManyHelpStepArgs, FindManyQuestionArgs,
 
 
 
@@ -114,7 +114,7 @@ import {
 
 
 
-    ForumAnswerOrderByInput, ForumAnswerWhereInput, ForumOrderByInput, ForumWhereInput, GradeOrderByInput, GradeWhereInput, QuestionOrderByInput, QuestionWhereInput,
+    ForumAnswerOrderByInput, ForumAnswerWhereInput, ForumOrderByInput, ForumWhereInput, GradeOrderByInput, GradeWhereInput, HelpStepOrderByInput, HelpStepWhereInput, QuestionOrderByInput, QuestionWhereInput,
 
 
 
@@ -201,6 +201,10 @@ import {
 
 
     ForumAnswerQueryInput, ForumQueryInput, GradeQueryInput,
+
+
+
+    HelpStepQueryInput,
 
 
 
@@ -637,6 +641,77 @@ export class QueryHelper {
         return args;
     }
 
+    public helpStepQueryBuilder(where: HelpStepQueryInput) {
+        const args: FindManyHelpStepArgs = {};
+        if (where) {
+            if (where.take) {
+                args.take = where.take;
+            }
+            if (where.skip) {
+                args.skip = where.skip;
+            }
+            if (where.where) {
+                const whereInput: HelpStepWhereInput = {};
+                if (where.where.id) {
+                    whereInput.id = where.where.id;
+                }
+                if (where.where.title) {
+                    whereInput.title = where.where.title;
+                }
+                if (where.where.description) {
+                    whereInput.description = where.where.description;
+                }
+                if (where.where.stepNumber) {
+                    whereInput.stepNumber = where.where.stepNumber;
+                }
+
+
+                args.where = whereInput;
+            }
+            if (where.cursor) {
+                args.cursor = where.cursor;
+            }
+            if (where.orderBy) {
+                const orderBy: HelpStepOrderByInput = {};
+                if (where.orderBy.createdAt == OrderByInput.asc) {
+                    orderBy.createdAt = "asc";
+                }
+                if (where.orderBy.createdAt == OrderByInput.desc) {
+                    orderBy.createdAt = "desc";
+                }
+                if (where.orderBy.updatedAt == OrderByInput.asc) {
+                    orderBy.updatedAt = "asc";
+                }
+                if (where.orderBy.updatedAt == OrderByInput.desc) {
+                    orderBy.updatedAt = "desc";
+                }
+                if (where.orderBy.title == OrderByInput.asc) {
+                    orderBy.title = "asc";
+                }
+                if (where.orderBy.title == OrderByInput.desc) {
+                    orderBy.title = "desc";
+                }
+                if (where.orderBy.description == OrderByInput.asc) {
+                    orderBy.description = "asc";
+                }
+                if (where.orderBy.description == OrderByInput.desc) {
+                    orderBy.description = "desc";
+                }
+
+                if (where.orderBy.stepNumber == OrderByInput.asc) {
+                    orderBy.stepNumber = "asc";
+                }
+                if (where.orderBy.stepNumber == OrderByInput.desc) {
+                    orderBy.stepNumber = "desc";
+                }
+
+
+                args.orderBy = orderBy;
+            }
+
+        }
+        return args;
+    }
     public attachmentQueryBuilder(where: AttachmentQueryInput) {
         const args: FindManyAttachmentArgs = {};
         if (where) {

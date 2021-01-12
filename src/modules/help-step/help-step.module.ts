@@ -8,4 +8,6 @@ import { HelpStepService } from './help-step.service';
   imports: [PrismaClientModule, QueryHelperModule],
   providers: [HelpStepService, HelpStepResolver]
 })
-export class HelpStepModule { }
+export class HelpStepModule {
+
+}

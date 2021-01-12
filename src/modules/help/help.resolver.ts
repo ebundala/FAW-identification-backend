@@ -1,10 +1,14 @@
 import {
     Args,
     Context,
+    Info,
     Mutation,
 
 
     Parent,
+
+
+    Query,
 
 
     ResolveField,
@@ -12,7 +16,7 @@ import {
 
     Resolver
 } from '@nestjs/graphql';
-import { Help, HelpCreateInput, HelpResult, HelpStep, HelpStepQueryInput, HelpUpdateInput, HelpWhereUniqueInput } from 'src/models/graphql';
+import { Help, HelpCreateInput, HelpListResult, HelpQueryInput, HelpResult, HelpStep, HelpStepQueryInput, HelpUpdateInput, HelpWhereUniqueInput } from 'src/models/graphql';
 import { HelpService } from './help.service';
 
 @Resolver((of) => Help)
@@ -35,7 +39,10 @@ export class HelpResolver {
     }
     @ResolveField((returns) => [HelpStep])
     async steps(@Parent() parent: Help, @Args("where", { type: () => HelpStepQueryInput }) where: HelpStepQueryInput, @Context() ctx) {
-        if (ctx.auth && ctx.auth.uid)
-            return this.helpService.steps(parent, where, ctx, ctx.auth.uid)
+        return this.helpService.steps(parent, where, ctx, ctx.auth.uid)
+    }
+    @Query((retuns) => HelpListResult)
+    async getHelp(@Info() info, @Args("where", { type: () => HelpQueryInput }) where: HelpQueryInput, @Context() ctx): Promise<HelpListResult> {
+        return this.helpService.getHelps(where)
     }
 }

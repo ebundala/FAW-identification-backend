@@ -1,10 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { HelpStepCreateArgs, HelpStepUpdateInput as HsInput, PrismaClient } from '@prisma/client';
-import { HelpStepCreateInput, HelpStepResult, HelpStepUpdateInput, HelpStepWhereUniqueInput } from 'src/models/graphql';
+import { HelpStepCreateArgs, HelpStepUpdateInput as HsInput } from '@prisma/client';
+import { AttachmentQueryInput, HelpStep, HelpStepCreateInput, HelpStepResult, HelpStepUpdateInput, HelpStepWhereUniqueInput } from 'src/models/graphql';
+import { PrismaClient } from '../prisma-client/prisma-client-service';
 import { QueryHelper } from '../query-helper/query-helper';
 
 @Injectable()
 export class HelpStepService {
+
     constructor(
         private readonly prisma: PrismaClient,
         private readonly helper: QueryHelper) { }
@@ -74,5 +76,13 @@ export class HelpStepService {
                 message: message || 'Failed to delete the Step'
             }
         })
+    }
+
+    async attachments(parent: HelpStep, where: AttachmentQueryInput, ctx: any, uid: any) {
+        const args = this.helper.attachmentQueryBuilder(where);
+        return this.prisma.helpStep.findOne({ where: { id: parent.id } }).attachments(args);
+    }
+    async help(parent: HelpStep, ctx: any, uid: any) {
+        return this.prisma.helpStep.findOne({ where: { id: parent.id } }).help()
     }
 }

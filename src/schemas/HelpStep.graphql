@@ -3,7 +3,7 @@ type HelpStep {
 	stepNumber: Int!
 	title: String!
 	description: String
-	attachments: [Attachment!]
+	attachments(where: AttachmentQueryInput): [Attachment!]
 	help: Help!
 	createdAt: String!
 	updatedAt: String!

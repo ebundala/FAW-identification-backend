@@ -941,6 +941,8 @@ export abstract class IQuery {
 
     abstract forums(where?: ForumQueryInput): ForumListResult | Promise<ForumListResult>;
 
+    abstract getHelp(where?: HelpQueryInput): HelpListResult | Promise<HelpListResult>;
+
     abstract responses(where: ResponseQueryInput): ResponseListResult | Promise<ResponseListResult>;
 
     abstract version(): string | Promise<string>;
