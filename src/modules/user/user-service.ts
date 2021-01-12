@@ -21,6 +21,7 @@ import { PrismaClient } from '../prisma-client/prisma-client-service';
 export class UserService {
 
 
+
   constructor(
     private readonly firebaseApp: FirebaseService,
     private readonly prisma: PrismaClient,
@@ -36,7 +37,8 @@ export class UserService {
   async signup(credentials: AuthInput): Promise<AuthResult> {
     const res = await this.signupWithEmail(credentials);
     if (!res.error) {
-      await this.mail.sendWelcomeEmail(credentials.email).catch((e) => { this.logger.debug(e) });
+      const link = await this.firebaseApp.admin.auth().generateEmailVerificationLink(credentials.email);
+      await this.mail.sendWelcomeEmail(credentials.email, link).catch((e) => { this.logger.debug(e) });
     }
     return res;
   }
@@ -45,7 +47,19 @@ export class UserService {
 
     return this.destroySessionToken(token);
   }
-
+  async recoverAccount(email: string): Promise<AuthResult> {
+    const user = await this.prisma.user.findOne({ where: { email: email } })
+    if (!user) return {
+      error: true,
+      message: "User account not found"
+    };
+    const link = await this.firebaseApp.admin.auth().generatePasswordResetLink(email);
+    await this.mail.sendPasswordResetLink(email, link).catch((e) => { this.logger.debug(e) });
+    return {
+      message: 'Password resset instructions sent',
+      error: false,
+    }
+  }
   async signupWithEmail(data: AuthInput): Promise<AuthResult> {
     const { email, password, displayName } = data;
     if (!isEmail(email)) {

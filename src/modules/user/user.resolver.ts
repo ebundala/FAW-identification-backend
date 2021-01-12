@@ -84,6 +84,10 @@ export class UsersResolver {
   async signout(@Context() ctx, @Info() info,): Promise<SignOutResult> {
     return this.userService.signOut(ctx.token)
   }
+  @Mutation((returns) => AuthResult)
+  async recoverAccount(@Args('email', { type: () => String }) email) {
+    return this.userService.recoverAccount(email);
+  }
   @Mutation((retuns) => UserResult)
   async deleteUser(@Info() info, @Args("where", { type: () => UserWhereUniqueInput }) where: UserWhereUniqueInput, @Context() ctx): Promise<UserResult> {
     return this.userService.deleteUser(where, ctx, ctx.auth.uid);

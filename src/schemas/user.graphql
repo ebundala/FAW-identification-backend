@@ -97,6 +97,8 @@ extend type Query {
 extend type Mutation {
 	signup(credentials: AuthInput!): AuthResult!
 	signin(credentials: AuthInput!): AuthResult!
+	recoverAccount(email: String!): AuthResult!
+
 	signout: SignOutResult!
 	updateUser(data: UserUpdateInput!): UserResult!
 	deleteUser(where: UserWhereUniqueInput!): UserResult!

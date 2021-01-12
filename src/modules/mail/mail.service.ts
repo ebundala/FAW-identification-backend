@@ -8,6 +8,7 @@ import { PrismaClient } from '../prisma-client/prisma-client-service';
 
 @Injectable()
 export class MailService {
+
     private from: string;
     private accountActivationTemplateId: string;
     private accountDeactivationTemplateId: string;
@@ -16,6 +17,7 @@ export class MailService {
     private newQuestionTemplateId: string;
     private questionAnsweredTemplateId: string;
     private welcomeTemplateId: string;
+    private passwordResetTemplateId: string;
 
 
 
@@ -34,8 +36,9 @@ export class MailService {
         this.newQuestionTemplateId = this.config.get<string>("SENDGRID_NEW_FORUM_TEMPLATE");
         this.questionAnsweredTemplateId = this.config.get<string>("SENDGRID_FORUM_ANSWERED_TEMPLATE");
         this.welcomeTemplateId = this.config.get<string>("SENDGRID_WELCOME_TEMPLATE");
+        this.passwordResetTemplateId = this.config.get<string>("SENDGRID_PASS_RESSET_TEMPLATE")
     }
-    async sendAccountActivationEmail(userId: string) {
+    async sendAccountActivationEmail(userId: string,) {
         this.logger.debug(this.sendAccountActivationEmail.name);
         const user = await this.prisma.user.findOne({ where: { id: userId } });
         if (user.email && this.accountActivationTemplateId) {
@@ -43,7 +46,19 @@ export class MailService {
                 templateId: this.accountActivationTemplateId,
                 from: this.from,
                 to: user.email,
-                dynamicTemplateData: user
+                dynamicTemplateData: { ...user }
+            });
+        }
+    }
+    async sendPasswordResetLink(email: any, link: string) {
+        this.logger.debug(this.sendPasswordResetLink.name);
+        const user = await this.prisma.user.findOne({ where: { email: email } });
+        if (user.email && this.passwordResetTemplateId) {
+            return this.sendGrid.send({
+                templateId: this.passwordResetTemplateId,
+                from: this.from,
+                to: user.email,
+                dynamicTemplateData: { ...user, link }
             });
         }
     }
@@ -132,7 +147,7 @@ export class MailService {
             });
         }
     }
-    async sendWelcomeEmail(email: string) {
+    async sendWelcomeEmail(email: string, link: string) {
         this.logger.debug(this.sendWelcomeEmail.name);
         const user = await this.prisma.user.findOne({ where: { email: email } });
         if (user && this.welcomeTemplateId) {
@@ -140,7 +155,7 @@ export class MailService {
                 templateId: this.welcomeTemplateId,
                 from: this.from,
                 to: user.email,
-                dynamicTemplateData: user
+                dynamicTemplateData: { ...user, link }
             });
         }
     }

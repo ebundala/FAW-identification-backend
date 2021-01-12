@@ -744,6 +744,8 @@ export abstract class IMutation {
 
     abstract signin(credentials: AuthInput): AuthResult | Promise<AuthResult>;
 
+    abstract recoverAccount(email: string): AuthResult | Promise<AuthResult>;
+
     abstract signout(): SignOutResult | Promise<SignOutResult>;
 
     abstract updateUser(data: UserUpdateInput): UserResult | Promise<UserResult>;
