@@ -52,7 +52,7 @@ import {
 
 
 
-    FindManyFormCategoryArgs, FindManyForumAnswerArgs, FindManyForumArgs, FindManyGradeArgs, FindManyHelpStepArgs, FindManyQuestionArgs,
+    FindManyFormCategoryArgs, FindManyForumAnswerArgs, FindManyForumArgs, FindManyGradeArgs, FindManyHelpArgs, FindManyHelpStepArgs, FindManyQuestionArgs,
 
 
 
@@ -114,7 +114,7 @@ import {
 
 
 
-    ForumAnswerOrderByInput, ForumAnswerWhereInput, ForumOrderByInput, ForumWhereInput, GradeOrderByInput, GradeWhereInput, HelpStepOrderByInput, HelpStepWhereInput, QuestionOrderByInput, QuestionWhereInput,
+    ForumAnswerOrderByInput, ForumAnswerWhereInput, ForumOrderByInput, ForumWhereInput, GradeOrderByInput, GradeWhereInput, HelpOrderByInput, HelpStepOrderByInput, HelpStepWhereInput, HelpWhereInput, QuestionOrderByInput, QuestionWhereInput,
 
 
 
@@ -201,6 +201,10 @@ import {
 
 
     ForumAnswerQueryInput, ForumQueryInput, GradeQueryInput,
+
+
+
+    HelpQueryInput,
 
 
 
@@ -909,7 +913,63 @@ export class QueryHelper {
         }
         return args;
     }
+    public helpQueryBuilder(where: HelpQueryInput) {
+        const args: FindManyHelpArgs = {};
+        if (where) {
+            if (where.take) {
+                args.take = where.take;
+            }
+            if (where.skip) {
+                args.skip = where.skip;
+            }
+            if (where.where) {
+                const whereInput: HelpWhereInput = {};
+                if (where.where.id) {
+                    whereInput.id = where.where.id;
+                }
+                if (where.where.topic) {
+                    whereInput.topic = where.where.topic;
+                }
+                if (where.where.state) {
+                    whereInput.state = where.where.state;
+                }
+                if (where.where.description) {
+                    whereInput.description = where.where.description;
+                }
+                args.where = whereInput;
+            }
+            if (where.cursor) {
+                args.cursor = where.cursor;
+            }
+            if (where.orderBy) {
+                const orderBy: HelpOrderByInput = {};
+                if (where.orderBy.createdAt == OrderByInput.asc) {
+                    orderBy.createdAt = "asc";
+                }
+                if (where.orderBy.createdAt == OrderByInput.desc) {
+                    orderBy.createdAt = "desc";
+                }
+                if (where.orderBy.updatedAt == OrderByInput.asc) {
+                    orderBy.updatedAt = "asc";
+                }
+                if (where.orderBy.updatedAt == OrderByInput.desc) {
+                    orderBy.updatedAt = "desc";
+                }
+                if (where.orderBy.topic == OrderByInput.asc) {
+                    orderBy.topic = "asc";
+                }
+                if (where.orderBy.description == OrderByInput.desc) {
+                    orderBy.description = "desc";
+                }
+                args.orderBy = orderBy;
+            }
 
+        }
+        /*  args.include = {
+             steps: true,
+         }; */
+        return args;
+    }
     public commentQueryBuilder(where: CommentQueryInput) {
         const args: FindManyCommentArgs = {};
         if (where) {

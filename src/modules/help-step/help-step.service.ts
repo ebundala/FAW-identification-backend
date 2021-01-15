@@ -10,7 +10,9 @@ export class HelpStepService {
     constructor(
         private readonly prisma: PrismaClient,
         private readonly helper: QueryHelper) { }
-    async createHelpStep(data: HelpStepCreateInput, uid: string): Promise<any | HelpStepResult> {
+    async createHelpStep(data: HelpStepCreateInput, ctx: any): Promise<any | HelpStepResult> {
+        this.helper.isAdmin(ctx)
+
         const args: HelpStepCreateArgs = {
             data: {
                 title: data.title,
@@ -40,7 +42,9 @@ export class HelpStepService {
                 }
             });
     }
-    async updateHelpStep(data: HelpStepUpdateInput, uid: string) {
+    async updateHelpStep(data: HelpStepUpdateInput, ctx: any) {
+        this.helper.isAdmin(ctx)
+
         const update = this.helper.filterUpdateDataInput<HsInput>(data.update);
         return this.prisma.helpStep.update({
             where: data.where,
@@ -58,7 +62,9 @@ export class HelpStepService {
             }
         });
     }
-    async deleteHelpStep(where: HelpStepWhereUniqueInput, uid: string): Promise<any | HelpStepResult> {
+    async deleteHelpStep(where: HelpStepWhereUniqueInput, ctx: any): Promise<any | HelpStepResult> {
+        this.helper.isAdmin(ctx)
+
         return this.prisma.helpStep.delete({
             where: where,
 
@@ -78,11 +84,11 @@ export class HelpStepService {
         })
     }
 
-    async attachments(parent: HelpStep, where: AttachmentQueryInput, ctx: any, uid: any) {
+    async attachments(parent: HelpStep, where: AttachmentQueryInput, ctx: any) {
         const args = this.helper.attachmentQueryBuilder(where);
         return this.prisma.helpStep.findOne({ where: { id: parent.id } }).attachments(args);
     }
-    async help(parent: HelpStep, ctx: any, uid: any) {
+    async help(parent: HelpStep, ctx: any) {
         return this.prisma.helpStep.findOne({ where: { id: parent.id } }).help()
     }
 }

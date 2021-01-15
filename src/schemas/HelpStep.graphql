@@ -3,6 +3,7 @@ type HelpStep {
 	stepNumber: Int!
 	title: String!
 	description: String
+	state: State
 	attachments(where: AttachmentQueryInput): [Attachment!]
 	help: Help!
 	createdAt: String!
@@ -13,6 +14,7 @@ input HelpStepCreateInput {
 	stepNumber: Int!
 	title: String!
 	description: String
+	state: State
 	attachments: [AttachmentWhereUniqueInput!]
 	help: HelpWhereUniqueInput!
 }
@@ -20,6 +22,7 @@ input HelpStepUpdateDataInput {
 	stepNumber: Int
 	title: String
 	description: String
+	state: State
 	attachments: [AttachmentWhereUniqueInput!]
 }
 input HelpStepWhereUniqueInput {
@@ -53,6 +56,7 @@ input HelpStepWhereQuery {
 	stepNumber: Int
 	title: String
 	description: String  
+	state: State
 
 }
 input HelpStepQueryInput {

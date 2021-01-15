@@ -2,6 +2,7 @@ type Help {
 	id: ID!
 	topic: String!
 	description: String
+	state: State
 	steps(where: HelpStepQueryInput): [HelpStep!]
 	createdAt:        String!
 	updatedAt:        String!
@@ -12,10 +13,12 @@ type Help {
 input HelpCreateInput {
 	topic:           String!
 	description:      String
+	state: State
 }
 input HelpUpdateDataInput {
 	topic:           String
-	description:      String       
+	description:      String   
+	state: State    
 }
 input HelpWhereUniqueInput {
 	id: ID!
@@ -45,7 +48,8 @@ input HelpOrderBy {
 input HelpWhereQuery {
 	id:               ID
 	topic:             String
-	description:      String   
+	description:      String  
+	state: State 
 
 }
 input HelpQueryInput {

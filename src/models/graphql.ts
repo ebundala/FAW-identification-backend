@@ -442,11 +442,13 @@ export class GradeQueryInput {
 export class HelpCreateInput {
     topic: string;
     description?: string;
+    state?: State;
 }
 
 export class HelpUpdateDataInput {
     topic?: string;
     description?: string;
+    state?: State;
 }
 
 export class HelpWhereUniqueInput {
@@ -470,6 +472,7 @@ export class HelpWhereQuery {
     id?: string;
     topic?: string;
     description?: string;
+    state?: State;
 }
 
 export class HelpQueryInput {
@@ -484,6 +487,7 @@ export class HelpStepCreateInput {
     stepNumber: number;
     title: string;
     description?: string;
+    state?: State;
     attachments?: AttachmentWhereUniqueInput[];
     help: HelpWhereUniqueInput;
 }
@@ -492,6 +496,7 @@ export class HelpStepUpdateDataInput {
     stepNumber?: number;
     title?: string;
     description?: string;
+    state?: State;
     attachments?: AttachmentWhereUniqueInput[];
 }
 
@@ -518,6 +523,7 @@ export class HelpStepWhereQuery {
     stepNumber?: number;
     title?: string;
     description?: string;
+    state?: State;
 }
 
 export class HelpStepQueryInput {
@@ -1056,6 +1062,7 @@ export class Help {
     id: string;
     topic: string;
     description?: string;
+    state?: State;
     steps?: HelpStep[];
     createdAt: string;
     updatedAt: string;
@@ -1078,6 +1085,7 @@ export class HelpStep {
     stepNumber: number;
     title: string;
     description?: string;
+    state?: State;
     attachments?: Attachment[];
     help: Help;
     createdAt: string;

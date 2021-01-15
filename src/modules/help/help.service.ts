@@ -5,27 +5,13 @@ import { QueryHelper } from '../query-helper/query-helper';
 
 @Injectable()
 export class HelpService {
-    async getHelps(where: HelpQueryInput): Promise<any | HelpListResult> {
-        return this.prisma.help.findMany(where).then((helps) => {
-            return {
-                status: true,
-                message: "success",
-                helps
-            }
-        })
-            .catch(({ message }) => {
-                return {
-                    status: false,
-                    message: message || 'Failed to fetch help'
-                }
-            });
 
-    }
 
     constructor(
         private readonly prisma: PrismaClient,
         private readonly helper: QueryHelper) { }
-    async createHelp(data: HelpCreateInput, uid: string): Promise<any | HelpResult> {
+    async createHelp(data: HelpCreateInput, ctx: any): Promise<any | HelpResult> {
+        this.helper.isAdmin(ctx)
         return this.prisma.help.create({
             data: {
                 topic: data.topic,
@@ -46,9 +32,9 @@ export class HelpService {
                 }
             });
     }
-    async updateHelp(data: HelpUpdateInput, uid: string): Promise<any | HelpResult> {
+    async updateHelp(data: HelpUpdateInput, ctx: any): Promise<any | HelpResult> {
+        this.helper.isAdmin(ctx)
         const update: HelpUpdateDataInput = this.helper.filterUpdateDataInput<HelpUpdateDataInput>(data.update);
-
         return this.prisma.help.update({
             where: data.where,
             data: update
@@ -65,7 +51,8 @@ export class HelpService {
             }
         });
     }
-    async deleteHelp(where: HelpWhereUniqueInput, uid: string) {
+    async deleteHelp(where: HelpWhereUniqueInput, ctx: any) {
+        this.helper.isAdmin(ctx)
         return this.prisma.help.delete({ where }).then((grade) => {
             return {
                 status: true,
@@ -82,8 +69,25 @@ export class HelpService {
         })
     }
 
-    async steps(parent: Help, where: HelpStepQueryInput, ctx: any, uid: any) {
+    async steps(parent: Help, where: HelpStepQueryInput, ctx: any) {
         const args = this.helper.helpStepQueryBuilder(where);
         return this.prisma.help.findOne({ where: { id: parent.id } }).steps(args)
+    }
+    async getHelps(where: HelpQueryInput): Promise<any | HelpListResult> {
+        const args = this.helper.helpQueryBuilder(where);
+        return this.prisma.help.findMany(args).then((helps) => {
+            return {
+                status: true,
+                message: "success",
+                helps
+            }
+        })
+            .catch(({ message }) => {
+                return {
+                    status: false,
+                    message: message || 'Failed to fetch help'
+                }
+            });
+
     }
 }

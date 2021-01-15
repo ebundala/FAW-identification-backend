@@ -25,21 +25,20 @@ export class HelpResolver {
     @Mutation((returns) => HelpResult)
     async createHelp(@Args('data', { type: () => HelpCreateInput }) data: HelpCreateInput, @Context() ctx): Promise<HelpResult> {
         if (ctx.auth && ctx.auth.uid)
-            return this.helpService.createHelp(data, ctx.auth.uid);
+            return this.helpService.createHelp(data, ctx);
     }
     @Mutation((returns) => HelpResult)
     async updateHelp(@Args('data', { type: () => HelpUpdateInput }) data: HelpUpdateInput, @Context() ctx): Promise<HelpResult> {
         if (ctx.auth && ctx.auth.uid)
-            return this.helpService.updateHelp(data, ctx.auth.uid);
+            return this.helpService.updateHelp(data, ctx);
     }
     @Mutation((returns) => HelpResult)
     async deleteHelp(@Args('where', { type: () => HelpWhereUniqueInput }) where: HelpWhereUniqueInput, @Context() ctx) {
-        if (ctx.auth && ctx.auth.uid)
-            return this.helpService.deleteHelp(where, ctx.auth.uid);
+        return this.helpService.deleteHelp(where, ctx.auth.uid);
     }
     @ResolveField((returns) => [HelpStep])
     async steps(@Parent() parent: Help, @Args("where", { type: () => HelpStepQueryInput }) where: HelpStepQueryInput, @Context() ctx) {
-        return this.helpService.steps(parent, where, ctx, ctx.auth.uid)
+        return this.helpService.steps(parent, where, ctx)
     }
     @Query((retuns) => HelpListResult)
     async getHelp(@Info() info, @Args("where", { type: () => HelpQueryInput }) where: HelpQueryInput, @Context() ctx): Promise<HelpListResult> {
