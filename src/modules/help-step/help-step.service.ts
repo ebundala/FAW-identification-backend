@@ -1,6 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { HelpStepCreateArgs, HelpStepUpdateInput as HsInput } from '@prisma/client';
-import { AttachmentQueryInput, HelpStep, HelpStepCreateInput, HelpStepResult, HelpStepUpdateInput, HelpStepWhereUniqueInput } from 'src/models/graphql';
+import {
+    AttachmentQueryInput, HelpStep, HelpStepCreateInput, HelpStepResult,
+    HelpStepUpdateInput, HelpStepWhereUniqueInput
+} from 'src/models/graphql';
 import { PrismaClient } from '../prisma-client/prisma-client-service';
 import { QueryHelper } from '../query-helper/query-helper';
 
@@ -42,18 +45,23 @@ export class HelpStepService {
                 }
             });
     }
-    async updateHelpStep(data: HelpStepUpdateInput, ctx: any) {
+    async updateHelpStep(data: HelpStepUpdateInput, ctx: any): Promise<any | HelpStepResult> {
         this.helper.isAdmin(ctx)
 
         const update = this.helper.filterUpdateDataInput<HsInput>(data.update);
+        if (data.update.attachments) {
+            update.attachments = {
+                connect: data.update.attachments
+            };
+        }
         return this.prisma.helpStep.update({
             where: data.where,
             data: update
-        }).then((help) => {
+        }).then((helpStep) => {
             return {
                 status: true,
                 message: 'Step updated successfully',
-                help
+                helpStep
             }
         }).catch(({ message }) => {
             return {
