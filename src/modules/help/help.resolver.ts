@@ -34,7 +34,7 @@ export class HelpResolver {
     }
     @Mutation((returns) => HelpResult)
     async deleteHelp(@Args('where', { type: () => HelpWhereUniqueInput }) where: HelpWhereUniqueInput, @Context() ctx) {
-        return this.helpService.deleteHelp(where, ctx.auth.uid);
+        return this.helpService.deleteHelp(where, ctx);
     }
     @ResolveField((returns) => [HelpStep])
     async steps(@Parent() parent: Help, @Args("where", { type: () => HelpStepQueryInput }) where: HelpStepQueryInput, @Context() ctx) {
