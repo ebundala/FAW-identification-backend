@@ -45,8 +45,9 @@ import { UserModule } from './modules/user/user.module';
         writeFileSync(join(process.cwd(), 'src/models/schema.g.graphql'), txt)
         return schema;
       },
-      debug: true,
-      playground: true,
+      uploads:true,
+      debug: false,
+      playground: false,
     }),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '../', 'public'),
