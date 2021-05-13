@@ -352,8 +352,8 @@ export class QueryHelper {
                     whereInput.description = where.where.description;
                 }
 
-                if (where.where.max) {
-                    whereInput.maxValue = where.where.max;
+                if (where.where.maxValue) {
+                    whereInput.maxValue = where.where.maxValue;
                 }
                 if (where.where.maxInclusive) {
                     whereInput.maxInclusive = where.where.maxInclusive;

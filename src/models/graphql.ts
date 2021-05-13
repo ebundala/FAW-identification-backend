@@ -385,8 +385,8 @@ export class ForumAnswerQueryInput {
 export class GradeCreateInput {
     name: string;
     description?: string;
-    min: number;
-    max: number;
+    minValue: number;
+    maxValue: number;
     minInclusive?: boolean;
     maxInclusive?: boolean;
     form: FormWhereUniqueInput;
@@ -395,8 +395,8 @@ export class GradeCreateInput {
 export class GradeUpdateDataInput {
     name?: string;
     description?: string;
-    min?: number;
-    max?: number;
+    minValue?: number;
+    maxValue?: number;
     minInclusive?: boolean;
     maxInclusive?: boolean;
 }
@@ -413,8 +413,8 @@ export class GradeUpdateInput {
 export class GradeOrderBy {
     name?: OrderByInput;
     description?: OrderByInput;
-    min?: OrderByInput;
-    max?: OrderByInput;
+    minValue?: OrderByInput;
+    maxValue?: OrderByInput;
     minInclusive?: OrderByInput;
     maxInclusive?: OrderByInput;
     id?: OrderByInput;
@@ -426,8 +426,8 @@ export class GradeWhereQuery {
     id?: string;
     name?: string;
     description?: string;
-    min?: number;
-    max?: number;
+    minValue?: number;
+    maxValue?: number;
     minInclusive?: boolean;
     maxInclusive?: boolean;
 }
@@ -1038,8 +1038,8 @@ export class Grade {
     responses?: Response[];
     recommendations?: Recommendation[];
     questions?: Question[];
-    min: number;
-    max: number;
+    minValue: number;
+    maxValue: number;
     minInclusive?: boolean;
     maxInclusive?: boolean;
     attachments?: Attachment[];

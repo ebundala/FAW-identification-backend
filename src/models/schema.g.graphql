@@ -592,8 +592,8 @@ type Grade {
   responses(where: ResponseQueryInput): [Response!]
   recommendations(where: RecommendationQueryInput): [Recommendation!]
   questions(where: QuestionQueryInput): [Question!]
-  min: Float!
-  max: Float!
+  minValue: Float!
+  maxValue: Float!
   minInclusive: Boolean
   maxInclusive: Boolean
   attachments(where: AttachmentQueryInput): [Attachment!]
@@ -604,8 +604,8 @@ type Grade {
 input GradeCreateInput {
   name: String!
   description: String
-  min: Float!
-  max: Float!
+  minValue: Float!
+  maxValue: Float!
   minInclusive: Boolean
   maxInclusive: Boolean
   form: FormWhereUniqueInput!
@@ -614,8 +614,8 @@ input GradeCreateInput {
 input GradeUpdateDataInput {
   name: String
   description: String
-  min: Float
-  max: Float
+  minValue: Float
+  maxValue: Float
   minInclusive: Boolean
   maxInclusive: Boolean
 }
@@ -644,8 +644,8 @@ type GradeListResult {
 input GradeOrderBy {
   name: OrderByInput
   description: OrderByInput
-  min: OrderByInput
-  max: OrderByInput
+  minValue: OrderByInput
+  maxValue: OrderByInput
   minInclusive: OrderByInput
   maxInclusive: OrderByInput
   id: OrderByInput
@@ -657,8 +657,8 @@ input GradeWhereQuery {
   id: ID
   name: String
   description: String
-  min: Float
-  max: Float
+  minValue: Float
+  maxValue: Float
   minInclusive: Boolean
   maxInclusive: Boolean
 }
