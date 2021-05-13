@@ -103,28 +103,28 @@ export class GradeService {
     }
     async attachments(parent: Grade, where: AttachmentQueryInput, ctx: any, uid: String) {
         const args: FindManyAttachmentArgs = this.helper.attachmentQueryBuilder(where);
-        return this.prisma.grade.findOne({ where: { id: parent.id } })
+        return this.prisma.grade.findUnique({ where: { id: parent.id } })
             .attachments(args)
     }
     async recommendations(parent: Grade, where: RecommendationQueryInput, ctx: any, uid: String): Promise<any[]> {
         const args: FindManyRecommendationArgs = this.helper.recommendationQueryBuilder(where);
         return this.prisma.grade
-            .findOne({ where: { id: parent.id } })
+            .findUnique({ where: { id: parent.id } })
             .recommendations(args);
     }
     async responses(parent: Grade, where: ResponseQueryInput, ctx: any, uid: String): Promise<any[]> {
         const args: FindManyResponseArgs = this.helper.responseQueryBuilder(where);
         return this.prisma.grade
-            .findOne({ where: { id: parent.id } })
+            .findUnique({ where: { id: parent.id } })
             .responses(args);
     }
     async questions(parent: Grade, where: QuestionQueryInput, ctx: any, uid: String): Promise<any[]> {
         const args: FindManyQuestionArgs = this.helper.questionQueryBuilder(where);
         return this.prisma.grade
-            .findOne({ where: { id: parent.id } })
+            .findUnique({ where: { id: parent.id } })
             .questions(args);
     }
     async form(parent: Grade, ctx: any, uid: string) {
-        return this.prisma.grade.findOne({ where: { id: parent.id } }).form();
+        return this.prisma.grade.findUnique({ where: { id: parent.id } }).form();
     }
 }

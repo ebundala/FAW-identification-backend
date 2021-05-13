@@ -48,7 +48,7 @@ export class UserService {
     return this.destroySessionToken(token);
   }
   async recoverAccount(email: string): Promise<AuthResult> {
-    const user = await this.prisma.user.findOne({ where: { email: email } })
+    const user = await this.prisma.user.findUnique({ where: { email: email } })
     if (!user) return {
       error: true,
       message: "User account not found"
@@ -73,7 +73,7 @@ export class UserService {
     }*/ else {
       const users = this.prisma.user;
       const exist = await users
-        .findOne({ where: { email } })
+        .findUnique({ where: { email } })
         .catch(() => false);
       if (exist) {
         throw new GraphQLError(
@@ -147,7 +147,7 @@ export class UserService {
   async signInWithEmail({ email, password }) {
 
     var user = await this.prisma.user
-      .findOne({ where: { email }, select: { id: true, state: true, role: true } });
+      .findUnique({ where: { email }, select: { id: true, state: true, role: true } });
     if (!user) {
       throw new GraphQLError('Signin failed user does not exist');
     }
@@ -229,7 +229,7 @@ export class UserService {
             .createSessionCookie(idToken, { expiresIn })
             .then((token) => {
               return this.prisma.user
-                .findOne({ where: { id: decodedIdToken.uid } })
+                .findUnique({ where: { id: decodedIdToken.uid } })
                 .then((user) => {
                   return {
                     user,
@@ -273,7 +273,7 @@ export class UserService {
   async responses(parent: User, where: ResponseQueryInput, ctx: any, uid: String): Promise<any[]> {
     const args: FindManyResponseArgs = this.helper.responseQueryBuilder(where);
     return this.prisma.user
-      .findOne({ where: { id: parent.id } })
+      .findUnique({ where: { id: parent.id } })
       .responses(args);
   }
 
@@ -282,17 +282,17 @@ export class UserService {
     // this.logger.debug(args,UserService.name);
 
     return this.prisma.user
-      .findOne({ where: { id: parent.id } })
+      .findUnique({ where: { id: parent.id } })
       .forms(args);
   }
   async avator(parent: User, ctx: any, uid: any) {
-    return this.prisma.user.findOne({ where: { id: parent.id } }).avator();
+    return this.prisma.user.findUnique({ where: { id: parent.id } }).avator();
   }
 
   async updateUser(data: UserUpdateInput, ctx: any, uid: any, info): Promise<any> {
 
     this.helper.isOwner(data.where, ctx);
-    const _user = await this.prisma.user.findOne({ where: { id: data.where.id } });
+    const _user = await this.prisma.user.findUnique({ where: { id: data.where.id } });
 
     const args: UserUpdateArgs = { where: data.where, data: {} };
     if (data.update.displayName) {

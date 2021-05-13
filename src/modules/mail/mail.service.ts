@@ -40,7 +40,7 @@ export class MailService {
     }
     async sendAccountActivationEmail(userId: string,) {
         this.logger.debug(this.sendAccountActivationEmail.name);
-        const user = await this.prisma.user.findOne({ where: { id: userId } });
+        const user = await this.prisma.user.findUnique({ where: { id: userId } });
         if (user.email && this.accountActivationTemplateId) {
             return this.sendGrid.send({
                 templateId: this.accountActivationTemplateId,
@@ -52,7 +52,7 @@ export class MailService {
     }
     async sendPasswordResetLink(email: any, link: string) {
         this.logger.debug(this.sendPasswordResetLink.name);
-        const user = await this.prisma.user.findOne({ where: { email: email } });
+        const user = await this.prisma.user.findUnique({ where: { email: email } });
         if (user.email && this.passwordResetTemplateId) {
             return this.sendGrid.send({
                 templateId: this.passwordResetTemplateId,
@@ -65,7 +65,7 @@ export class MailService {
     async sendAccountDeactivationEmail(userId: string) {
         this.logger.debug(this.sendAccountDeactivationEmail.name);
 
-        const user = await this.prisma.user.findOne({ where: { id: userId } });
+        const user = await this.prisma.user.findUnique({ where: { id: userId } });
         if (user.email && this.accountDeactivationTemplateId) {
             return this.sendGrid.send({
                 templateId: this.accountDeactivationTemplateId,
@@ -78,7 +78,7 @@ export class MailService {
     async sendAccountMadeAdminEmail(userId: string) {
         this.logger.debug(this.sendAccountMadeAdminEmail.name);
 
-        const user = await this.prisma.user.findOne({ where: { id: userId } });
+        const user = await this.prisma.user.findUnique({ where: { id: userId } });
         if (user.email && this.accountMadeAdminTemplateId) {
             return this.sendGrid.send({
                 templateId: this.accountMadeAdminTemplateId,
@@ -91,7 +91,7 @@ export class MailService {
     async sendAccountRemovedAdminEmail(userId: string) {
         this.logger.debug(this.sendAccountRemovedAdminEmail.name);
 
-        const user = await this.prisma.user.findOne({ where: { id: userId } });
+        const user = await this.prisma.user.findUnique({ where: { id: userId } });
         if (user.email && this.accountRemovedAdminTemplateId) {
             return this.sendGrid.send({
                 templateId: this.accountRemovedAdminTemplateId,
@@ -105,7 +105,7 @@ export class MailService {
         this.logger.debug(this.sendNewQuestionPostedEmail.name);
 
         const admins = await this.prisma.user.findMany({ where: { role: Role.ADMIN } });
-        const forum = await this.prisma.forum.findOne({
+        const forum = await this.prisma.forum.findUnique({
             where: { id: forumId }, include: {
                 author: true,
                 attachments: true
@@ -126,7 +126,7 @@ export class MailService {
     async sendQuestionAnsweredEmail(answerId: string) {
         this.logger.debug(this.sendQuestionAnsweredEmail.name);
 
-        const answer = await this.prisma.forumAnswer.findOne({
+        const answer = await this.prisma.forumAnswer.findUnique({
             where: { id: answerId }, include: {
                 attachments: true,
                 author: true,
@@ -149,7 +149,7 @@ export class MailService {
     }
     async sendWelcomeEmail(email: string, link: string) {
         this.logger.debug(this.sendWelcomeEmail.name);
-        const user = await this.prisma.user.findOne({ where: { email: email } });
+        const user = await this.prisma.user.findUnique({ where: { email: email } });
         if (user && this.welcomeTemplateId) {
             return this.sendGrid.send({
                 templateId: this.welcomeTemplateId,

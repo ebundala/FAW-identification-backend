@@ -90,15 +90,15 @@ export class AnswerService {
 
     async attachments(parent: Answer,where: AttachmentQueryInput, uid: String){
        const args: FindManyAttachmentArgs = this.helper.attachmentQueryBuilder(where);
-       return this.prisma.answer.findOne({where:{id:parent.id}})
+       return this.prisma.answer.findUnique({where:{id:parent.id}})
        .attachments(args)
     }
     async response(parent: Answer,ctx:any,uid:String){
-        return this.prisma.answer.findOne({where:{id:parent.id}})
+        return this.prisma.answer.findUnique({where:{id:parent.id}})
         .response()
     }
     async question(parent: Answer,ctx:any,uid:String){
-        return this.prisma.answer.findOne({where:{id:parent.id}})
+        return this.prisma.answer.findUnique({where:{id:parent.id}})
         .question()
     }
 }

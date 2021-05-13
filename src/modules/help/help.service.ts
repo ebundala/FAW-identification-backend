@@ -71,7 +71,7 @@ export class HelpService {
 
     async steps(parent: Help, where: HelpStepQueryInput, ctx: any) {
         const args = this.helper.helpStepQueryBuilder(where);
-        return this.prisma.help.findOne({ where: { id: parent.id } }).steps(args)
+        return this.prisma.help.findUnique({ where: { id: parent.id } }).steps(args)
     }
     async getHelps(where: HelpQueryInput): Promise<any | HelpListResult> {
         const args = this.helper.helpQueryBuilder(where);

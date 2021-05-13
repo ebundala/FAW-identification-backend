@@ -1,15 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import {
-    FindManyAttachmentArgs, FindManyFormArgs,
-
-
-    FindManyGradeArgs, FindManyQuestionArgs, FindManyResponseArgs,
-
-
-
-
-
-    FormCreateArgs, FormUpdateArgs
+   Prisma
 } from '@prisma/client';
 import { Kind, visit } from 'graphql';
 import {
@@ -45,7 +36,7 @@ export class FormService {
     ) { }
     createForm(data: FormCreateInput, ctx: any, uid: string): Promise<any | FormResult> {
         this.helper.isAdmin(ctx);
-        const args: FormCreateArgs = {
+        const args: Prisma.FormCreateArgs = {
             data: {
                 title: data.title,
                 description: data.description,
@@ -79,7 +70,7 @@ export class FormService {
     }
     updateForm(data: FormUpdateInput, ctx: any): Promise<any> {
         this.helper.isAdmin(ctx);
-        const args: FormUpdateArgs = { where: data.where, data: {} };
+        const args: Prisma.FormUpdateArgs = { where: data.where, data: {} };
         if (data.update.title) {
             args.data.title = data.update.title
         }
@@ -132,45 +123,45 @@ export class FormService {
         })
     }
     responses(parent: Form, where: ResponseQueryInput, ctx: any, uid: String): Promise<any[]> {
-        const args: FindManyResponseArgs = this.helper.responseQueryBuilder(where);
+        const args: Prisma.ResponseFindManyArgs = this.helper.responseQueryBuilder(where);
         return this.prisma.form
-            .findOne({ where: { id: parent.id } })
+            .findUnique({ where: { id: parent.id } })
             .responses(args);
     }
 
 
     questions(parent: Form, where: QuestionQueryInput, ctx: any, uid: String): Promise<any[]> {
-        const args: FindManyQuestionArgs = this.helper.questionQueryBuilder(where);
+        const args: Prisma.QuestionFindManyArgs = this.helper.questionQueryBuilder(where);
         return this.prisma.form
-            .findOne({ where: { id: parent.id } })
+            .findUnique({ where: { id: parent.id } })
             .questions(args);
     }
 
 
     grades(parent: Form, where: GradeQueryInput, ctx: any, uid: String): Promise<any[]> {
-        const args: FindManyGradeArgs = this.helper.gradeQueryBuilder(where);
+        const args: Prisma.GradeFindManyArgs = this.helper.gradeQueryBuilder(where);
         return this.prisma.form
-            .findOne({ where: { id: parent.id } })
+            .findUnique({ where: { id: parent.id } })
             .grades(args);
     }
 
 
     attachments(parent: Form, where: AttachmentQueryInput, ctx: any, uid: String): Promise<any[]> {
-        const args: FindManyAttachmentArgs = this.helper.attachmentQueryBuilder(where);
+        const args: Prisma.AttachmentFindManyArgs = this.helper.attachmentQueryBuilder(where);
         return this.prisma.form
-            .findOne({ where: { id: parent.id } })
+            .findUnique({ where: { id: parent.id } })
             .attachments(args);
     }
     author(parent: Form, ctx: any, uid: string) {
-        return this.prisma.form.findOne({ where: { id: parent.id } })
+        return this.prisma.form.findUnique({ where: { id: parent.id } })
             .author();
     }
     category(parent: Form, ctx: any, uid: string) {
-        return this.prisma.form.findOne({ where: { id: parent.id } })
+        return this.prisma.form.findUnique({ where: { id: parent.id } })
             .category();
     }
     getForms(where?: FormQueryInput): Promise<any | FormListResult> {
-        const args: FindManyFormArgs = this.helper.formQueryBuilder(where);
+        const args: Prisma.FormFindManyArgs = this.helper.formQueryBuilder(where);
 
         return this.prisma.form.findMany(args).then((forms) => {
             return {

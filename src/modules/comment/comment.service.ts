@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CommentCreateArgs, CommentUpdateArgs, FindManyAttachmentArgs, FindManyCommentArgs } from '@prisma/client';
+import  {Prisma}from '@prisma/client';
 import { AttachmentQueryInput, Comment, CommentCreateInput, CommentQueryInput, CommentResult, CommentUpdateInput, CommentWhereUniqueInput, State } from 'src/models/graphql';
 import { PrismaClient } from '../prisma-client/prisma-client-service';
 import { QueryHelper } from '../query-helper/query-helper';
@@ -10,7 +10,7 @@ export class CommentService {
         private readonly prisma: PrismaClient,
         private readonly helper: QueryHelper) { }
     createComment(data: CommentCreateInput, uid: string): Promise<any | CommentResult> {
-        const args: CommentCreateArgs = {
+        const args: Prisma.CommentCreateArgs = {
             data: {
                 content: data.content,
                 commentsEnabled: data.commentsEnabled,
@@ -47,7 +47,7 @@ export class CommentService {
             });
     }
     updateComment(data: CommentUpdateInput): Promise<any> {
-        const args: CommentUpdateArgs = { where: data.where, data: {} };
+        const args: Prisma.CommentUpdateArgs = { where: data.where, data: {} };
         if (data.update.content) {
             args.data.content = data.update.content
         }
@@ -97,33 +97,33 @@ export class CommentService {
     }
 
     forum(parent: Comment, ctx: any, uid: string) {
-        return this.prisma.comment.findOne({ where: { id: parent.id } })
+        return this.prisma.comment.findUnique({ where: { id: parent.id } })
             .forum();
     }
     comment(parent: Comment, ctx: any, uid: string) {
-        return this.prisma.comment.findOne({ where: { id: parent.id } })
+        return this.prisma.comment.findUnique({ where: { id: parent.id } })
             .comment();
     }
     forumAnswer(parent: Comment, ctx: any, uid: string) {
-        return this.prisma.comment.findOne({ where: { id: parent.id } })
+        return this.prisma.comment.findUnique({ where: { id: parent.id } })
             .forumAnswer();
     }
     comments(parent: Comment, where: CommentQueryInput, ctx: any, uid: String): Promise<any[]> {
-        const args: FindManyCommentArgs = this.helper.commentQueryBuilder(where);
+        const args: Prisma.CommentFindManyArgs = this.helper.commentQueryBuilder(where);
         return this.prisma.comment
-            .findOne({ where: { id: parent.id } })
+            .findUnique({ where: { id: parent.id } })
             .comments(args);
     }
 
 
     attachments(parent: Comment, where: AttachmentQueryInput, ctx: any, uid: String): Promise<any[]> {
-        const args: FindManyAttachmentArgs = this.helper.attachmentQueryBuilder(where);
+        const args: Prisma.AttachmentFindManyArgs = this.helper.attachmentQueryBuilder(where);
         return this.prisma.comment
-            .findOne({ where: { id: parent.id } })
+            .findUnique({ where: { id: parent.id } })
             .attachments(args);
     }
     author(parent: Comment, ctx: any, uid: string) {
-        return this.prisma.comment.findOne({ where: { id: parent.id } })
+        return this.prisma.comment.findUnique({ where: { id: parent.id } })
             .author();
     }
 }

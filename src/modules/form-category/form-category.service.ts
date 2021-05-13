@@ -90,7 +90,7 @@ export class FormCategoryService {
     }
     image(parent: FormCategory, ctx: any, uid: String): Promise<any> {
         return this.prisma.formCategory
-            .findOne({ where: { id: parent.id } })
+            .findUnique({ where: { id: parent.id } })
             .image();
     }
 

@@ -96,10 +96,10 @@ export class RecommendationService {
     }
     async attachments(parent: Recommendation, where: AttachmentQueryInput, ctx: any, uid: String) {
         const args = this.helper.attachmentQueryBuilder(where);
-        return this.prisma.recommendation.findOne({ where: { id: parent.id } })
+        return this.prisma.recommendation.findUnique({ where: { id: parent.id } })
             .attachments(args);
     }
     async grade(parent: Recommendation, ctx: any, uid: any) {
-        return this.prisma.recommendation.findOne({ where: { id: parent.id } }).grade();
+        return this.prisma.recommendation.findUnique({ where: { id: parent.id } }).grade();
     }
 }

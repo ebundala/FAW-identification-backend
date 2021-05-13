@@ -159,25 +159,25 @@ export class ResponseService {
     async answers(parent: Response, where: AnswerQueryInput, ctx: any, uid: String): Promise<any[]> {
         const args: FindManyAnswerArgs = this.helper.answersQueryBuilder(where);
         return this.prisma.response
-            .findOne({ where: { id: parent.id } })
+            .findUnique({ where: { id: parent.id } })
             .answers(args);
     }
     async attachments(parent: Response, where: AttachmentQueryInput, ctx: any, uid: String): Promise<any[]> {
         const args = this.helper.attachmentQueryBuilder(where);
         return this.prisma.response
-            .findOne({ where: { id: parent.id } })
+            .findUnique({ where: { id: parent.id } })
             .attachments(args);
     }
     async form(parent: Response, ctx: any, uid: any) {
-        return this.prisma.response.findOne({ where: { id: parent.id } }).form();
+        return this.prisma.response.findUnique({ where: { id: parent.id } }).form();
     }
     async author(parent: Response, ctx: any, uid: any) {
-        return this.prisma.response.findOne({ where: { id: parent.id } }).author();
+        return this.prisma.response.findUnique({ where: { id: parent.id } }).author();
     }
     async grades(parent: Response, ctx: any, uid: any) {
         //TODO calculate grade here;
         try {
-            const response = await this.prisma.response.findOne({
+            const response = await this.prisma.response.findUnique({
                 where: { id: parent.id, },
                 include: {
                     answers: {

@@ -111,18 +111,18 @@ export class QuestionService {
     }
     async answers(parent: Question, where: AnswerQueryInput, ctx: any, uid: String) {
         const args = this.helper.answersQueryBuilder(where);
-        return this.prisma.question.findOne({ where: { id: parent.id } })
+        return this.prisma.question.findUnique({ where: { id: parent.id } })
             .answers(args);
     }
     async attachments(parent: Question, where: AttachmentQueryInput, ctx: any, uid: String) {
         const args = this.helper.attachmentQueryBuilder(where);
-        return this.prisma.question.findOne({ where: { id: parent.id } })
+        return this.prisma.question.findUnique({ where: { id: parent.id } })
             .attachments(args);
     }
     async form(parent: Question, ctx: any, uid: any) {
-        return this.prisma.question.findOne({ where: { id: parent.id } }).form()
+        return this.prisma.question.findUnique({ where: { id: parent.id } }).form()
     }
     async grade(parent: Question, ctx: any, uid: any) {
-        return this.prisma.question.findOne({ where: { id: parent.id } }).grade()
+        return this.prisma.question.findUnique({ where: { id: parent.id } }).grade()
     }
 }

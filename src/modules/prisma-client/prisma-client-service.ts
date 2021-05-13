@@ -1,6 +1,7 @@
 
 import { onDeleteArgs, PrismaDelete, PrismaSelect } from '@paljs/plugins';
-import { PrismaClient as _PrismaClient, PrismaClientOptions } from '@prisma/client';
+import { PrismaClient as _PrismaClient } from '@prisma/client';
+import { PrismaClientOptions } from '@prisma/client/runtime';
 
 export class PrismaClient extends _PrismaClient {
     constructor(options?: PrismaClientOptions) {

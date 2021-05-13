@@ -107,7 +107,7 @@ export class ForumService {
     forumAnswers(parent: Forum, where: ForumAnswerQueryInput, ctx: any, uid: String): Promise<any[]> {
         const args: FindManyForumAnswerArgs = this.helper.forumAnswerQueryBuilder(where);
         return this.prisma.forum
-            .findOne({ where: { id: parent.id } })
+            .findUnique({ where: { id: parent.id } })
             .forumAnswers(args);
     }
 
@@ -115,7 +115,7 @@ export class ForumService {
     comments(parent: Forum, where: CommentQueryInput, ctx: any, uid: String): Promise<any[]> {
         const args: FindManyCommentArgs = this.helper.commentQueryBuilder(where);
         return this.prisma.forum
-            .findOne({ where: { id: parent.id } })
+            .findUnique({ where: { id: parent.id } })
             .comments(args);
     }
 
@@ -123,11 +123,11 @@ export class ForumService {
     attachments(parent: Forum, where: AttachmentQueryInput, ctx: any, uid: String): Promise<any[]> {
         const args: FindManyAttachmentArgs = this.helper.attachmentQueryBuilder(where);
         return this.prisma.forum
-            .findOne({ where: { id: parent.id } })
+            .findUnique({ where: { id: parent.id } })
             .attachments(args);
     }
     author(parent: Forum, ctx: any, uid: string) {
-        return this.prisma.forum.findOne({ where: { id: parent.id } })
+        return this.prisma.forum.findUnique({ where: { id: parent.id } })
             .author();
     }
 

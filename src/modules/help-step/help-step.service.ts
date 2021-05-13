@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { HelpStepCreateArgs, HelpStepUpdateInput as HsInput } from '@prisma/client';
+//import { HelpStepCreateArgs, HelpStepUpdateInput as HsInput } from '@prisma/client';
+import {Prisma} from '@prisma/client'
 import {
     AttachmentQueryInput, HelpStep, HelpStepCreateInput, HelpStepResult,
     HelpStepUpdateInput, HelpStepWhereUniqueInput
@@ -16,7 +17,7 @@ export class HelpStepService {
     async createHelpStep(data: HelpStepCreateInput, ctx: any): Promise<any | HelpStepResult> {
         this.helper.isAdmin(ctx)
 
-        const args: HelpStepCreateArgs = {
+        const args: Prisma.HelpStepCreateArgs = {
             data: {
                 title: data.title,
                 description: data.description,
@@ -48,7 +49,7 @@ export class HelpStepService {
     async updateHelpStep(data: HelpStepUpdateInput, ctx: any): Promise<any | HelpStepResult> {
         this.helper.isAdmin(ctx)
 
-        const update = this.helper.filterUpdateDataInput<HsInput>(data.update);
+        const update = this.helper.filterUpdateDataInput<Prisma.HelpStepUpdateInput>(data.update);
         if (data.update.attachments) {
             update.attachments = {
                 connect: data.update.attachments
@@ -94,9 +95,9 @@ export class HelpStepService {
 
     async attachments(parent: HelpStep, where: AttachmentQueryInput, ctx: any) {
         const args = this.helper.attachmentQueryBuilder(where);
-        return this.prisma.helpStep.findOne({ where: { id: parent.id } }).attachments(args);
+        return this.prisma.helpStep.findUnique({ where: { id: parent.id } }).attachments(args);
     }
     async help(parent: HelpStep, ctx: any) {
-        return this.prisma.helpStep.findOne({ where: { id: parent.id } }).help()
+        return this.prisma.helpStep.findUnique({ where: { id: parent.id } }).help()
     }
 }

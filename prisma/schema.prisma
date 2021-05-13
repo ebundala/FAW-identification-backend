@@ -105,8 +105,8 @@ model Grade {
   responses       Response[]
   recommendations Recommendation[]
   questions       Question[]
-  min             Float
-  max             Float
+  min             Float //rename this to avoid name collition
+  max             Float //rename this to avoid name collition
   minInclusive    Boolean          @default(false)
   maxInclusive    Boolean          @default(false)
   attachments     Attachment[]

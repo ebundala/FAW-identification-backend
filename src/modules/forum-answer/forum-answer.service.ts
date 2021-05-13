@@ -109,14 +109,14 @@ export class ForumAnswerService {
     }
 
     forum(parent: ForumAnswer, ctx: any, uid: string) {
-        return this.prisma.forumAnswer.findOne({ where: { id: parent.id } })
+        return this.prisma.forumAnswer.findUnique({ where: { id: parent.id } })
             .forum();
     }
 
     comments(parent: ForumAnswer, where: CommentQueryInput, ctx: any, uid: String): Promise<any[]> {
         const args: FindManyCommentArgs = this.helper.commentQueryBuilder(where);
         return this.prisma.forumAnswer
-            .findOne({ where: { id: parent.id } })
+            .findUnique({ where: { id: parent.id } })
             .comments(args);
     }
 
@@ -124,11 +124,11 @@ export class ForumAnswerService {
     attachments(parent: ForumAnswer, where: AttachmentQueryInput, ctx: any, uid: String): Promise<any[]> {
         const args: FindManyAttachmentArgs = this.helper.attachmentQueryBuilder(where);
         return this.prisma.forumAnswer
-            .findOne({ where: { id: parent.id } })
+            .findUnique({ where: { id: parent.id } })
             .attachments(args);
     }
     author(parent: ForumAnswer, ctx: any, uid: string) {
-        return this.prisma.forumAnswer.findOne({ where: { id: parent.id } })
+        return this.prisma.forumAnswer.findUnique({ where: { id: parent.id } })
             .author();
     }
 
