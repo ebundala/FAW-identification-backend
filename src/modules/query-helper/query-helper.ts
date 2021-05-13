@@ -400,16 +400,16 @@ export class QueryHelper {
                 if (where.orderBy.description == OrderByInput.desc) {
                     orderBy.description = "desc";
                 }
-                if (where.orderBy.max == OrderByInput.asc) {
+                if (where.orderBy.maxValue == OrderByInput.asc) {
                     orderBy.maxValue = "asc";
                 }
-                if (where.orderBy.max == OrderByInput.desc) {
+                if (where.orderBy.maxValue == OrderByInput.desc) {
                     orderBy.maxValue = "desc";
                 }
-                if (where.orderBy.min == OrderByInput.asc) {
+                if (where.orderBy.minValue == OrderByInput.asc) {
                     orderBy.minValue = "asc";
                 }
-                if (where.orderBy.min == OrderByInput.desc) {
+                if (where.orderBy.minValue == OrderByInput.desc) {
                     orderBy.minValue = "desc";
                 }
                 if (where.orderBy.maxInclusive == OrderByInput.asc) {

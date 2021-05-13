@@ -26,8 +26,8 @@ export class GradeService {
             data: {
                 name: data.name,
                 description: data.description,
-                maxValue: data.max,
-                minValue: data.min,
+                maxValue: data.maxValue,
+                minValue: data.minValue,
                 maxInclusive: data.maxInclusive ? true : false,
                 minInclusive: data.minInclusive ? true : false,
                 form: {
