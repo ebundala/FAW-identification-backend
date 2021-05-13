@@ -35,5 +35,8 @@ lerna-debug.log*
 prisma/.env
 .env
 serviceAccount.json
+.ssh
 
-
+*.base64
+.env.base64
+serviceAccount.json.base64

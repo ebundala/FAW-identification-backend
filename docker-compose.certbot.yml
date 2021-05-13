@@ -1,0 +1,21 @@
+version: "3.1"
+services: 
+    webserver:
+        image: nginx:mainline-alpine
+        ports:
+        - "80:80"    
+        volumes:
+        - ./webserver/web-root:/var/www/html
+        - ./webserver/certbot/nginx-conf:/etc/nginx/conf.d
+        - ./webserver/certbot/certbot-etc:/etc/letsencrypt
+        - ./webserver/certbot/certbot-var:/var/lib/letsencrypt
+        
+    certbot:
+        image: certbot/certbot
+        volumes:
+            - ./webserver/certbot/certbot-etc:/etc/letsencrypt
+            - ./webserver/certbot/certbot-var:/var/lib/letsencrypt
+            - ./webserver/web-root:/var/www/html
+        depends_on:
+            - webserver
+        command: certonly --webroot --webroot-path=/var/www/html --email ${DOMAINS_EMAIL} --agree-tos --no-eff-email ${CERTBOT_ENV} ${DOMAINS}
