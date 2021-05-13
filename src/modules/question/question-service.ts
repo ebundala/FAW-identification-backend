@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { QuestionCreateArgs, QuestionUpdateArgs } from '@prisma/client';
+import { Prisma} from '@prisma/client';
 import { AnswerQueryInput, AttachmentQueryInput, Question, QuestionCreateInput, QuestionResult, QuestionUpdateInput, QuestionWhereUniqueInput } from 'src/models/graphql';
 import { PrismaClient } from '../prisma-client/prisma-client-service';
 import { QueryHelper } from '../query-helper/query-helper';
@@ -11,7 +11,7 @@ export class QuestionService {
         private readonly helper: QueryHelper) { }
 
     async createQuestion(data: QuestionCreateInput, uid: String): Promise<any | QuestionResult> {
-        const args: QuestionCreateArgs = {
+        const args: Prisma.QuestionCreateArgs = {
             data: {
                 question: data.question,
                 questionNumber: data.questionNumber,
@@ -45,7 +45,7 @@ export class QuestionService {
     }
 
     async updateQuestion(data: QuestionUpdateInput, uid: String): Promise<any | QuestionResult> {
-        const args: QuestionUpdateArgs = {
+        const args: Prisma.QuestionUpdateArgs = {
             where: data.where,
             data: {}
         };

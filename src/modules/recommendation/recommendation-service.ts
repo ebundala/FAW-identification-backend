@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { RecommendationUpdateArgs, AttachmentUpdateManyWithoutRecommendationInput, RecommendationCreateArgs, } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import { RecommendationWhereUniqueInput, RecommendationResult, RecommendationCreateInput, RecommendationUpdateInput, Recommendation, RecommendationQueryInput, AttachmentQueryInput } from 'src/models/graphql';
 import { PrismaClient } from '../prisma-client/prisma-client-service';
 import { QueryHelper } from '../query-helper/query-helper';
@@ -10,7 +10,7 @@ export class RecommendationService {
     constructor(private readonly prisma: PrismaClient,
         private readonly helper: QueryHelper) { }
     async createRecommendation(data: RecommendationCreateInput, uid: string): Promise<any | RecommendationResult> {
-        const args: RecommendationCreateArgs = {
+        const args: Prisma.RecommendationCreateArgs = {
             data: {
                 content: data.content,
                 grade: { connect: { id: data.grade.id } },
@@ -36,7 +36,7 @@ export class RecommendationService {
             });
     }
     async updateRecommendation(data: RecommendationUpdateInput, uid: String): Promise<any> {
-        const args: RecommendationUpdateArgs = { where: data.where, data: {} };
+        const args: Prisma.RecommendationUpdateArgs = { where: data.where, data: {} };
         if (data.update) {
             if (data.update.content) {
                 args.data.content = data.update.content;
@@ -48,7 +48,7 @@ export class RecommendationService {
                     }
                 }
             }
-            const attach: AttachmentUpdateManyWithoutRecommendationInput = {}
+            const attach: Prisma.AttachmentUpdateManyWithoutRecommendationInput = {}
             if (data.update.attachments) {
                 attach.connect = data.update.attachments;
 

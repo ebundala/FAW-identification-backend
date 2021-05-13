@@ -1,227 +1,16 @@
 import { Injectable } from '@nestjs/common';
-import {
-    AnswerOrderByInput, AnswerWhereInput, AttachmentOrderByInput, AttachmentWhereInput,
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    CommentOrderByInput, CommentWhereInput, FindManyAnswerArgs, FindManyAttachmentArgs,
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    FindManyCommentArgs, FindManyFormArgs,
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    FindManyFormCategoryArgs, FindManyForumAnswerArgs, FindManyForumArgs, FindManyGradeArgs, FindManyHelpArgs, FindManyHelpStepArgs, FindManyQuestionArgs,
-
-
-
-
-
-
-
-
-
-
-    FindManyRecommendationArgs, FindManyResponseArgs,
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    FindManyUserArgs, FormCategoryOrderByInput, FormCategoryWhereInput, FormOrderByInput,
-
-
-
-
-
-
-
-
-
-
-    FormWhereInput,
-
-
-
-
-
-
-
-
-
-
-
-    ForumAnswerOrderByInput, ForumAnswerWhereInput, ForumOrderByInput, ForumWhereInput, GradeOrderByInput, GradeWhereInput, HelpOrderByInput, HelpStepOrderByInput, HelpStepWhereInput, HelpWhereInput, QuestionOrderByInput, QuestionWhereInput,
-
-
-
-
-
-
-
-
-
-
-
-    RecommendationOrderByInput, RecommendationWhereInput, ResponseWhereInput,
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+import {Prisma,
     Role,
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    UserOrderByInput, UserWhereInput
 } from '@prisma/client';
 import { GraphQLError } from 'graphql';
 import {
     AnswerQueryInput, AttachmentQueryInput,
-
-
-
-
-
-
     CommentQueryInput, FormCategoryQueryInput, FormQueryInput,
-
-
-
-
-
-
-
-
     ForumAnswerQueryInput, ForumQueryInput, GradeQueryInput,
-
-
-
     HelpQueryInput,
-
-
-
     HelpStepQueryInput,
-
-
-
     OrderByInput, QuestionQueryInput,
     RecommendationQueryInput, ResponseQueryInput,
-
-
-
-
-
-
-
-
     UserQueryInput,
     UserWhereUniqueInput
 } from '../../models/graphql';
@@ -238,8 +27,8 @@ export class QueryHelper {
         }
         return update;
     }
-    userQueryBuilder(where: UserQueryInput): FindManyUserArgs {
-        const args: FindManyUserArgs = {};
+    userQueryBuilder(where: UserQueryInput): Prisma.UserFindManyArgs {
+        const args:  Prisma.UserFindManyArgs = {};
         if (where) {
             if (where.take) {
                 args.take = where.take
@@ -248,7 +37,7 @@ export class QueryHelper {
                 args.skip = where.skip
             }
             if (where.where) {
-                const whereInput: UserWhereInput = {}
+                const whereInput: Prisma.UserWhereInput = {}
                 if (where.where.id) {
                     whereInput.id = where.where.id
                 }
@@ -277,7 +66,7 @@ export class QueryHelper {
             }
 
             if (where.orderBy) {
-                const orderBy: UserOrderByInput = {}
+                const orderBy: Prisma.UserOrderByInput = {}
                 if (where.orderBy.createdAt == OrderByInput.asc) {
                     orderBy.createdAt = "asc"
                 }
@@ -336,7 +125,7 @@ export class QueryHelper {
         return args
     }
     public answersQueryBuilder(where: AnswerQueryInput) {
-        const args: FindManyAnswerArgs = {};
+        const args: Prisma.AnswerFindManyArgs = {};
         if (where) {
             if (where.take) {
                 args.take = where.take
@@ -345,7 +134,7 @@ export class QueryHelper {
                 args.skip = where.skip
             }
             if (where.where) {
-                const whereInput: AnswerWhereInput = {}
+                const whereInput: Prisma.AnswerWhereInput = {}
                 if (where.where.id) {
                     whereInput.id = where.where.id
                 }
@@ -357,7 +146,7 @@ export class QueryHelper {
                 args.cursor = where.cursor
             }
             if (where.orderBy) {
-                const orderBy: AnswerOrderByInput = {}
+                const orderBy: Prisma.AnswerOrderByInput = {}
                 if (where.orderBy.createdAt == OrderByInput.asc) {
                     orderBy.createdAt = "asc"
                 }
@@ -393,7 +182,7 @@ export class QueryHelper {
         return args
     }
     public responseQueryBuilder(where: ResponseQueryInput) {
-        const args: FindManyResponseArgs = {};
+        const args: Prisma.ResponseFindManyArgs = {};
         if (where) {
             if (where.take) {
                 args.take = where.take;
@@ -402,7 +191,7 @@ export class QueryHelper {
                 args.skip = where.skip;
             }
             if (where.where) {
-                const whereInput: ResponseWhereInput = {};
+                const whereInput: Prisma.ResponseWhereInput = {};
                 if (where.where.id) {
                     whereInput.id = where.where.id;
                 }
@@ -418,7 +207,7 @@ export class QueryHelper {
                 args.cursor = where.cursor;
             }
             if (where.orderBy) {
-                const orderBy: FormOrderByInput = {};
+                const orderBy: Prisma.FormOrderByInput = {};
                 if (where.orderBy.createdAt == OrderByInput.asc) {
                     orderBy.createdAt = "asc";
                 }
@@ -449,7 +238,7 @@ export class QueryHelper {
     }
 
     public questionQueryBuilder(where: QuestionQueryInput) {
-        const args: FindManyQuestionArgs = {};
+        const args: Prisma.QuestionFindManyArgs = {};
         if (where) {
             if (where.take) {
                 args.take = where.take;
@@ -458,7 +247,7 @@ export class QueryHelper {
                 args.skip = where.skip;
             }
             if (where.where) {
-                const whereInput: QuestionWhereInput = {};
+                const whereInput: Prisma.QuestionWhereInput = {};
                 if (where.where.id) {
                     whereInput.id = where.where.id;
                 }
@@ -483,7 +272,7 @@ export class QueryHelper {
                 args.cursor = where.cursor;
             }
             if (where.orderBy) {
-                const orderBy: QuestionOrderByInput = {};
+                const orderBy: Prisma.QuestionOrderByInput = {};
                 if (where.orderBy.createdAt == OrderByInput.asc) {
                     orderBy.createdAt = "asc";
                 }
@@ -543,7 +332,7 @@ export class QueryHelper {
         return args;
     }
     public gradeQueryBuilder(where: GradeQueryInput) {
-        const args: FindManyGradeArgs = {};
+        const args: Prisma.GradeFindManyArgs = {};
         if (where) {
             if (where.take) {
                 args.take = where.take;
@@ -552,7 +341,7 @@ export class QueryHelper {
                 args.skip = where.skip;
             }
             if (where.where) {
-                const whereInput: GradeWhereInput = {};
+                const whereInput: Prisma.GradeWhereInput = {};
                 if (where.where.id) {
                     whereInput.id = where.where.id;
                 }
@@ -564,7 +353,7 @@ export class QueryHelper {
                 }
 
                 if (where.where.max) {
-                    whereInput.max = where.where.max;
+                    whereInput.maxValue = where.where.max;
                 }
                 if (where.where.maxInclusive) {
                     whereInput.maxInclusive = where.where.maxInclusive;
@@ -579,7 +368,7 @@ export class QueryHelper {
                 args.cursor = where.cursor;
             }
             if (where.orderBy) {
-                const orderBy: GradeOrderByInput = {};
+                const orderBy: Prisma.GradeOrderByInput = {};
                 if (where.orderBy.createdAt == OrderByInput.asc) {
                     orderBy.createdAt = "asc";
                 }
@@ -612,16 +401,16 @@ export class QueryHelper {
                     orderBy.description = "desc";
                 }
                 if (where.orderBy.max == OrderByInput.asc) {
-                    orderBy.max = "asc";
+                    orderBy.maxValue = "asc";
                 }
                 if (where.orderBy.max == OrderByInput.desc) {
-                    orderBy.max = "desc";
+                    orderBy.maxValue = "desc";
                 }
                 if (where.orderBy.min == OrderByInput.asc) {
-                    orderBy.min = "asc";
+                    orderBy.minValue = "asc";
                 }
                 if (where.orderBy.min == OrderByInput.desc) {
-                    orderBy.min = "desc";
+                    orderBy.minValue = "desc";
                 }
                 if (where.orderBy.maxInclusive == OrderByInput.asc) {
                     orderBy.maxInclusive = "asc";
@@ -646,7 +435,7 @@ export class QueryHelper {
     }
 
     public helpStepQueryBuilder(where: HelpStepQueryInput) {
-        const args: FindManyHelpStepArgs = {};
+        const args: Prisma.HelpStepFindManyArgs = {};
         if (where) {
             if (where.take) {
                 args.take = where.take;
@@ -655,7 +444,7 @@ export class QueryHelper {
                 args.skip = where.skip;
             }
             if (where.where) {
-                const whereInput: HelpStepWhereInput = {};
+                const whereInput: Prisma.HelpStepWhereInput = {};
                 if (where.where.id) {
                     whereInput.id = where.where.id;
                 }
@@ -676,7 +465,7 @@ export class QueryHelper {
                 args.cursor = where.cursor;
             }
             if (where.orderBy) {
-                const orderBy: HelpStepOrderByInput = {};
+                const orderBy: Prisma.HelpStepOrderByInput = {};
                 if (where.orderBy.createdAt == OrderByInput.asc) {
                     orderBy.createdAt = "asc";
                 }
@@ -717,7 +506,7 @@ export class QueryHelper {
         return args;
     }
     public attachmentQueryBuilder(where: AttachmentQueryInput) {
-        const args: FindManyAttachmentArgs = {};
+        const args: Prisma.AttachmentFindManyArgs = {};
         if (where) {
             if (where.take) {
                 args.take = where.take;
@@ -726,7 +515,7 @@ export class QueryHelper {
                 args.skip = where.skip;
             }
             if (where.where) {
-                const whereInput: AttachmentWhereInput = {};
+                const whereInput: Prisma.AttachmentWhereInput = {};
                 if (where.where.id) {
                     whereInput.id = where.where.id;
                 }
@@ -750,7 +539,7 @@ export class QueryHelper {
                 args.cursor = where.cursor;
             }
             if (where.orderBy) {
-                const orderBy: AttachmentOrderByInput = {};
+                const orderBy: Prisma.AttachmentOrderByInput = {};
                 if (where.orderBy.createdAt == OrderByInput.asc) {
                     orderBy.createdAt = "asc";
                 }
@@ -797,7 +586,7 @@ export class QueryHelper {
     }
 
     public formQueryBuilder(where: FormQueryInput) {
-        const args: FindManyFormArgs = {};
+        const args: Prisma.FormFindManyArgs = {};
         if (where) {
             if (where.take) {
                 args.take = where.take;
@@ -806,7 +595,7 @@ export class QueryHelper {
                 args.skip = where.skip;
             }
             if (where.where) {
-                const whereInput: FormWhereInput = {};
+                const whereInput: Prisma.FormWhereInput = {};
                 if (where.where.id) {
                     whereInput.id = where.where.id;
                 }
@@ -825,7 +614,7 @@ export class QueryHelper {
                 args.cursor = where.cursor;
             }
             if (where.orderBy) {
-                const orderBy: FormOrderByInput = {};
+                const orderBy: Prisma.FormOrderByInput = {};
                 if (where.orderBy.createdAt == OrderByInput.asc) {
                     orderBy.createdAt = "asc";
                 }
@@ -854,7 +643,7 @@ export class QueryHelper {
         return args;
     }
     public recommendationQueryBuilder(where: RecommendationQueryInput) {
-        const args: FindManyRecommendationArgs = {};
+        const args: Prisma.RecommendationFindManyArgs = {};
         if (where) {
             if (where.take) {
                 args.take = where.take;
@@ -863,7 +652,7 @@ export class QueryHelper {
                 args.skip = where.skip;
             }
             if (where.where) {
-                const whereInput: RecommendationWhereInput = {};
+                const whereInput: Prisma.RecommendationWhereInput = {};
                 if (where.where.id) {
                     whereInput.id = where.where.id;
                 }
@@ -879,7 +668,7 @@ export class QueryHelper {
                 args.cursor = where.cursor;
             }
             if (where.orderBy) {
-                const orderBy: RecommendationOrderByInput = {};
+                const orderBy: Prisma.RecommendationOrderByInput = {};
                 if (where.orderBy.createdAt == OrderByInput.asc) {
                     orderBy.createdAt = "asc";
                 }
@@ -914,7 +703,7 @@ export class QueryHelper {
         return args;
     }
     public helpQueryBuilder(where: HelpQueryInput) {
-        const args: FindManyHelpArgs = {};
+        const args: Prisma.HelpFindManyArgs = {};
         if (where) {
             if (where.take) {
                 args.take = where.take;
@@ -923,7 +712,7 @@ export class QueryHelper {
                 args.skip = where.skip;
             }
             if (where.where) {
-                const whereInput: HelpWhereInput = {};
+                const whereInput: Prisma.HelpWhereInput = {};
                 if (where.where.id) {
                     whereInput.id = where.where.id;
                 }
@@ -942,7 +731,7 @@ export class QueryHelper {
                 args.cursor = where.cursor;
             }
             if (where.orderBy) {
-                const orderBy: HelpOrderByInput = {};
+                const orderBy: Prisma.HelpOrderByInput = {};
                 if (where.orderBy.createdAt == OrderByInput.asc) {
                     orderBy.createdAt = "asc";
                 }
@@ -971,7 +760,7 @@ export class QueryHelper {
         return args;
     }
     public commentQueryBuilder(where: CommentQueryInput) {
-        const args: FindManyCommentArgs = {};
+        const args: Prisma.CommentFindManyArgs = {};
         if (where) {
             if (where.take) {
                 args.take = where.take;
@@ -980,7 +769,7 @@ export class QueryHelper {
                 args.skip = where.skip;
             }
             if (where.where) {
-                const whereInput: CommentWhereInput = {};
+                const whereInput: Prisma.CommentWhereInput = {};
                 if (where.where.id) {
                     whereInput.id = where.where.id;
                 }
@@ -996,7 +785,7 @@ export class QueryHelper {
                 args.cursor = where.cursor;
             }
             if (where.orderBy) {
-                const orderBy: CommentOrderByInput = {};
+                const orderBy: Prisma.CommentOrderByInput = {};
                 if (where.orderBy.createdAt == OrderByInput.asc) {
                     orderBy.createdAt = "asc";
                 }
@@ -1031,7 +820,7 @@ export class QueryHelper {
         return args;
     }
     public forumAnswerQueryBuilder(where: ForumAnswerQueryInput) {
-        const args: FindManyForumAnswerArgs = {};
+        const args: Prisma.ForumAnswerFindManyArgs = {};
         if (where) {
             if (where.take) {
                 args.take = where.take;
@@ -1040,7 +829,7 @@ export class QueryHelper {
                 args.skip = where.skip;
             }
             if (where.where) {
-                const whereInput: ForumAnswerWhereInput = {};
+                const whereInput: Prisma.ForumAnswerWhereInput = {};
                 if (where.where.id) {
                     whereInput.id = where.where.id;
                 }
@@ -1056,7 +845,7 @@ export class QueryHelper {
                 args.cursor = where.cursor;
             }
             if (where.orderBy) {
-                const orderBy: ForumAnswerOrderByInput = {};
+                const orderBy: Prisma.ForumAnswerOrderByInput = {};
                 if (where.orderBy.createdAt == OrderByInput.asc) {
                     orderBy.createdAt = "asc";
                 }
@@ -1091,7 +880,7 @@ export class QueryHelper {
         return args;
     }
     public forumQueryBuilder(where: ForumQueryInput) {
-        const args: FindManyForumArgs = {};
+        const args: Prisma.ForumFindManyArgs = {};
         if (where) {
             if (where.take) {
                 args.take = where.take;
@@ -1100,7 +889,7 @@ export class QueryHelper {
                 args.skip = where.skip;
             }
             if (where.where) {
-                const whereInput: ForumWhereInput = {};
+                const whereInput: Prisma.ForumWhereInput = {};
                 if (where.where.id) {
                     whereInput.id = where.where.id;
                 }
@@ -1117,7 +906,7 @@ export class QueryHelper {
                 args.cursor = where.cursor;
             }
             if (where.orderBy) {
-                const orderBy: ForumOrderByInput = {};
+                const orderBy: Prisma.ForumOrderByInput = {};
                 if (where.orderBy.createdAt == OrderByInput.asc) {
                     orderBy.createdAt = "asc";
                 }
@@ -1146,7 +935,7 @@ export class QueryHelper {
         return args;
     }
     public formCategoryQueryBuilder(where: FormCategoryQueryInput) {
-        const args: FindManyFormCategoryArgs = {};
+        const args: Prisma.FormCategoryFindManyArgs = {};
         if (where) {
             if (where.take) {
                 args.take = where.take;
@@ -1155,7 +944,7 @@ export class QueryHelper {
                 args.skip = where.skip;
             }
             if (where.where) {
-                const whereInput: FormCategoryWhereInput = {};
+                const whereInput: Prisma.FormCategoryWhereInput = {};
                 if (where.where.id) {
                     whereInput.id = where.where.id;
                 }
@@ -1169,7 +958,7 @@ export class QueryHelper {
                 args.cursor = where.cursor;
             }
             if (where.orderBy) {
-                const orderBy: FormCategoryOrderByInput = {};
+                const orderBy: Prisma.FormCategoryOrderByInput = {};
                 if (where.orderBy.createdAt == OrderByInput.asc) {
                     orderBy.createdAt = "asc";
                 }

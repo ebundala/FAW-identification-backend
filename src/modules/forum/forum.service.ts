@@ -1,8 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import {
-    FindManyAttachmentArgs, FindManyCommentArgs,
-    FindManyForumAnswerArgs, FindManyForumArgs, ForumCreateArgs,
-    ForumUpdateArgs
+    Prisma
 } from '@prisma/client';
 import {
     AttachmentQueryInput, CommentQueryInput,
@@ -25,7 +23,7 @@ export class ForumService {
         this.logger.setContext(ForumService.name);
     }
     createForum(data: ForumCreateInput, uid: string): Promise<any | ForumResult> {
-        const args: ForumCreateArgs = {
+        const args: Prisma.ForumCreateArgs = {
             data: {
                 question: data.question,
                 description: data.description,
@@ -56,7 +54,7 @@ export class ForumService {
             });
     }
     updateForum(data: ForumUpdateInput): Promise<any> {
-        const args: ForumUpdateArgs = { where: data.where, data: {} };
+        const args: Prisma.ForumUpdateArgs = { where: data.where, data: {} };
         if (data.update.question) {
             args.data.question = data.update.question
         }
@@ -105,7 +103,7 @@ export class ForumService {
         })
     }
     forumAnswers(parent: Forum, where: ForumAnswerQueryInput, ctx: any, uid: String): Promise<any[]> {
-        const args: FindManyForumAnswerArgs = this.helper.forumAnswerQueryBuilder(where);
+        const args: Prisma.ForumAnswerFindManyArgs = this.helper.forumAnswerQueryBuilder(where);
         return this.prisma.forum
             .findUnique({ where: { id: parent.id } })
             .forumAnswers(args);
@@ -113,7 +111,7 @@ export class ForumService {
 
 
     comments(parent: Forum, where: CommentQueryInput, ctx: any, uid: String): Promise<any[]> {
-        const args: FindManyCommentArgs = this.helper.commentQueryBuilder(where);
+        const args: Prisma.CommentFindManyArgs = this.helper.commentQueryBuilder(where);
         return this.prisma.forum
             .findUnique({ where: { id: parent.id } })
             .comments(args);
@@ -121,7 +119,7 @@ export class ForumService {
 
 
     attachments(parent: Forum, where: AttachmentQueryInput, ctx: any, uid: String): Promise<any[]> {
-        const args: FindManyAttachmentArgs = this.helper.attachmentQueryBuilder(where);
+        const args: Prisma.AttachmentFindManyArgs = this.helper.attachmentQueryBuilder(where);
         return this.prisma.forum
             .findUnique({ where: { id: parent.id } })
             .attachments(args);
@@ -132,7 +130,7 @@ export class ForumService {
     }
 
     getForums(where?: ForumQueryInput): Promise<any> {
-        const args: FindManyForumArgs = this.helper.forumQueryBuilder(where);
+        const args: Prisma.ForumFindManyArgs = this.helper.forumQueryBuilder(where);
         return this.prisma.forum.findMany(args).then((forums) => {
             return {
                 status: true,

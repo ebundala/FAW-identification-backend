@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { AnswerCreateWithoutResponseInput, FindManyAnswerArgs, ResponseCreateArgs, ResponseUpdateArgs } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import {
     AnswerQueryInput, AttachmentQueryInput, Response, ResponseCreateInput,
     ResponseListResult, ResponseQueryInput, ResponseResult,
@@ -19,7 +19,7 @@ export class ResponseService {
         this.logger.setContext(ResponseService.name);
     }
     async createResponse(data: ResponseCreateInput, uid: string): Promise<any | ResponseResult> {
-        const args: ResponseCreateArgs = {
+        const args: Prisma.ResponseCreateArgs = {
             data: {
                 state: data.state || State.PENDING,
                 form: {
@@ -33,7 +33,7 @@ export class ResponseService {
             }
         }
         if (data.answers != null && data.answers.length) {
-            const create: AnswerCreateWithoutResponseInput[] = data.answers.map((v) => ({
+            const create: Prisma.AnswerCreateWithoutResponseInput[] = data.answers.map((v) => ({
                 booleanValue: v.booleanValue,
                 textValue: v.textValue,
                 question: {
@@ -62,7 +62,7 @@ export class ResponseService {
     }
 
     async updateResponse(data: ResponseUpdateInput, uid: String): Promise<any> {
-        const args: ResponseUpdateArgs = {
+        const args: Prisma.ResponseUpdateArgs = {
             where: data.where,
             data: {
                 answers: {
@@ -157,7 +157,7 @@ export class ResponseService {
         });
     }
     async answers(parent: Response, where: AnswerQueryInput, ctx: any, uid: String): Promise<any[]> {
-        const args: FindManyAnswerArgs = this.helper.answersQueryBuilder(where);
+        const args: Prisma.AnswerFindManyArgs = this.helper.answersQueryBuilder(where);
         return this.prisma.response
             .findUnique({ where: { id: parent.id } })
             .answers(args);
@@ -226,7 +226,7 @@ export class ResponseService {
                             }
                         }).reduce((a, b) => a + b);
                         return { grade, score }
-                    }).filter(({ grade, score }) => score >= grade.min);
+                    }).filter(({ grade, score }) => score >= grade.minValue);
                 const sorted = gradeScores.sort((a, b) => a.score - b.score).map((v) => v.grade);
                 this.logger.debug(sorted);
                 return sorted;

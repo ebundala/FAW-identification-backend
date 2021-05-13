@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-//import { HelpStepCreateArgs, HelpStepUpdateInput as HsInput } from '@prisma/client';
 import {Prisma} from '@prisma/client'
 import {
     AttachmentQueryInput, HelpStep, HelpStepCreateInput, HelpStepResult,

@@ -40,3 +40,4 @@ serviceAccount.json
 *.base64
 .env.base64
 serviceAccount.json.base64
+prisma/migrations.old

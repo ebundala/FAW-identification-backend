@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { FindManyAttachmentArgs } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import {
     Answer, AnswerCreateInput, AnswerResult,
 
@@ -89,7 +89,7 @@ export class AnswerService {
     }
 
     async attachments(parent: Answer,where: AttachmentQueryInput, uid: String){
-       const args: FindManyAttachmentArgs = this.helper.attachmentQueryBuilder(where);
+       const args: Prisma.AttachmentFindManyArgs = this.helper.attachmentQueryBuilder(where);
        return this.prisma.answer.findUnique({where:{id:parent.id}})
        .attachments(args)
     }

@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import {
-    FindManyAttachmentArgs,
-    FindManyCommentArgs, ForumAnswerCreateArgs, ForumAnswerUpdateArgs
+    Prisma
 } from '@prisma/client';
 import { AttachmentQueryInput, CommentQueryInput, ForumAnswer, ForumAnswerCreateInput, ForumAnswerResult, ForumAnswerUpdateInput, ForumAnswerWhereUniqueInput, State } from 'src/models/graphql';
 import { AppLogger } from '../app-logger/app-logger.module';
@@ -20,7 +19,7 @@ export class ForumAnswerService {
     }
     createForumAnswer(data: ForumAnswerCreateInput, ctx: any, uid: string): Promise<any | ForumAnswerResult> {
         this.helper.isAdmin(ctx);
-        const args: ForumAnswerCreateArgs = {
+        const args: Prisma.ForumAnswerCreateArgs = {
             data: {
                 content: data.content,
                 commentsEnabled: data.commentsEnabled,
@@ -58,7 +57,7 @@ export class ForumAnswerService {
     }
     updateForumAnswer(data: ForumAnswerUpdateInput, ctx: any): Promise<any> {
         this.helper.isAdmin(ctx);
-        const args: ForumAnswerUpdateArgs = { where: data.where, data: {} };
+        const args: Prisma.ForumAnswerUpdateArgs = { where: data.where, data: {} };
         if (data.update.content) {
             args.data.content = data.update.content
         }
@@ -114,7 +113,7 @@ export class ForumAnswerService {
     }
 
     comments(parent: ForumAnswer, where: CommentQueryInput, ctx: any, uid: String): Promise<any[]> {
-        const args: FindManyCommentArgs = this.helper.commentQueryBuilder(where);
+        const args: Prisma.CommentFindManyArgs = this.helper.commentQueryBuilder(where);
         return this.prisma.forumAnswer
             .findUnique({ where: { id: parent.id } })
             .comments(args);
@@ -122,7 +121,7 @@ export class ForumAnswerService {
 
 
     attachments(parent: ForumAnswer, where: AttachmentQueryInput, ctx: any, uid: String): Promise<any[]> {
-        const args: FindManyAttachmentArgs = this.helper.attachmentQueryBuilder(where);
+        const args: Prisma.AttachmentFindManyArgs = this.helper.attachmentQueryBuilder(where);
         return this.prisma.forumAnswer
             .findUnique({ where: { id: parent.id } })
             .attachments(args);

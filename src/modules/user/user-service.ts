@@ -1,9 +1,8 @@
 import { HttpService, Injectable } from '@nestjs/common';
 import {
-  FindManyFormArgs,
-  FindManyResponseArgs, FindManyUserArgs, Role as _Role,
+  Prisma, Role as _Role,
   State, State as _State, User as _User,
-  UserUpdateArgs
+
 } from '@prisma/client';
 import { GraphQLError } from 'graphql';
 import {
@@ -271,14 +270,14 @@ export class UserService {
       });
   }
   async responses(parent: User, where: ResponseQueryInput, ctx: any, uid: String): Promise<any[]> {
-    const args: FindManyResponseArgs = this.helper.responseQueryBuilder(where);
+    const args: Prisma.ResponseFindManyArgs = this.helper.responseQueryBuilder(where);
     return this.prisma.user
       .findUnique({ where: { id: parent.id } })
       .responses(args);
   }
 
   async forms(parent: User, where: FormQueryInput, ctx: any, uid: String): Promise<any[]> {
-    const args: FindManyFormArgs = this.helper.formQueryBuilder(where)
+    const args: Prisma.FormFindManyArgs = this.helper.formQueryBuilder(where)
     // this.logger.debug(args,UserService.name);
 
     return this.prisma.user
@@ -294,7 +293,7 @@ export class UserService {
     this.helper.isOwner(data.where, ctx);
     const _user = await this.prisma.user.findUnique({ where: { id: data.where.id } });
 
-    const args: UserUpdateArgs = { where: data.where, data: {} };
+    const args: Prisma.UserUpdateArgs = { where: data.where, data: {} };
     if (data.update.displayName) {
       args.data.displayName = data.update.displayName
     }
@@ -402,7 +401,7 @@ export class UserService {
   }
   getUsers(ctx: any, uid: any, where?: UserQueryInput,): Promise<any> {
     this.helper.isAdmin(ctx);
-    const args: FindManyUserArgs = this.helper.userQueryBuilder(where);
+    const args: Prisma.UserFindManyArgs = this.helper.userQueryBuilder(where);
     return this.prisma.user.findMany(args).then((users) => {
       return {
         status: true,

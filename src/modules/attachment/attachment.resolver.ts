@@ -1,7 +1,6 @@
 import { Resolver, Mutation, Args, Context } from '@nestjs/graphql';
 import { Attachment, AttachmentMetadata, AttachmentResult, AttachmentUpdateInput, AttachmentWhereUniqueInput } from 'src/models/graphql';
 import { AttachmentService } from './attachment-service';
-import { AttachmentCreateInput } from '@prisma/client';
 import { GraphQLUpload, FileUpload } from 'graphql-upload';
 
 

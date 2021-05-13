@@ -1,11 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import {
-    FindManyAttachmentArgs,
-    FindManyQuestionArgs, FindManyRecommendationArgs,
-
-
-
-    FindManyResponseArgs
+    Prisma
 } from '@prisma/client';
 import {
     AttachmentQueryInput, Grade, GradeCreateInput, GradeResult,
@@ -31,8 +26,8 @@ export class GradeService {
             data: {
                 name: data.name,
                 description: data.description,
-                max: data.max,
-                min: data.min,
+                maxValue: data.max,
+                minValue: data.min,
                 maxInclusive: data.maxInclusive ? true : false,
                 minInclusive: data.minInclusive ? true : false,
                 form: {
@@ -102,24 +97,24 @@ export class GradeService {
         })
     }
     async attachments(parent: Grade, where: AttachmentQueryInput, ctx: any, uid: String) {
-        const args: FindManyAttachmentArgs = this.helper.attachmentQueryBuilder(where);
+        const args: Prisma.AttachmentFindManyArgs = this.helper.attachmentQueryBuilder(where);
         return this.prisma.grade.findUnique({ where: { id: parent.id } })
             .attachments(args)
     }
     async recommendations(parent: Grade, where: RecommendationQueryInput, ctx: any, uid: String): Promise<any[]> {
-        const args: FindManyRecommendationArgs = this.helper.recommendationQueryBuilder(where);
+        const args: Prisma.RecommendationFindManyArgs = this.helper.recommendationQueryBuilder(where);
         return this.prisma.grade
             .findUnique({ where: { id: parent.id } })
             .recommendations(args);
     }
     async responses(parent: Grade, where: ResponseQueryInput, ctx: any, uid: String): Promise<any[]> {
-        const args: FindManyResponseArgs = this.helper.responseQueryBuilder(where);
+        const args: Prisma.ResponseFindManyArgs = this.helper.responseQueryBuilder(where);
         return this.prisma.grade
             .findUnique({ where: { id: parent.id } })
             .responses(args);
     }
     async questions(parent: Grade, where: QuestionQueryInput, ctx: any, uid: String): Promise<any[]> {
-        const args: FindManyQuestionArgs = this.helper.questionQueryBuilder(where);
+        const args: Prisma.QuestionFindManyArgs = this.helper.questionQueryBuilder(where);
         return this.prisma.grade
             .findUnique({ where: { id: parent.id } })
             .questions(args);
