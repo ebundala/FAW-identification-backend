@@ -163,5 +163,6 @@ jobs:
             ./scripts/create_file  ${{ secrets.FIREBASE_ADM_FILE }} "${{env.FIREBASE_ADM_AC}}"
             ./scripts/create_file .env "${{ env.SERVER_ENV}}"
             ./scripts/create_file  webserver/nginx-conf/nginx.conf "${{env.SERVER_CONF}}"
-             
+            ./scripts/create_file  webserver/certbot/nginx-conf/nginx.conf "${{secrets.CERT_SERVER_CONF}}"
+
             ./scripts/stackdeploy prod faw ${{github.sha}}
