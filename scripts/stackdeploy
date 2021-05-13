@@ -1,8 +1,6 @@
 #! /bin/bash
 export IMAGE_TAG=$3
 docker container prune -f
-# docker load -i app.tar
-# docker load -1 studio.tar
 #docker-compose -f "docker-compose.$1.yml"  config > stack.yml
 #docker stack deploy --compose-file stack.yml "$2"
 #rm -f stack.yml
