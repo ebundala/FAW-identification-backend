@@ -1,4 +1,4 @@
-version: "3.1"
+version: "3.9"
 
 services:
   db:
@@ -8,6 +8,11 @@ services:
       - PGDATA:/var/lib/postgresql/data
     networks:
       webnet:
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     environment:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_USER: ${POSTGRES_USER}
@@ -51,7 +56,8 @@ services:
        DATABASE_URL: ${DATABASE_URL}
       
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     volumes:
       - ${PWD}/${GOOGLE_APPLICATION_CREDENTIALS}:/usr/src/app/${GOOGLE_APPLICATION_CREDENTIALS}
       - ./webserver/web-root:/usr/src/app/public
@@ -70,9 +76,12 @@ services:
   webserver:
     image: nginx:latest
     ports:
-      - "80:80"
-      - "443:443"
-      - "5555:5555"
+      - published: 80
+        target: 80
+      - published: 443
+        target: 443
+      # - published: 5555
+      #   target: 5555
     volumes:
       - ./webserver/web-root:/var/www/html
       - ./webserver/nginx-conf:/etc/nginx/conf.d
