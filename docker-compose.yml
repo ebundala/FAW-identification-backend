@@ -40,13 +40,17 @@ services:
   app:
     image: ${NODE_TAG}
     working_dir: /home/app
-    command: yarn run start:docker:prod
+    command: yarn run start:docker:debug
     depends_on:
       - db
     ports:
+
       - ${APP_PORT}:3000
+      - 5555:5555
+      - 9229:9229
     volumes:
       - ./:/home/app
+      - ./public:/home/app/dist/public
     networks:
       webnet:
     deploy:

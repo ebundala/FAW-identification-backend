@@ -49,7 +49,7 @@ import { UserModule } from './modules/user/user.module';
       playground: true,
     }),
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '../../', 'public'),
+      rootPath: join(__dirname, '../', 'public'),
       exclude: ['/graphql']
     }),
     FirebaseModule,

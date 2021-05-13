@@ -60,7 +60,7 @@ services:
         condition: service_healthy
     volumes:
       - ${PWD}/${GOOGLE_APPLICATION_CREDENTIALS}:/usr/src/app/${GOOGLE_APPLICATION_CREDENTIALS}
-      - ./webserver/web-root/public:/usr/src/app/public
+      - ./webserver/web-root/public:/usr/src/app/dist/public
     networks:
       webnet:
 
