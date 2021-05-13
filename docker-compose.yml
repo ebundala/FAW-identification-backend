@@ -16,10 +16,10 @@ services:
       PGDATA: ${PGDATA}
     deploy:
       replicas: 1
-      resources:
-        limits:
-          cpus: "0.2"
-          memory: 1g
+      # resources:
+      #   limits:
+      #     cpus: "0.2"
+      #     memory: 1g
       restart_policy:
         condition: on-failure
 
@@ -51,10 +51,10 @@ services:
       webnet:
     deploy:
       replicas: 1
-      resources:
-        limits:
-          cpus: "2"
-          memory: 1g
+      # resources:
+      #   limits:
+      #     cpus: "2"
+      #     memory: 1g
       restart_policy:
         condition: on-failure
 networks:
