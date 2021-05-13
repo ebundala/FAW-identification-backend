@@ -45,7 +45,10 @@ import { UserModule } from './modules/user/user.module';
         writeFileSync(join(process.cwd(), 'src/models/schema.g.graphql'), txt)
         return schema;
       },
-      uploads:true,
+      uploads:{
+        maxFieldSize:5048000,
+        maxFileSize:5048000
+      },
       debug: false,
       playground: false,
     }),
